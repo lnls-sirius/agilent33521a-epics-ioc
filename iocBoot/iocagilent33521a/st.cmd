@@ -16,7 +16,7 @@ agilent33521a_registerRecordDeviceDriver pdbbase
 drvAsynIPPortConfigure("AGILENTPORT", "${IPADDR}:${IPPORT} TCP", 0, 0, 0)
 
 ## Load record instances
-#dbLoadRecords("db/xxx.db","user=janitoHost")
+dbLoadRecords("db/agilent33521a.db","P=${P}, R=${R}, PORT=AGILENTPORT")
 
 cd "${TOP}/iocBoot/${IOC}"
 iocInit

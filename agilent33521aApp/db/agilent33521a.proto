@@ -1,0 +1,7 @@
+TERMINATOR = NL;
+ExtraInput = Ignore;
+ReplyTimeout = 1000;
+
+channelOutputEnable {
+    out "OUTPut1 %{OFF|ON}"
+}

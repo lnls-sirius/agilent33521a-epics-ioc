@@ -1,0 +1,7 @@
+record(bo, "$(P)$(R)channelOutput-SP") {
+    field(DESC, "Enable channel output")
+    field(ZNAM, "OFF")
+    field(ONAM, "ON")
+    field(DTYP, "stream")
+    field(OUT, "@agilent33521a.proto channelOutputEnable $(PORT)")
+}
