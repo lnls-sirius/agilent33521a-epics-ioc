@@ -24,6 +24,12 @@ TEMPLATE_TOP=$(EPICS_BASE)/templates/makeBaseApp/top
 # If using the sequencer, point SNCSEQ at its top directory:
 #SNCSEQ=$(EPICS_BASE)/../modules/soft/seq
 
+# RELEASE.local should define the following variables with the
+# paths to the respective EPICS modules:
+#  ASYN
+#  STREAM
+include $(TOP)/configure/RELEASE.local
+
 # EPICS_BASE usually appears last so other apps can override stuff:
 EPICS_BASE=/opt/epics/base
 

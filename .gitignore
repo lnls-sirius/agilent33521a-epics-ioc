@@ -5,3 +5,5 @@
 **/O.*
 
 iocBoot/**/envPaths
+
+configure/*.local
