@@ -21,5 +21,4 @@ dbLoadRecords("db/agilent33521a.db","P=${P}, R=${R}, PORT=AGILENTPORT")
 cd "${TOP}/iocBoot/${IOC}"
 iocInit
 
-## Start any sequence programs
-#seq sncxxx,"user=janitoHost"
+dbpf $(P)$(R)channelOutput-Sts OFF
