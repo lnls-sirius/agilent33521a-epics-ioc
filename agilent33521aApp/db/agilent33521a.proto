@@ -12,3 +12,8 @@ channelOutputEnable {
     out "OUTPut1 %{OFF|ON}";
     @init { channelOutputRead; }
 }
+
+getWaveformFunction {
+    out "SOURce1:FUNCtion?";
+    in "%s"
+}

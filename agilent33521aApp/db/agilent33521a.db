@@ -14,3 +14,18 @@ record(bi, "$(P)$(R)channelOutput-Sts") {
     field(DTYP, "stream")
     field(INP, "@agilent33521a.proto channelOutputRead $(PORT)")
 }
+
+record(mbbi, "$(P)$(R)waveformFunction-Sts") {
+    field(DESC, "Read current waveform function")
+    field(ZRST, "SIN")
+    field(ONST, "SQU")
+    field(TWST, "TRI")
+    field(THST, "RAMP")
+    field(FRST, "PULS")
+    field(FVST, "PRBS")
+    field(SXST, "NOIS")
+    field(SVST, "ARB")
+    field(EIST, "DC")
+    field(DTYP, "stream")
+    field(INP, "@agilent33521a.proto getWaveformFunction $(PORT)")
+}
