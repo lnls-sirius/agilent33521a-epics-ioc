@@ -27,3 +27,8 @@ getFrequency {
     out "SOURce1:FREQuency?";
     in "%f"
 }
+
+setFrequency {
+    out "SOURce1:FREQuency %f";
+    @init { getFrequency }
+}
