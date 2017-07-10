@@ -4,8 +4,7 @@ ReplyTimeout = 1000;
 
 channelOutputRead {
     out "OUTPut1?";
-    in "%i";
-    @init { wait 5000; }
+    in "%i"
 }
 
 channelOutputEnable {
@@ -25,7 +24,8 @@ setWaveformFunction {
 
 getFrequency {
     out "SOURce1:FREQuency?";
-    in "%f"
+    in "%f";
+    @init { wait 5000; }
 }
 
 setFrequency {
