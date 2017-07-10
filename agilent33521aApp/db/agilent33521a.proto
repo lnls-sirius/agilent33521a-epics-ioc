@@ -17,3 +17,8 @@ getWaveformFunction {
     out "SOURce1:FUNCtion?";
     in "%s"
 }
+
+setWaveformFunction {
+    out "SOURce1:FUNCtion %s";
+    @init { getWaveformFunction }
+}

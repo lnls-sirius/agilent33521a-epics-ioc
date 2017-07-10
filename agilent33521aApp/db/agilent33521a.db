@@ -31,3 +31,19 @@ record(mbbi, "$(P)$(R)waveformFunction-Sts") {
     field(PINI, 1)
     field(INP, "@agilent33521a.proto getWaveformFunction $(PORT)")
 }
+
+record(mbbo, "$(P)$(R)waveformFunction-Sel") {
+    field(DESC, "Select waveform function")
+    field(ZRST, "SIN")
+    field(ONST, "SQU")
+    field(TWST, "TRI")
+    field(THST, "RAMP")
+    field(FRST, "PULS")
+    field(FVST, "PRBS")
+    field(SXST, "NOIS")
+    field(SVST, "ARB")
+    field(EIST, "DC")
+    field(DTYP, "stream")
+    field(OUT, "@agilent33521a.proto setWaveformFunction $(PORT)")
+    field(FLNK, "$(P)$(R)waveformFunction-Sts")
+}
