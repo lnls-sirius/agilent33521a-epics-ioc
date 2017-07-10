@@ -32,3 +32,8 @@ setFrequency {
     out "SOURce1:FREQuency %f";
     @init { getFrequency }
 }
+
+getAmplitude {
+    out "SOURce1:VOLT?";
+    in "%f";
+}
