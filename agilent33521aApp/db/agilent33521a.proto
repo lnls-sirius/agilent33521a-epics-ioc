@@ -15,10 +15,10 @@ channelOutputEnable {
 
 getWaveformFunction {
     out "SOURce1:FUNCtion?";
-    in "%s"
+    in "%{SIN|SQU|TRI|RAMP|PULS|PRBS|NOIS|ARB|DC}"
 }
 
 setWaveformFunction {
-    out "SOURce1:FUNCtion %s";
+    out "SOURce1:FUNCtion %{SIN|SQU|TRI|RAMP|PULS|PRBS|NOIS|ARB|DC}";
     @init { getWaveformFunction }
 }
