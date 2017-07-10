@@ -1,4 +1,4 @@
-record(bo, "$(P)$(R)channelOutput-SP") {
+record(bo, "$(P)$(R)channelOutput-Sel") {
     field(DESC, "Enable channel output")
     field(ZNAM, "OFF")
     field(ONAM, "ON")
