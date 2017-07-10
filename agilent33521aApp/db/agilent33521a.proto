@@ -22,3 +22,8 @@ setWaveformFunction {
     out "SOURce1:FUNCtion %{SIN|SQU|TRI|RAMP|PULS|PRBS|NOIS|ARB|DC}";
     @init { getWaveformFunction }
 }
+
+getFrequency {
+    out "SOURce1:FREQuency?";
+    in "%f"
+}

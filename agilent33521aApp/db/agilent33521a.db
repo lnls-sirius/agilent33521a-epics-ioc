@@ -47,3 +47,11 @@ record(mbbo, "$(P)$(R)waveformFunction-Sel") {
     field(OUT, "@agilent33521a.proto setWaveformFunction $(PORT)")
     field(FLNK, "$(P)$(R)waveformFunction-Sts")
 }
+
+record(ai, "$(P)$(R)frequency-RB") {
+    field(DESC, "Read configured frequency")
+    field(EGU, "Hz")
+    field(PINI, 1)
+    field(DTYP, "stream")
+    field(INP, "@agilent33521a.proto getFrequency $(PORT)")
+}
