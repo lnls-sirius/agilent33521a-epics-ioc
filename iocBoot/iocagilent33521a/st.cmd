@@ -20,5 +20,3 @@ dbLoadRecords("db/agilent33521a.db","P=${P}, R=${R}, PORT=AGILENTPORT")
 
 cd "${TOP}/iocBoot/${IOC}"
 iocInit
-
-dbpf $(P)$(R)channelOutput-Sts OFF
