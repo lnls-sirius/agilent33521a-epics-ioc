@@ -2,6 +2,11 @@ TERMINATOR = NL;
 ExtraInput = Ignore;
 ReplyTimeout = 1000;
 
+channelOutputRead {
+    out "OUTPut1?";
+    in "%i"
+}
+
 channelOutputEnable {
     out "OUTPut1 %{OFF|ON}"
 }
