@@ -191,3 +191,11 @@ record(ao, "$(P)$(R)pulse:trailingEdge-SP") {
     field(OUT, "@agilent33521a.proto setPulseTrailingEdge $(PORT)")
     field(FLNK, "$(P)$(R)pulse:trailingEdge-RB")
 }
+
+record(ai, "$(P)$(R)prbs:bitRate-RB") {
+    field(DESC, "Read configured PRBS bit rate")
+    field(EGU, "bps")
+    field(PINI, 1)
+    field(DTYP, "stream")
+    field(INP, "@agilent33521a.proto getPrbsBitRate $(PORT)")
+}

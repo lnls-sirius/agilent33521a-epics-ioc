@@ -112,3 +112,8 @@ setPulseTrailingEdge {
     out "SOURce1:FUNCtion:PULSe:TRANsition:TRAiling %g";
     @init { getPulseTrailingEdge }
 }
+
+getPrbsBitRate {
+    out "SOURce1:FUNCtion:PRBS:BRATe?";
+    in "%f"
+}
