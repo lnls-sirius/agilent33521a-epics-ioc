@@ -79,3 +79,11 @@ record(ao, "$(P)$(R)amplitude-SP") {
     field(OUT, "@agilent33521a.proto setAmplitude $(PORT)")
     field(FLNK, "$(P)$(R)amplitude-RB")
 }
+
+record(ai, "$(P)$(R)offset-RB") {
+    field(DESC, "Read configured DC offset")
+    field(EGU, "V")
+    field(PINI, 1)
+    field(DTYP, "stream")
+    field(INP, "@agilent33521a.proto getOffset $(PORT)")
+}

@@ -41,3 +41,8 @@ getAmplitude {
 setAmplitude {
     out "SOURce1:VOLT %f"
 }
+
+getOffset {
+    out "SOURce1:VOLT:OFFSet?";
+    in "%f"
+}
