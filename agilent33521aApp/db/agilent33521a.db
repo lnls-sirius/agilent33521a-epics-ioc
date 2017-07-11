@@ -151,3 +151,11 @@ record(ai, "$(P)$(R)pulse:width-RB") {
     field(DTYP, "stream")
     field(INP, "@agilent33521a.proto getPulseWidth $(PORT)")
 }
+
+record(ao, "$(P)$(R)pulse:width-SP") {
+    field(DESC, "Configure pulse width")
+    field(EGU, "s")
+    field(DTYP, "stream")
+    field(OUT, "@agilent33521a.proto setPulseWidth $(PORT)")
+    field(FLNK, "$(P)$(R)pulse:width-RB")
+}

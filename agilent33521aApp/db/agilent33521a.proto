@@ -87,3 +87,8 @@ getPulseWidth {
     out "SOURce1:FUNCtion:PULSe:WIDTh?";
     in "%f"
 }
+
+setPulseWidth {
+    out "SOURce1:FUNCtion:PULSe:WIDTh %f";
+    @init { getPulseWidth }
+}
