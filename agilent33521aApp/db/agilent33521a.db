@@ -215,3 +215,11 @@ record(ai, "$(P)$(R)prbs:edgeTime-RB") {
     field(DTYP, "stream")
     field(INP, "@agilent33521a.proto getPrbsEdgeTime $(PORT)")
 }
+
+record(ao, "$(P)$(R)prbs:edgeTime-SP") {
+    field(DESC, "Configure PRBS edge time")
+    field(EGU, "s")
+    field(DTYP, "stream")
+    field(OUT, "@agilent33521a.proto setPrbsEdgeTime $(PORT)")
+    field(FLNK, "$(P)$(R)prbs:edgeTime-RB")
+}

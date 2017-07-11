@@ -127,3 +127,8 @@ getPrbsEdgeTime {
     out "SOURce1:FUNCtion:PRBS:TRANsition?";
     in "%f"
 }
+
+setPrbsEdgeTime {
+    out "SOURce1:FUNCtion:PRBS:TRANsition %g";
+    @init { getPrbsEdgeTime }
+}
