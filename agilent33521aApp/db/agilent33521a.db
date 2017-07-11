@@ -290,3 +290,12 @@ record(waveform, "$(P)$(R)arbitrary:waveformFile-RB") {
     field(DTYP, "stream")
     field(INP, "@agilent33521a.proto getArbitraryWaveformFile $(PORT)")
 }
+
+record(waveform, "$(P)$(R)arbitrary:waveformFile-SP") {
+    field(DESC, "Set arbitrary waveform file path")
+    field(NELM, 240)
+    field(FTVL, "STRING")
+    field(DTYP, "stream")
+    field(INP, "@agilent33521a.proto setArbitraryWaveformFile $(PORT)")
+    field(FLNK, "$(P)$(R)arbitrary:waveformFile-RB")
+}

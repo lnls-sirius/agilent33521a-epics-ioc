@@ -167,3 +167,8 @@ getArbitraryWaveformFile {
     out "SOURce1:FUNCtion:ARBitrary?";
     in "%.1/\"([^\"]*)\"/"
 }
+
+setArbitraryWaveformFile {
+    out "SOURce1:FUNCtion:ARBitrary \"%s\"";
+    @init { getArbitraryWaveformFile }
+}
