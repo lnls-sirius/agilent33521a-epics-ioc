@@ -167,3 +167,11 @@ record(ai, "$(P)$(R)pulse:leadingEdge-RB") {
     field(DTYP, "stream")
     field(INP, "@agilent33521a.proto getPulseLeadingEdge $(PORT)")
 }
+
+record(ao, "$(P)$(R)pulse:leadingEdge-SP") {
+    field(DESC, "Configure pulse leading edge time")
+    field(EGU, "s")
+    field(DTYP, "stream")
+    field(OUT, "@agilent33521a.proto setPulseLeadingEdge $(PORT)")
+    field(FLNK, "$(P)$(R)pulse:leadingEdge-RB")
+}
