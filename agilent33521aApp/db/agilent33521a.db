@@ -135,3 +135,11 @@ record(ai, "$(P)$(R)ramp:symmetry-RB") {
     field(DTYP, "stream")
     field(INP, "@agilent33521a.proto getRampSymmetry $(PORT)")
 }
+
+record(ao, "$(P)$(R)ramp:symmetry-SP") {
+    field(DESC, "Configure ramp function symmetry")
+    field(EGU, "%")
+    field(DTYP, "stream")
+    field(OUT, "@agilent33521a.proto setRampSymmetry $(PORT)")
+    field(FLNK, "$(P)$(R)ramp:symmetry-RB")
+}

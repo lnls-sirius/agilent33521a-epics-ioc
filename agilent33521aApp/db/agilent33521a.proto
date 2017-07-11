@@ -77,3 +77,8 @@ getRampSymmetry {
     out "SOURce1:FUNCtion:RAMP:SYMMetry?";
     in "%f"
 }
+
+setRampSymmetry {
+    out "SOURce1:FUNCtion:RAMP:SYMMetry %f";
+    @init { getRampSymmetry }
+}
