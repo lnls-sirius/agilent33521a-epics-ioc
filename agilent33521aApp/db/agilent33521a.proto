@@ -107,3 +107,8 @@ getPulseTrailingEdge {
     out "SOURce1:FUNCtion:PULSe:TRANsition:TRAiling?";
     in "%f"
 }
+
+setPulseTrailingEdge {
+    out "SOURce1:FUNCtion:PULSe:TRANsition:TRAiling %g";
+    @init { getPulseTrailingEdge }
+}
