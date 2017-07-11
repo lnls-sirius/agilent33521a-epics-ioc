@@ -62,3 +62,8 @@ setPhase {
     out "SOURce1:PHASe %f";
     @init { getPhase }
 }
+
+getSquareDutyCycle {
+    out "SOURce1:FUNCtion:SQUare:DCYCle?";
+    in "%f"
+}

@@ -111,3 +111,11 @@ record(ao, "$(P)$(R)phase-SP") {
     field(OUT, "@agilent33521a.proto setPhase $(PORT)")
     field(FLNK, "$(P)$(R)phase-RB")
 }
+
+record(ai, "$(P)$(R)square:dutyCycle-RB") {
+    field(DESC, "Read configured square wave duty cycle")
+    field(EGU, "%")
+    field(PINI, 1)
+    field(DTYP, "stream")
+    field(INP, "@agilent33521a.proto getSquareDutyCycle $(PORT)")
+}
