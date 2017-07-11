@@ -49,6 +49,10 @@ binary directly by passing the `st.cmd` file name as a parameter:
     cd iocBoot/iocagilent33521a
     P="MYLAB:" R="TEST:" IPADDR="192.168.1.100" IPPORT=5025 ../../bin/<HOST-ARCH>/agilent33521a st.cmd
 
+where `<HOST-ARCH>` is the output folder with the binary for your specific host
+architecture. If you built the IOC with no cross-compilation configured, there
+should only be one output directory.
+
 ## Supported Features
 
 For now, the following features are supported:
