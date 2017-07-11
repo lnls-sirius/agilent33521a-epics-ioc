@@ -64,4 +64,5 @@ For now, the following features are supported:
 - Configuring ramp function symmetry;
 - Configuring pulse width and leading and trailing edge times;
 - Configuring pseudo-random bit stream bit rate, edge time and sequence type;
-- Configuring noise function bandwidth.
+- Configuring noise function bandwidth;
+- Configuring arbitrary waveform sample rate.
