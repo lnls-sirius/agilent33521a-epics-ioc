@@ -95,3 +95,11 @@ record(ao, "$(P)$(R)offset-SP") {
     field(OUT, "@agilent33521a.proto setOffset $(PORT)")
     field(FLNK, "$(P)$(R)offset-RB")
 }
+
+record(ai, "$(P)$(R)phase-RB") {
+    field(DESC, "Read configured phase")
+    field(EGU, "degrees")
+    field(PINI, 1)
+    field(DTYP, "stream")
+    field(INP, "@agilent33521a.proto getPhase $(PORT)")
+}

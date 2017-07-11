@@ -52,3 +52,8 @@ setOffset {
     out "SOURce1:VOLT:OFFSet %f";
     @init { getOffset }
 }
+
+getPhase {
+    out "SOURce1:PHASe?";
+    in "%f"
+}
