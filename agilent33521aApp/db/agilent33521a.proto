@@ -72,3 +72,8 @@ setSquareDutyCycle {
     out "SOURce1:FUNCtion:SQUare:DCYCle %f";
     @init { getSquareDutyCycle }
 }
+
+getRampSymmetry {
+    out "SOURce1:FUNCtion:RAMP:SYMMetry?";
+    in "%f"
+}

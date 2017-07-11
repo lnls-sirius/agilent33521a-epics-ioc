@@ -127,3 +127,11 @@ record(ao, "$(P)$(R)square:dutyCycle-SP") {
     field(OUT, "@agilent33521a.proto setSquareDutyCycle $(PORT)")
     field(FLNK, "$(P)$(R)square:dutyCycle-RB")
 }
+
+record(ai, "$(P)$(R)ramp:symmetry-RB") {
+    field(DESC, "Read configured ramp function symmetry")
+    field(EGU, "%")
+    field(PINI, 1)
+    field(DTYP, "stream")
+    field(INP, "@agilent33521a.proto getRampSymmetry $(PORT)")
+}
