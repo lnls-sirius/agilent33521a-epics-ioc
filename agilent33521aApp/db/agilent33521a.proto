@@ -162,3 +162,8 @@ setArbitraryWaveformSampleRate {
     out "SOURce1:FUNCtion:ARBitrary:SRATe %g";
     @init { getArbitraryWaveformSampleRate }
 }
+
+getArbitraryWaveformFile {
+    out "SOURce1:FUNCtion:ARBitrary?";
+    in "%.1/\"([^\"]*)\"/"
+}

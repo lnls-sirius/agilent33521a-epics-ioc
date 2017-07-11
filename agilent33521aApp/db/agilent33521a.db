@@ -281,3 +281,12 @@ record(ao, "$(P)$(R)arbitrary:sampleRate-SP") {
     field(OUT, "@agilent33521a.proto setArbitraryWaveformSampleRate $(PORT)")
     field(FLNK, "$(P)$(R)arbitrary:sampleRate-RB")
 }
+
+record(waveform, "$(P)$(R)arbitrary:waveformFile-RB") {
+    field(DESC, "Read arbitrary waveform file path")
+    field(NELM, 240)
+    field(FTVL, "STRING")
+    field(PINI, 1)
+    field(DTYP, "stream")
+    field(INP, "@agilent33521a.proto getArbitraryWaveformFile $(PORT)")
+}
