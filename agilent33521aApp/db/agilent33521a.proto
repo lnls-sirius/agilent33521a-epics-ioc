@@ -132,3 +132,8 @@ setPrbsEdgeTime {
     out "SOURce1:FUNCtion:PRBS:TRANsition %g";
     @init { getPrbsEdgeTime }
 }
+
+getPrbsSequenceType {
+    out "SOURce1:FUNCtion:PRBS:DATA?";
+    in "%s"
+}

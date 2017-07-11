@@ -223,3 +223,16 @@ record(ao, "$(P)$(R)prbs:edgeTime-SP") {
     field(OUT, "@agilent33521a.proto setPrbsEdgeTime $(PORT)")
     field(FLNK, "$(P)$(R)prbs:edgeTime-RB")
 }
+
+record(mbbi, "$(P)$(R)prbs:sequenceType-Sts") {
+    field(DESC, "Read current PRBS sequence type")
+    field(ZRST, "PN7")
+    field(ONST, "PN9")
+    field(TWST, "PN11")
+    field(THST, "PN15")
+    field(FRST, "PN20")
+    field(FVST, "PN23")
+    field(DTYP, "stream")
+    field(PINI, 1)
+    field(INP, "@agilent33521a.proto getPrbsSequenceType $(PORT)")
+}
