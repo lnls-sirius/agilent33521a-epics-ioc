@@ -265,3 +265,11 @@ record(ao, "$(P)$(R)noise:bandwidth-SP") {
     field(OUT, "@agilent33521a.proto setNoiseBandwidth $(PORT)")
     field(FLNK, "$(P)$(R)noise:bandwidth-RB")
 }
+
+record(ai, "$(P)$(R)arbitrary:sampleRate-RB") {
+    field(DESC, "Read sample rate for arbitrary waveform")
+    field(EGU, "Sa/s")
+    field(PINI, 1)
+    field(DTYP, "stream")
+    field(INP, "@agilent33521a.proto getArbitraryWaveformSampleRate $(PORT)")
+}

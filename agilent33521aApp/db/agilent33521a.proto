@@ -152,3 +152,8 @@ setNoiseBandwidth {
     out "SOURce1:FUNCtion:NOISe:BANDwidth %g";
     @init { getNoiseBandwidth }
 }
+
+getArbitraryWaveformSampleRate {
+    out "SOURce1:FUNCtion:ARBitrary:SRATe?";
+    in "%f"
+}
