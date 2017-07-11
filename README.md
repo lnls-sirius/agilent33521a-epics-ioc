@@ -61,4 +61,5 @@ For now, the following features are supported:
 - Selecting the waveform function;
 - Configuring the waveform frequency, amplitude, DC offset and phase;
 - Configuring square wave duty cycle;
-- Configuring ramp function symmetry.
+- Configuring ramp function symmetry;
+- Configuring pulse width.
