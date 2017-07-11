@@ -249,3 +249,11 @@ record(mbbo, "$(P)$(R)prbs:sequenceType-Sel") {
     field(OUT, "@agilent33521a.proto setPrbsSequenceType $(PORT)")
     field(FLNK, "$(P)$(R)prbs:sequenceType-Sts")
 }
+
+record(ai, "$(P)$(R)noise:bandwidth-RB") {
+    field(DESC, "Read configured noise function bandwidth")
+    field(EGU, "Hz")
+    field(PINI, 1)
+    field(DTYP, "stream")
+    field(INP, "@agilent33521a.proto getNoiseBandwidth $(PORT)")
+}

@@ -142,3 +142,8 @@ setPrbsSequenceType {
     out "SOURce1:FUNCtion:PRBS:DATA %s";
     @init { getPrbsSequenceType }
 }
+
+getNoiseBandwidth {
+    out "SOURce1:FUNCtion:NOISe:BANDwidth?";
+    in "%f"
+}
