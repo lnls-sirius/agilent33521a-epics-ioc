@@ -67,3 +67,8 @@ getSquareDutyCycle {
     out "SOURce1:FUNCtion:SQUare:DCYCle?";
     in "%f"
 }
+
+setSquareDutyCycle {
+    out "SOURce1:FUNCtion:SQUare:DCYCle %f";
+    @init { getSquareDutyCycle }
+}

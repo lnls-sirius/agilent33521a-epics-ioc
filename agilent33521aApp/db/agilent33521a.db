@@ -119,3 +119,11 @@ record(ai, "$(P)$(R)square:dutyCycle-RB") {
     field(DTYP, "stream")
     field(INP, "@agilent33521a.proto getSquareDutyCycle $(PORT)")
 }
+
+record(ao, "$(P)$(R)square:dutyCycle-SP") {
+    field(DESC, "Configure square wave duty cycle")
+    field(EGU, "%")
+    field(DTYP, "stream")
+    field(OUT, "@agilent33521a.proto setSquareDutyCycle $(PORT)")
+    field(FLNK, "$(P)$(R)square:dutyCycle-RB")
+}
