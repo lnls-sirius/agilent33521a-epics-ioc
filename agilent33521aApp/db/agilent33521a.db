@@ -71,3 +71,11 @@ record(ai, "$(P)$(R)amplitude-RB") {
     field(DTYP, "stream")
     field(INP, "@agilent33521a.proto getAmplitude $(PORT)")
 }
+
+record(ao, "$(P)$(R)amplitude-SP") {
+    field(DESC, "Configure amplitude value")
+    field(EGU, "V")
+    field(DTYP, "stream")
+    field(OUT, "@agilent33521a.proto setAmplitude $(PORT)")
+    field(FLNK, "$(P)$(R)amplitude-RB")
+}

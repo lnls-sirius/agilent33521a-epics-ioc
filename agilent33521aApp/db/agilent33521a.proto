@@ -37,3 +37,7 @@ getAmplitude {
     out "SOURce1:VOLT?";
     in "%f";
 }
+
+setAmplitude {
+    out "SOURce1:VOLT %f"
+}
