@@ -62,4 +62,5 @@ For now, the following features are supported:
 - Configuring the waveform frequency, amplitude, DC offset and phase;
 - Configuring square wave duty cycle;
 - Configuring ramp function symmetry;
-- Configuring pulse width and leading and trailing edge times.
+- Configuring pulse width and leading and trailing edge times;
+- Configuring pseudo-random bit stream bit rate.
