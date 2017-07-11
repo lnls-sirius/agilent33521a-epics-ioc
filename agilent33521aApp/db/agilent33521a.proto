@@ -102,3 +102,8 @@ setPulseLeadingEdge {
     out "SOURce1:FUNCtion:PULSe:TRANsition:LEADing %g";
     @init { getPulseLeadingEdge }
 }
+
+getPulseTrailingEdge {
+    out "SOURce1:FUNCtion:PULSe:TRANsition:TRAiling?";
+    in "%f"
+}

@@ -175,3 +175,11 @@ record(ao, "$(P)$(R)pulse:leadingEdge-SP") {
     field(OUT, "@agilent33521a.proto setPulseLeadingEdge $(PORT)")
     field(FLNK, "$(P)$(R)pulse:leadingEdge-RB")
 }
+
+record(ai, "$(P)$(R)pulse:trailingEdge-RB") {
+    field(DESC, "Read configured trailing edge time")
+    field(EGU, "s")
+    field(PINI, 1)
+    field(DTYP, "stream")
+    field(INP, "@agilent33521a.proto getPulseTrailingEdge $(PORT)")
+}
