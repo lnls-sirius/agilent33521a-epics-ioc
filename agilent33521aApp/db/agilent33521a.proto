@@ -29,7 +29,7 @@ getFrequency {
 }
 
 setFrequency {
-    out "SOURce1:FREQuency %f";
+    out "SOURce1:FREQuency %g";
     @init { getFrequency }
 }
 
@@ -39,7 +39,7 @@ getAmplitude {
 }
 
 setAmplitude {
-    out "SOURce1:VOLT %f";
+    out "SOURce1:VOLT %g";
     @init { getAmplitude }
 }
 
@@ -49,7 +49,7 @@ getOffset {
 }
 
 setOffset {
-    out "SOURce1:VOLT:OFFSet %f";
+    out "SOURce1:VOLT:OFFSet %g";
     @init { getOffset }
 }
 
@@ -59,7 +59,7 @@ getPhase {
 }
 
 setPhase {
-    out "SOURce1:PHASe %f";
+    out "SOURce1:PHASe %g";
     @init { getPhase }
 }
 
@@ -69,7 +69,7 @@ getSquareDutyCycle {
 }
 
 setSquareDutyCycle {
-    out "SOURce1:FUNCtion:SQUare:DCYCle %f";
+    out "SOURce1:FUNCtion:SQUare:DCYCle %g";
     @init { getSquareDutyCycle }
 }
 
@@ -79,7 +79,7 @@ getRampSymmetry {
 }
 
 setRampSymmetry {
-    out "SOURce1:FUNCtion:RAMP:SYMMetry %f";
+    out "SOURce1:FUNCtion:RAMP:SYMMetry %g";
     @init { getRampSymmetry }
 }
 
@@ -89,7 +89,7 @@ getPulseWidth {
 }
 
 setPulseWidth {
-    out "SOURce1:FUNCtion:PULSe:WIDTh %f";
+    out "SOURce1:FUNCtion:PULSe:WIDTh %g";
     @init { getPulseWidth }
 }
 
