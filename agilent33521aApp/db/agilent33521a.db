@@ -207,3 +207,11 @@ record(ao, "$(P)$(R)prbs:bitRate-SP") {
     field(OUT, "@agilent33521a.proto setPrbsBitRate $(PORT)")
     field(FLNK, "$(P)$(R)prbs:bitRate-RB")
 }
+
+record(ai, "$(P)$(R)prbs:edgeTime-RB") {
+    field(DESC, "Read configured PRBS edge time")
+    field(EGU, "s")
+    field(PINI, 1)
+    field(DTYP, "stream")
+    field(INP, "@agilent33521a.proto getPrbsEdgeTime $(PORT)")
+}

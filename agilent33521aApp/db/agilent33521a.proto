@@ -122,3 +122,8 @@ setPrbsBitRate {
     out "SOURce1:FUNCtion:PRBS:BRATe %g";
     @init { getPrbsBitRate }
 }
+
+getPrbsEdgeTime {
+    out "SOURce1:FUNCtion:PRBS:TRANsition?";
+    in "%f"
+}
