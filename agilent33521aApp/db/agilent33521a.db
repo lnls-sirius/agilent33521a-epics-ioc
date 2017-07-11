@@ -257,3 +257,11 @@ record(ai, "$(P)$(R)noise:bandwidth-RB") {
     field(DTYP, "stream")
     field(INP, "@agilent33521a.proto getNoiseBandwidth $(PORT)")
 }
+
+record(ao, "$(P)$(R)noise:bandwidth-SP") {
+    field(DESC, "Configure noise function bandwidth")
+    field(EGU, "Hz")
+    field(DTYP, "stream")
+    field(OUT, "@agilent33521a.proto setNoiseBandwidth $(PORT)")
+    field(FLNK, "$(P)$(R)noise:bandwidth-RB")
+}

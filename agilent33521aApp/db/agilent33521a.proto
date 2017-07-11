@@ -147,3 +147,8 @@ getNoiseBandwidth {
     out "SOURce1:FUNCtion:NOISe:BANDwidth?";
     in "%f"
 }
+
+setNoiseBandwidth {
+    out "SOURce1:FUNCtion:NOISe:BANDwidth %g";
+    @init { getNoiseBandwidth }
+}
