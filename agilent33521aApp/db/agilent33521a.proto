@@ -157,3 +157,8 @@ getArbitraryWaveformSampleRate {
     out "SOURce1:FUNCtion:ARBitrary:SRATe?";
     in "%f"
 }
+
+setArbitraryWaveformSampleRate {
+    out "SOURce1:FUNCtion:ARBitrary:SRATe %g";
+    @init { getArbitraryWaveformSampleRate }
+}

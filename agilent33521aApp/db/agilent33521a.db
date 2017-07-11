@@ -273,3 +273,11 @@ record(ai, "$(P)$(R)arbitrary:sampleRate-RB") {
     field(DTYP, "stream")
     field(INP, "@agilent33521a.proto getArbitraryWaveformSampleRate $(PORT)")
 }
+
+record(ao, "$(P)$(R)arbitrary:sampleRate-SP") {
+    field(DESC, "Set sample rate for arbitrary waveform")
+    field(EGU, "Sa/s")
+    field(DTYP, "stream")
+    field(OUT, "@agilent33521a.proto setArbitraryWaveformSampleRate $(PORT)")
+    field(FLNK, "$(P)$(R)arbitrary:sampleRate-RB")
+}
