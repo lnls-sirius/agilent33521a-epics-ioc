@@ -63,4 +63,4 @@ For now, the following features are supported:
 - Configuring square wave duty cycle;
 - Configuring ramp function symmetry;
 - Configuring pulse width and leading and trailing edge times;
-- Configuring pseudo-random bit stream bit rate and edge time.
+- Configuring pseudo-random bit stream bit rate, edge time and sequence type.
