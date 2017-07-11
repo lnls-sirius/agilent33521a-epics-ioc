@@ -57,3 +57,8 @@ getPhase {
     out "SOURce1:PHASe?";
     in "%f"
 }
+
+setPhase {
+    out "SOURce1:PHASe %f";
+    @init { getPhase }
+}

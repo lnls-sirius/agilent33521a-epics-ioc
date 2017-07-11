@@ -103,3 +103,11 @@ record(ai, "$(P)$(R)phase-RB") {
     field(DTYP, "stream")
     field(INP, "@agilent33521a.proto getPhase $(PORT)")
 }
+
+record(ao, "$(P)$(R)phase-SP") {
+    field(DESC, "Configure phase")
+    field(EGU, "degrees")
+    field(DTYP, "stream")
+    field(OUT, "@agilent33521a.proto setPhase $(PORT)")
+    field(FLNK, "$(P)$(R)phase-RB")
+}
