@@ -159,3 +159,11 @@ record(ao, "$(P)$(R)pulse:width-SP") {
     field(OUT, "@agilent33521a.proto setPulseWidth $(PORT)")
     field(FLNK, "$(P)$(R)pulse:width-RB")
 }
+
+record(ai, "$(P)$(R)pulse:leadingEdge-RB") {
+    field(DESC, "Read configured leading edge time")
+    field(EGU, "s")
+    field(PINI, 1)
+    field(DTYP, "stream")
+    field(INP, "@agilent33521a.proto getPulseLeadingEdge $(PORT)")
+}

@@ -92,3 +92,8 @@ setPulseWidth {
     out "SOURce1:FUNCtion:PULSe:WIDTh %f";
     @init { getPulseWidth }
 }
+
+getPulseLeadingEdge {
+    out "SOURce1:FUNCtion:PULSe:TRANsition:LEADing?";
+    in "%f"
+}
