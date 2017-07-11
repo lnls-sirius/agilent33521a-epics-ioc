@@ -59,4 +59,5 @@ For now, the following features are supported:
 
 - Enabling/Disabling the channel output;
 - Selecting the waveform function;
-- Configuring the waveform frequency, amplitude, DC offset and phase.
+- Configuring the waveform frequency, amplitude, DC offset and phase;
+- Configuring square wave duty cycle.
