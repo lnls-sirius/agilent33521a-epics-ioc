@@ -82,3 +82,8 @@ setRampSymmetry {
     out "SOURce1:FUNCtion:RAMP:SYMMetry %f";
     @init { getRampSymmetry }
 }
+
+getPulseWidth {
+    out "SOURce1:FUNCtion:PULSe:WIDTh?";
+    in "%f"
+}

@@ -143,3 +143,11 @@ record(ao, "$(P)$(R)ramp:symmetry-SP") {
     field(OUT, "@agilent33521a.proto setRampSymmetry $(PORT)")
     field(FLNK, "$(P)$(R)ramp:symmetry-RB")
 }
+
+record(ai, "$(P)$(R)pulse:width-RB") {
+    field(DESC, "Read configured pulse width")
+    field(EGU, "s")
+    field(PINI, 1)
+    field(DTYP, "stream")
+    field(INP, "@agilent33521a.proto getPulseWidth $(PORT)")
+}
