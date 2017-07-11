@@ -61,6 +61,7 @@ record(ao, "$(P)$(R)frequency-SP") {
     field(EGU, "Hz")
     field(DTYP, "stream")
     field(OUT, "@agilent33521a.proto setFrequency $(PORT)")
+    field(FLNK, "$(P)$(R)frequency-RB")
 }
 
 record(ai, "$(P)$(R)amplitude-RB") {
