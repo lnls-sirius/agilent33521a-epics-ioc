@@ -236,3 +236,16 @@ record(mbbi, "$(P)$(R)prbs:sequenceType-Sts") {
     field(PINI, 1)
     field(INP, "@agilent33521a.proto getPrbsSequenceType $(PORT)")
 }
+
+record(mbbo, "$(P)$(R)prbs:sequenceType-Sel") {
+    field(DESC, "Select PRBS sequence type")
+    field(ZRST, "PN7")
+    field(ONST, "PN9")
+    field(TWST, "PN11")
+    field(THST, "PN15")
+    field(FRST, "PN20")
+    field(FVST, "PN23")
+    field(DTYP, "stream")
+    field(OUT, "@agilent33521a.proto setPrbsSequenceType $(PORT)")
+    field(FLNK, "$(P)$(R)prbs:sequenceType-Sts")
+}

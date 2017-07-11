@@ -137,3 +137,8 @@ getPrbsSequenceType {
     out "SOURce1:FUNCtion:PRBS:DATA?";
     in "%s"
 }
+
+setPrbsSequenceType {
+    out "SOURce1:FUNCtion:PRBS:DATA %s";
+    @init { getPrbsSequenceType }
+}
