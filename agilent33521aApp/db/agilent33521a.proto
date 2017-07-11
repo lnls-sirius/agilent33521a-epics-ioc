@@ -117,3 +117,8 @@ getPrbsBitRate {
     out "SOURce1:FUNCtion:PRBS:BRATe?";
     in "%f"
 }
+
+setPrbsBitRate {
+    out "SOURce1:FUNCtion:PRBS:BRATe %g";
+    @init { getPrbsBitRate }
+}

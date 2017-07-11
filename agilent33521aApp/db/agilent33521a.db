@@ -199,3 +199,11 @@ record(ai, "$(P)$(R)prbs:bitRate-RB") {
     field(DTYP, "stream")
     field(INP, "@agilent33521a.proto getPrbsBitRate $(PORT)")
 }
+
+record(ao, "$(P)$(R)prbs:bitRate-SP") {
+    field(DESC, "Configure PRBS bit rate")
+    field(EGU, "s")
+    field(DTYP, "stream")
+    field(OUT, "@agilent33521a.proto setPrbsBitRate $(PORT)")
+    field(FLNK, "$(P)$(R)prbs:bitRate-RB")
+}
