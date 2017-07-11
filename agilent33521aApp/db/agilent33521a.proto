@@ -168,6 +168,10 @@ getArbitraryWaveformFile {
     in "%.1/\"([^\"]*)\"/"
 }
 
+loadArbitraryWaveformFile {
+    out "MMEMory:LOAD:DATA1 \"%s\"";
+}
+
 setArbitraryWaveformFile {
     out "SOURce1:FUNCtion:ARBitrary \"%s\"";
     @init { getArbitraryWaveformFile }
