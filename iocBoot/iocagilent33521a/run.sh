@@ -6,10 +6,10 @@ IOC_BOOT_DIR="$(dirname "$0")"
 IOC_BIN_DIR="$IOC_BOOT_DIR/../../bin"
 
 if [ -n "$EPICS_HOST_ARCH" ]; then
-    IOC_BIN="$IOC_BIN_DIR/$EPICS_HOST_ARCH/$IOC_NAME"
+    IOC_BIN="../../bin/$EPICS_HOST_ARCH/$IOC_NAME"
 elif [ "$(ls "$IOC_BIN_DIR" | wc -l)" -eq 1 ]; then
     HOST_ARCH_GUESS="$(ls "$IOC_BIN_DIR")"
-    IOC_BIN="$IOC_BIN_DIR/$HOST_ARCH_GUESS/$IOC_NAME"
+    IOC_BIN="../../bin/$HOST_ARCH_GUESS/$IOC_NAME"
 else
     if [ -z "$(ls "$IOC_BIN_DIR")" ]; then
         echo "No IOC binaries found Did you run make install in the root directory?" >&2
@@ -50,4 +50,6 @@ if [ -z "$IPADDR" ]; then
     exit 3
 fi
 
-TOP="$IOC_BOOT_DIR/../.." IPADDR="$IPADDR" IPPORT="$IPPORT" P="$P" R="$R" "$IOC_BIN" "$IOC_BOOT_DIR/st.cmd"
+cd "$IOC_BOOT_DIR"
+
+IPADDR="$IPADDR" IPPORT="$IPPORT" P="$P" R="$R" "$IOC_BIN" st.cmd
