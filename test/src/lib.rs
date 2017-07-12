@@ -1,6 +1,4 @@
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-    }
-}
+extern crate bytes;
+extern crate tokio_io;
+
+pub mod line_codec;
