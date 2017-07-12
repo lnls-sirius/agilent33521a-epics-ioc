@@ -6,3 +6,4 @@ authors = ["Janito Vaqueiro Ferreira Filho <janito.vff@gmail.com>"]
 [dependencies]
 bytes = "0.4"
 tokio-io = "0.1"
+tokio-proto = "0.1"
