@@ -153,3 +153,29 @@ impl Service for MockLineService {
         }
     }
 }
+
+impl Future for MockLineService {
+    type Item = Result<()>;
+    type Error = Error;
+
+    fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
+        let status = self.status.lock()?;
+
+        match *status {
+            Ok(()) => Ok(Async::Ready(Ok(()))),
+            Err(ref error) => match *error.kind() {
+                ErrorKind::ExpectedRequestQueueAccess =>
+                    Err(ErrorKind::ExpectedRequestQueueAccess.into()),
+                ErrorKind::NoRequests | ErrorKind::MissingRequest(_) =>
+                    Ok(Async::NotReady),
+                ErrorKind::UnexpectedRequest(ref request) =>
+                    Err(ErrorKind::UnexpectedRequest(request.clone()).into()),
+                ErrorKind::IncorrectRequest(ref request, ref expected) =>
+                    Err(ErrorKind::IncorrectRequest(request.clone(),
+                                                    expected.clone()).into()),
+                ErrorKind::Msg(ref message) =>
+                    Err(ErrorKind::Msg(message.clone()).into()),
+            }
+        }
+    }
+}
