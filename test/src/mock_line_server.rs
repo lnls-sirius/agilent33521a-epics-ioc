@@ -91,6 +91,7 @@ impl MockLineServer {
                 .map(|(connection, service)| {
                     ActiveMockLineServer::new(connection, service)
                 })
+                .flatten()
         });
 
         server.flatten().boxed()
