@@ -47,7 +47,7 @@ impl MockLineServer {
         }
     }
 
-    pub fn expect(&mut self, request: String, response: String) -> &mut Self {
+    pub fn expect(&mut self, request: &str, response: &str) -> &mut Self {
         self.service_factory.expect(request, response);
 
         self

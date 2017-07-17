@@ -59,7 +59,9 @@ impl MockLineServiceFactory {
         Self { expected_requests: Vec::new() }
     }
 
-    pub fn expect(&mut self, request: String, response: String) {
+    pub fn expect(&mut self, request: &str, response: &str) {
+        let request = String::from(request);
+        let response = String::from(response);
         let expected_request = ExpectedRequest { request, response };
 
         self.expected_requests.push(expected_request);
