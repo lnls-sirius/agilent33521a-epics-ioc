@@ -2,7 +2,7 @@ use std::io;
 use std::sync::{Arc, Mutex, PoisonError};
 
 use futures::{Async, Future, Poll};
-use tokio_service::Service;
+use tokio_service::{NewService, Service};
 
 error_chain! {
     errors {
@@ -38,91 +38,158 @@ impl<T> From<PoisonError<T>> for Error {
     }
 }
 
+impl Into<io::Error> for Error {
+    fn into(self) -> io::Error {
+        io::Error::new(io::ErrorKind::Other, self.to_string())
+    }
+}
+
+#[derive(Clone, Default)]
 struct ExpectedRequest {
     request: String,
     response: String,
 }
 
-type ExpectedRequestQueue = Arc<Mutex<Vec<ExpectedRequest>>>;
-type MockLineServiceStatus = Arc<Mutex<Result<()>>>;
+pub struct MockLineServiceFactory {
+    expected_requests: Vec<ExpectedRequest>,
+}
+
+impl MockLineServiceFactory {
+    pub fn new() -> Self {
+        Self { expected_requests: Vec::new() }
+    }
+
+    pub fn expect(&mut self, request: String, response: String) {
+        let expected_request = ExpectedRequest { request, response };
+
+        self.expected_requests.push(expected_request);
+    }
+}
+
+impl NewService for MockLineServiceFactory {
+    type Request = String;
+    type Response = String;
+    type Error = io::Error;
+    type Instance = MockLineService;
+
+    fn new_service(&self) -> io::Result<Self::Instance> {
+        let requests = self.expected_requests.clone();
+
+        Ok(Self::Instance::with_expected_requests(requests))
+    }
+}
+
+#[derive(Clone)]
+enum Status {
+    AllRequestsProcessed,
+    WaitingForRequest(String),
+    UnexpectedExtraRequest(String),
+    WrongRequest { received: String, expected: String },
+}
+
+impl Status {
+    fn from(expected_requests: &Vec<ExpectedRequest>) -> Status {
+        let first_expected_request = expected_requests.first();
+
+        if let Some(ref expected_request) = first_expected_request {
+            Status::WaitingForRequest(expected_request.request.clone())
+        } else {
+            Status::AllRequestsProcessed
+        }
+    }
+}
+
+impl<T> Into<Poll<T, Error>> for Status
+where T: Default
+{
+    fn into(self) -> Poll<T, Error> {
+        match self {
+            Status::AllRequestsProcessed =>
+                Ok(Async::Ready(Default::default())),
+            Status::WaitingForRequest(_) =>
+                Ok(Async::NotReady),
+            Status::UnexpectedExtraRequest(request) =>
+                Err(ErrorKind::UnexpectedRequest(request).into()),
+            Status::WrongRequest { received, expected } =>
+                Err(ErrorKind::IncorrectRequest(received, expected).into())
+        }
+    }
+}
 
 pub struct MockLineService {
-    expected_requests: ExpectedRequestQueue,
-    status: MockLineServiceStatus,
+    expected_requests: Arc<Mutex<Vec<ExpectedRequest>>>,
+    status: Arc<Mutex<Status>>,
 }
 
 impl MockLineService {
-    pub fn new() -> Self {
+    fn with_expected_requests(expected_requests: Vec<ExpectedRequest>) -> Self {
+        let status = Status::from(&expected_requests);
+
         Self {
-            expected_requests: Arc::new(Mutex::new(Vec::new())),
-            status: Arc::new(Mutex::new(Ok(()))),
+            expected_requests: Arc::new(Mutex::new(expected_requests)),
+            status: Arc::new(Mutex::new(status)),
         }
-    }
-
-    pub fn expect(&mut self, request: String, response: String) -> Result<()> {
-        self.queue_expected_request(request, response)
-            .and_then(|_| self.reset_status())
-    }
-
-    fn queue_expected_request(&mut self, request: String, response: String)
-                              -> Result<()> {
-        let expected_request = ExpectedRequest { request, response };
-
-        self.expected_requests.lock()?.push(expected_request);
-
-        Ok(())
-    }
-
-    fn reset_status(&mut self) -> Result<()> {
-        let mut status = self.status.lock()?;
-
-        *status = Err(ErrorKind::NoRequests.into());
-
-        Ok(())
     }
 }
 
 pub struct HandleRequest {
     request: String,
-    expected_requests: ExpectedRequestQueue,
-    status: MockLineServiceStatus,
+    expected_requests: Arc<Mutex<Vec<ExpectedRequest>>>,
+    status: Arc<Mutex<Status>>,
 }
 
 impl HandleRequest {
-    fn handle_request(&self) -> Result<String> {
+    fn handle_request(&self) -> Poll<String, Error> {
         let mut expected_requests = self.expected_requests.lock()?;
         let expected = self.get_next_expected_request(&mut expected_requests)?;
 
         if expected.request == self.request {
-            self.update_status(&mut expected_requests)?;
-            Ok(expected.response)
+            self.reply_to_request(&expected.response, &mut expected_requests)
         } else {
-            Err(ErrorKind::IncorrectRequest(self.request.clone(),
-                                            expected.request.clone()).into())
+            self.incorrect_request(&expected.request)
         }
     }
 
     fn get_next_expected_request(&self,
                                  expected_requests: &mut Vec<ExpectedRequest>)
-                                 -> Result<ExpectedRequest> {
+         -> Result<ExpectedRequest>
+    {
         match expected_requests.pop() {
             Some(expected_request) => Ok(expected_request),
-            None => Err(ErrorKind::UnexpectedRequest(self.request.clone())
-                        .into())
+            None => self.unexpected_request(),
         }
     }
 
-    fn update_status(&self, expected_requests: &mut Vec<ExpectedRequest>)
-                     -> Result<()> {
+    fn update_status<T: Default>(&self, new_status: Status) -> Poll<T, Error> {
         let mut status = self.status.lock()?;
 
-        *status = match expected_requests.first() {
-            Some(next_expected_request) => Err(ErrorKind::MissingRequest(
-                    next_expected_request.request.clone()).into()),
-            None => Ok(())
-        };
+        *status = new_status.clone();
 
-        Ok(())
+        new_status.into()
+    }
+
+    fn reply_to_request(&self, response: &str,
+                        expected_requests: &mut Vec<ExpectedRequest>)
+        -> Poll<String, Error>
+    {
+        self.update_status::<()>(Status::from(expected_requests))
+            .and(Ok(Async::Ready(String::from(response))))
+    }
+
+    fn unexpected_request<T: Default>(&self) -> Result<T> {
+        let request = self.request.clone();
+
+        self.update_status::<()>(Status::UnexpectedExtraRequest(request))
+            .and(Ok(Default::default()))
+    }
+
+    fn incorrect_request<T: Default>(&self, expected_request: &str)
+        -> Poll<T, Error>
+    {
+        let received = self.request.clone();
+        let expected = String::from(expected_request);
+
+        self.update_status(Status::WrongRequest { received, expected })
     }
 }
 
@@ -131,11 +198,8 @@ impl Future for HandleRequest {
     type Error = io::Error;
 
     fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
-        match self.handle_request() {
-            Ok(response) => Ok(Async::Ready(response)),
-            Err(error) => Err(io::Error::new(io::ErrorKind::Other,
-                                             error.to_string()))
-        }
+        self.handle_request()
+            .map_err(|error| error.into())
     }
 }
 
@@ -155,27 +219,10 @@ impl Service for MockLineService {
 }
 
 impl Future for MockLineService {
-    type Item = Result<()>;
+    type Item = ();
     type Error = Error;
 
     fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
-        let status = self.status.lock()?;
-
-        match *status {
-            Ok(()) => Ok(Async::Ready(Ok(()))),
-            Err(ref error) => match *error.kind() {
-                ErrorKind::ExpectedRequestQueueAccess =>
-                    Err(ErrorKind::ExpectedRequestQueueAccess.into()),
-                ErrorKind::NoRequests | ErrorKind::MissingRequest(_) =>
-                    Ok(Async::NotReady),
-                ErrorKind::UnexpectedRequest(ref request) =>
-                    Err(ErrorKind::UnexpectedRequest(request.clone()).into()),
-                ErrorKind::IncorrectRequest(ref request, ref expected) =>
-                    Err(ErrorKind::IncorrectRequest(request.clone(),
-                                                    expected.clone()).into()),
-                ErrorKind::Msg(ref message) =>
-                    Err(ErrorKind::Msg(message.clone()).into()),
-            }
-        }
+        self.status.lock()?.clone().into()
     }
 }
