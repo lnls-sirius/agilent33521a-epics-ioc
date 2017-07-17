@@ -37,7 +37,7 @@ pub struct MockLineServer {
     service_factory: MockLineServiceFactory,
 }
 
-pub type ServerFuture = Box<Future<Item = ActiveMockLineServer, Error = Error>>;
+pub type ServerFuture = Box<Future<Item = (), Error = Error>>;
 
 impl MockLineServer {
     pub fn new(address: SocketAddr) -> MockLineServer {
@@ -53,17 +53,20 @@ impl MockLineServer {
         self
     }
 
-    pub fn serve(&mut self) -> ServerFuture {
+    pub fn serve(&mut self) -> Result<()> {
         match Core::new() {
-            Ok(reactor) => self.serve_with_handle(reactor.handle()),
-            Err(error) => future::err(error.into()).boxed()
+            Ok(mut reactor) => {
+                let server = self.serve_with_handle(reactor.handle());
+                reactor.run(server)
+            },
+            Err(error) => Err(error.into())
         }
     }
 
     pub fn serve_with_handle(&mut self, handle: Handle) -> ServerFuture {
         match TcpListener::bind(&self.address, &handle) {
             Ok(listener) => self.serve_on_listener(listener),
-            Err(error) => future::err(error.into()).boxed()
+            Err(error) => future::result(Err(error.into())).boxed()
         }
     }
 
@@ -81,13 +84,13 @@ impl MockLineServer {
             .flatten();
 
         let service = self.service_factory.new_service();
-        let server = single_connection.map(|(socket, _)| {
+        let server = single_connection.map(|(socket, client_address)| {
             let protocol = LineProtocol::with_separator('\n' as u8);
             let protocol_stream = protocol.bind_transport(socket);
 
             future::result(protocol_stream)
                 .join(future::result(service))
-                .map_err(|error| error.into())
+                .map_err::<_, Error>(|error| error.into())
                 .map(|(connection, service)| {
                     ActiveMockLineServer::new(connection, service)
                 })
