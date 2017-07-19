@@ -22,8 +22,10 @@ error_chain! {
         }
 
         UnexpectedRequest(request: String) {
-            description("unexpected request after processing all expected requests")
-            display("received an unexpected request after processing all expected requests: '{}'", request)
+            description("unexpected request after processing all expected \
+                         requests")
+            display("received an unexpected request after processing all \
+                     expected requests: '{}'", request)
         }
 
         IncorrectRequest(request: String, expected: String) {
@@ -58,7 +60,9 @@ pub struct MockLineServiceFactory {
 
 impl MockLineServiceFactory {
     pub fn new() -> Self {
-        Self { expected_requests: Vec::new() }
+        Self {
+            expected_requests: Vec::new(),
+        }
     }
 
     pub fn expect(&mut self, request: &str, response: &str) {
@@ -118,10 +122,10 @@ impl HandleRequest {
         }
     }
 
-    fn get_next_expected_request(&self,
-        expected_requests: &mut VecDeque<ExpectedRequest>)
-        -> Result<ExpectedRequest>
-    {
+    fn get_next_expected_request(
+        &self,
+        expected_requests: &mut VecDeque<ExpectedRequest>,
+    ) -> Result<ExpectedRequest> {
         match expected_requests.pop_front() {
             Some(expected_request) => Ok(expected_request),
             None => self.unexpected_request(),
@@ -151,8 +155,7 @@ impl Future for HandleRequest {
     type Error = io::Error;
 
     fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
-        self.handle_request()
-            .map_err(|error| error.into())
+        self.handle_request().map_err(|error| error.into())
     }
 }
 

@@ -20,10 +20,10 @@ pub struct ActiveMockLineServer {
 }
 
 impl ActiveMockLineServer {
-    pub fn new(connection: Framed<TcpStream, LineCodec>,
-               service: MockLineService)
-        -> Self
-    {
+    pub fn new(
+        connection: Framed<TcpStream, LineCodec>,
+        service: MockLineService,
+    ) -> Self {
         Self {
             connection,
             service,
@@ -76,18 +76,19 @@ impl ActiveMockLineServer {
         self
     }
 
-    fn send_responses_while_possible(&mut self)
-        -> Option<(usize, StartSend<String, io::Error>)>
-    {
+    fn send_responses_while_possible(
+        &mut self,
+    ) -> Option<(usize, StartSend<String, io::Error>)> {
         let connection = &mut self.connection;
 
-        self.live_responses.iter()
+        self.live_responses
+            .iter()
             .map(|response| connection.start_send(response.clone()))
             .enumerate()
             .find(|&(_, ref status)| match *status {
                 Ok(AsyncSink::Ready) => false,
                 Ok(AsyncSink::NotReady(_)) => true,
-                Err(_) => true
+                Err(_) => true,
             })
     }
 
@@ -137,4 +138,3 @@ impl Future for ActiveMockLineServer {
         self.poll_status()
     }
 }
-

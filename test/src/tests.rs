@@ -67,16 +67,18 @@ pub fn test_enable_channel_output() -> Result<()> {
 
     server.expect("OUTPut1 ON", "");
 
-    start_ioc(port)
-        .and_then(|mut ioc| {
-            ioc.stdin.as_mut().ok_or(ErrorKind::NoIocShellInput.into())
-                .and_then(|ref mut iocsh| {
-                    let mut iocsh_writer = BufWriter::new(iocsh);
+    start_ioc(port).and_then(|mut ioc| {
+        ioc.stdin
+            .as_mut()
+            .ok_or(ErrorKind::NoIocShellInput.into())
+            .and_then(|ref mut iocsh| {
+                let mut iocsh_writer = BufWriter::new(iocsh);
 
-                    iocsh_writer.write("dbpf channelOutput-Sel ON\n".as_bytes())
-                        .map_err(|error| error.into())
-                })
-                .and_then(|_| server.serve().map_err(|error| error.into()))
-                .and(ioc.kill().map_err(|error| error.into()))
-        })
+                iocsh_writer
+                    .write("dbpf channelOutput-Sel ON\n".as_bytes())
+                    .map_err(|error| error.into())
+            })
+            .and_then(|_| server.serve().map_err(|error| error.into()))
+            .and(ioc.kill().map_err(|error| error.into()))
+    })
 }

@@ -37,21 +37,22 @@ impl MockLineServer {
             Ok(mut reactor) => {
                 let server = self.serve_with_handle(reactor.handle());
                 reactor.run(server)
-            },
-            Err(error) => Err(error.into())
+            }
+            Err(error) => Err(error.into()),
         }
     }
 
     pub fn serve_with_handle(&mut self, handle: Handle) -> ServerFuture {
         match TcpListener::bind(&self.address, &handle) {
             Ok(listener) => self.serve_on_listener(listener),
-            Err(error) => future::result(Err(error.into())).boxed()
+            Err(error) => future::result(Err(error.into())).boxed(),
         }
     }
 
     fn serve_on_listener(&mut self, listener: TcpListener) -> ServerFuture {
         let connections = listener.incoming();
-        let single_connection = connections.take(1)
+        let single_connection = connections
+            .take(1)
             .into_future()
             .map(|(maybe_connection, _)| {
                 let no_connections = ErrorKind::FailedToReceiveConnection;
@@ -79,4 +80,3 @@ impl MockLineServer {
         server.flatten().boxed()
     }
 }
-

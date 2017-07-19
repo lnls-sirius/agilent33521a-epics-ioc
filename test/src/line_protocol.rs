@@ -12,13 +12,11 @@ pub struct LineProtocol {
 
 impl LineProtocol {
     pub fn with_separator(separator: u8) -> Self {
-        Self {
-            separator,
-        }
+        Self { separator }
     }
 }
 
-impl <T: AsyncRead + AsyncWrite + 'static> ServerProto<T> for LineProtocol {
+impl<T: AsyncRead + AsyncWrite + 'static> ServerProto<T> for LineProtocol {
     type Request = String;
     type Response = String;
     type Transport = Framed<T, LineCodec>;

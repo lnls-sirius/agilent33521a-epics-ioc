@@ -14,7 +14,7 @@ impl Status {
     pub fn is_active(&self) -> bool {
         match *self {
             Status::Active => true,
-            _ => false
+            _ => false,
         }
     }
 
@@ -33,13 +33,15 @@ impl Status {
             (_, &Status::WouldBlock) => false,
             (&Status::WouldBlock, _) => true,
             (_, &Status::Finished) => false,
-            _ => true
+            _ => true,
         }
     }
 }
 
 impl<T, E> From<Poll<T, E>> for Status
-where E: Into<Error> {
+where
+    E: Into<Error>,
+{
     fn from(poll: Poll<T, E>) -> Status {
         match poll {
             Ok(Async::Ready(_)) => Status::Active,
@@ -50,7 +52,9 @@ where E: Into<Error> {
 }
 
 impl<T, E> From<StartSend<T, E>> for Status
-where E: Into<Error> {
+where
+    E: Into<Error>,
+{
     fn from(start_send: StartSend<T, E>) -> Status {
         match start_send {
             Ok(AsyncSink::Ready) => Status::Active,
@@ -66,9 +70,9 @@ impl Into<Poll<(), Error>> for Status {
             Status::Finished => Ok(Async::Ready(())),
             Status::WouldBlock => Ok(Async::NotReady),
             Status::Error(error) => Err(error),
-            Status::Active =>
-                Err(ErrorKind::ActiveStatusHasNoPollEquivalent.into()),
+            Status::Active => Err(
+                ErrorKind::ActiveStatusHasNoPollEquivalent.into(),
+            ),
         }
     }
 }
-

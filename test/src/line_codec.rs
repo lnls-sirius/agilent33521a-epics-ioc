@@ -14,9 +14,7 @@ pub struct LineCodec {
 
 impl LineCodec {
     pub fn with_separator(separator: u8) -> Self {
-        Self {
-            separator,
-        }
+        Self { separator }
     }
 }
 
