@@ -88,7 +88,7 @@ impl MockLineServer {
             .flatten();
 
         let service = self.service_factory.new_service();
-        let server = single_connection.map(|(socket, client_address)| {
+        let server = single_connection.map(|(socket, _client_address)| {
             let protocol = LineProtocol::with_separator('\n' as u8);
             let protocol_stream = protocol.bind_transport(socket);
 
