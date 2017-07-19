@@ -3,12 +3,13 @@ use std::io::{BufWriter, Write};
 use std::net::{AddrParseError, SocketAddr};
 use std::process::{Child, Command, Stdio};
 
-use super::mock_line_server;
-use super::mock_line_server::MockLineServer;
+use super::line_protocol::LineProtocol;
+use super::mock_server;
+use super::mock_server::MockServer;
 
 error_chain! {
     links {
-        ServerError(mock_line_server::Error, mock_line_server::ErrorKind);
+        ServerError(mock_server::Error, mock_server::ErrorKind);
     }
 
     foreign_links {
@@ -23,9 +24,10 @@ error_chain! {
     }
 }
 
-fn create_mock_server(port: u16) -> Result<MockLineServer> {
+fn create_mock_server(port: u16) -> Result<MockServer<LineProtocol>> {
     let address = SocketAddr::new("0.0.0.0".parse()?, port);
-    let mut server = MockLineServer::new(address);
+    let protocol = LineProtocol::with_separator('\n' as u8);
+    let mut server = MockServer::new(address, protocol);
 
     for _ in 0..2 {
         server.expect("SOURce1:VOLT?", "1");

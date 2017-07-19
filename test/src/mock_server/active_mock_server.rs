@@ -1,28 +1,40 @@
-use std::{io, mem};
+use std::fmt::Display;
+use std::mem;
 
 use futures::{Async, AsyncSink, Future, Poll, Sink, StartSend, Stream};
 use futures::stream::FuturesUnordered;
-use tokio_core::net::TcpStream;
-use tokio_io::codec::Framed;
 use tokio_service::Service;
 
 use super::errors::Error;
 use super::status::Status;
-use super::super::line_codec::LineCodec;
 use super::super::mock_service::{HandleRequest, MockService};
 
-pub struct ActiveMockLineServer {
-    connection: Framed<TcpStream, LineCodec>,
-    service: MockService<String, String>,
-    live_requests: FuturesUnordered<HandleRequest<String, String>>,
-    live_responses: Vec<String>,
+pub struct ActiveMockServer<T>
+where
+    T: Stream + Sink,
+    T::Item: Clone + Display + PartialEq,
+    T::SinkItem: Clone,
+    T::Error: Into<Error>,
+    T::SinkError: Into<Error>,
+{
+    connection: T,
+    service: MockService<T::Item, T::SinkItem>,
+    live_requests: FuturesUnordered<HandleRequest<T::Item, T::SinkItem>>,
+    live_responses: Vec<T::SinkItem>,
     status: Status,
 }
 
-impl ActiveMockLineServer {
+impl<T> ActiveMockServer<T>
+where
+    T: Stream + Sink,
+    T::Item: Clone + Display + PartialEq,
+    T::SinkItem: Clone,
+    T::Error: Into<Error>,
+    T::SinkError: Into<Error>,
+{
     pub fn new(
-        connection: Framed<TcpStream, LineCodec>,
-        service: MockService<String, String>,
+        connection: T,
+        service: MockService<T::Item, T::SinkItem>,
     ) -> Self {
         Self {
             connection,
@@ -78,7 +90,7 @@ impl ActiveMockLineServer {
 
     fn send_responses_while_possible(
         &mut self,
-    ) -> Option<(usize, StartSend<String, io::Error>)> {
+    ) -> Option<(usize, StartSend<T::SinkItem, T::SinkError>)> {
         let connection = &mut self.connection;
 
         self.live_responses
@@ -122,7 +134,15 @@ impl ActiveMockLineServer {
     }
 }
 
-impl Future for ActiveMockLineServer {
+impl<T> Future for ActiveMockServer<T>
+where
+    T: Stream + Sink,
+    T: Stream + Sink,
+    T::Item: Clone + Display + PartialEq,
+    T::SinkItem: Clone,
+    T::Error: Into<Error>,
+    T::SinkError: Into<Error>,
+{
     type Item = ();
     type Error = Error;
 
