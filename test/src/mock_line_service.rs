@@ -1,4 +1,6 @@
+use std::collections::VecDeque;
 use std::io;
+use std::iter::FromIterator;
 use std::sync::{Arc, Mutex, PoisonError};
 
 use futures::{Async, Future, Poll};
@@ -90,7 +92,7 @@ enum Status {
 }
 
 impl Status {
-    fn from(expected_requests: &Vec<ExpectedRequest>) -> Status {
+    fn from(expected_requests: &VecDeque<ExpectedRequest>) -> Status {
         let first_expected_request = expected_requests.first();
 
         if let Some(ref expected_request) = first_expected_request {
@@ -119,12 +121,13 @@ where T: Default
 }
 
 pub struct MockLineService {
-    expected_requests: Arc<Mutex<Vec<ExpectedRequest>>>,
+    expected_requests: Arc<Mutex<VecDeque<ExpectedRequest>>>,
     status: Arc<Mutex<Status>>,
 }
 
 impl MockLineService {
     fn with_expected_requests(expected_requests: Vec<ExpectedRequest>) -> Self {
+        let expected_requests = VecDeque::from_iter(expected_requests);
         let status = Status::from(&expected_requests);
 
         Self {
@@ -136,7 +139,7 @@ impl MockLineService {
 
 pub struct HandleRequest {
     request: String,
-    expected_requests: Arc<Mutex<Vec<ExpectedRequest>>>,
+    expected_requests: Arc<Mutex<VecDeque<ExpectedRequest>>>,
     status: Arc<Mutex<Status>>,
 }
 
@@ -153,10 +156,10 @@ impl HandleRequest {
     }
 
     fn get_next_expected_request(&self,
-                                 expected_requests: &mut Vec<ExpectedRequest>)
-         -> Result<ExpectedRequest>
+        expected_requests: &mut VecDeque<ExpectedRequest>)
+        -> Result<ExpectedRequest>
     {
-        match expected_requests.pop() {
+        match expected_requests.pop_front() {
             Some(expected_request) => Ok(expected_request),
             None => self.unexpected_request(),
         }
@@ -171,7 +174,7 @@ impl HandleRequest {
     }
 
     fn reply_to_request(&self, response: &str,
-                        expected_requests: &mut Vec<ExpectedRequest>)
+                        expected_requests: &mut VecDeque<ExpectedRequest>)
         -> Poll<String, Error>
     {
         self.update_status::<()>(Status::from(expected_requests))
