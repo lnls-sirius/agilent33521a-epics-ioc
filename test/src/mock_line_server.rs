@@ -180,7 +180,11 @@ impl ActiveMockLineServer {
     }
 
     fn check_service_status(&mut self) -> Poll<(), Error> {
-        self.service.poll().map_err(|error| error.into())
+        match self.service.has_finished() {
+            Ok(true) => Ok(Async::Ready(())),
+            Ok(false) => Ok(Async::NotReady),
+            Err(error) => Err(error.into()),
+        }
     }
 }
 
