@@ -1,4 +1,4 @@
-use std::io;
+use std::{io, mem};
 use std::net::{AddrParseError, SocketAddr};
 
 use futures::{Async, AsyncSink, Future, Poll, Sink, StartSend, Stream, future};
@@ -28,6 +28,10 @@ error_chain! {
     errors {
         FailedToReceiveConnection {
             description("failed to receive a connection")
+        }
+
+        ActiveStatusHasNoPollEquivalent {
+            description("active server status means processing hasn't finished")
         }
     }
 }
@@ -101,11 +105,82 @@ impl MockLineServer {
     }
 }
 
+#[derive(Debug)]
+enum Status {
+    Active,
+    Finished,
+    WouldBlock,
+    Error(Error),
+}
+
+impl Status {
+    fn is_active(&self) -> bool {
+        match *self {
+            Status::Active => true,
+            _ => false
+        }
+    }
+
+    fn is_more_severe_than(&self, other: &Status) -> bool {
+        match (self, other) {
+            (_, &Status::Error(_)) => false,
+            (&Status::Error(_), _) => true,
+            (_, &Status::WouldBlock) => false,
+            (&Status::WouldBlock, _) => true,
+            (_, &Status::Finished) => false,
+            _ => true
+        }
+    }
+
+    fn update<T: Into<Status>>(&mut self, status_update: T) {
+        let status_update = status_update.into();
+
+        if status_update.is_more_severe_than(self) {
+            *self = status_update;
+        }
+    }
+}
+
+impl<T, E> From<Poll<T, E>> for Status
+where E: Into<Error> {
+    fn from(poll: Poll<T, E>) -> Status {
+        match poll {
+            Ok(Async::Ready(_)) => Status::Active,
+            Ok(Async::NotReady) => Status::WouldBlock,
+            Err(error) => Status::Error(error.into()),
+        }
+    }
+}
+
+impl<T, E> From<StartSend<T, E>> for Status
+where E: Into<Error> {
+    fn from(start_send: StartSend<T, E>) -> Status {
+        match start_send {
+            Ok(AsyncSink::Ready) => Status::Active,
+            Ok(AsyncSink::NotReady(_)) => Status::WouldBlock,
+            Err(error) => Status::Error(error.into()),
+        }
+    }
+}
+
+impl Into<Poll<(), Error>> for Status {
+    fn into(self) -> Poll<(), Error> {
+        match self {
+            Status::Finished => Ok(Async::Ready(())),
+            Status::WouldBlock => Ok(Async::NotReady),
+            Status::Error(error) => Err(error),
+            Status::Active =>
+                Err(ErrorKind::ActiveStatusHasNoPollEquivalent.into()),
+        }
+    }
+}
+
 pub struct ActiveMockLineServer {
     connection: Framed<TcpStream, LineCodec>,
     service: MockLineService,
     live_requests: FuturesUnordered<HandleRequest>,
     live_responses: Vec<String>,
+    status: Status,
 }
 
 impl ActiveMockLineServer {
@@ -117,47 +192,51 @@ impl ActiveMockLineServer {
             service,
             live_requests: FuturesUnordered::new(),
             live_responses: Vec::new(),
+            status: Status::Active,
         }
     }
 
-    fn try_to_get_new_request(&mut self) -> Result<()> {
-        let new_request = self.connection.poll();
+    fn try_to_get_new_request(&mut self) -> &mut Self {
+        if self.status.is_active() {
+            let new_request = self.connection.poll();
 
-        if let Ok(Async::Ready(Some(request))) = new_request {
-            self.live_requests.push(self.service.call(request));
-            Ok(())
-        } else {
-            new_request.and(Ok(())).map_err(|error| error.into())
-        }
-    }
-
-    fn try_to_get_new_response(&mut self) -> Result<()> {
-        let maybe_response = self.live_requests.poll();
-
-        if let Ok(Async::Ready(Some(response))) = maybe_response {
-            self.live_responses.push(response);
-            Ok(())
-        } else {
-            maybe_response.and(Ok(())).map_err(|error| error.into())
-        }
-    }
-
-    fn try_to_send_responses(&mut self) -> Poll<(), Error> {
-        let first_failed_send = self.send_responses_while_possible();
-
-        if let Some((index, status)) = first_failed_send {
-            self.live_responses.drain(0..index);
-
-            match status {
-                Ok(AsyncSink::Ready) => Ok(Async::Ready(())),
-                Ok(AsyncSink::NotReady(_)) => Ok(Async::NotReady),
-                Err(error) => Err(error.into())
+            if let Ok(Async::Ready(Some(request))) = new_request {
+                self.live_requests.push(self.service.call(request));
+            } else {
+                self.status.update(new_request);
             }
-        } else {
-            self.live_responses.clear();
-
-            Ok(Async::Ready(()))
         }
+
+        self
+    }
+
+    fn try_to_get_new_response(&mut self) -> &mut Self {
+        if self.status.is_active() {
+            let maybe_response = self.live_requests.poll();
+
+            if let Ok(Async::Ready(Some(response))) = maybe_response {
+                self.live_responses.push(response);
+            } else {
+                self.status.update(maybe_response);
+            }
+        }
+
+        self
+    }
+
+    fn try_to_send_responses(&mut self) -> &mut Self {
+        if self.status.is_active() {
+            let first_failed_send = self.send_responses_while_possible();
+
+            if let Some((index, status)) = first_failed_send {
+                self.live_responses.drain(0..index);
+                self.status.update(status);
+            } else {
+                self.live_responses.clear();
+            }
+        }
+
+        self
     }
 
     fn send_responses_while_possible(&mut self)
@@ -175,16 +254,33 @@ impl ActiveMockLineServer {
             })
     }
 
-    fn try_to_flush_responses(&mut self) -> Poll<(), Error> {
-        self.connection.poll_complete().map_err(|error| error.into())
+    fn try_to_flush_responses(&mut self) -> &mut Self {
+        if self.status.is_active() {
+            self.status.update(self.connection.poll_complete());
+        }
+
+        self
     }
 
-    fn check_service_status(&mut self) -> Poll<(), Error> {
-        match self.service.has_finished() {
-            Ok(true) => Ok(Async::Ready(())),
-            Ok(false) => Ok(Async::NotReady),
-            Err(error) => Err(error.into()),
+    fn check_if_finished(&mut self) {
+        if self.status.is_active() {
+            let no_pending_requests = self.live_requests.is_empty();
+            let no_pending_responses = self.live_responses.is_empty();
+
+            if no_pending_requests && no_pending_responses {
+                self.status = match self.service.has_finished() {
+                    Ok(true) => Status::Finished,
+                    Ok(false) => Status::Active,
+                    Err(error) => Status::Error(error.into()),
+                }
+            }
         }
+    }
+
+    fn poll_status(&mut self) -> Poll<(), Error> {
+        let resulting_status = mem::replace(&mut self.status, Status::Active);
+
+        resulting_status.into()
     }
 }
 
@@ -193,20 +289,14 @@ impl Future for ActiveMockLineServer {
     type Error = Error;
 
     fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
-        self.try_to_get_new_request()
-            .and_then(|_| self.try_to_get_new_response())
-            .and_then(|_| self.try_to_send_responses())
-            .and_then(|_| self.try_to_flush_responses())
-            .and_then(|_| self.check_service_status())
-            .and_then(|status| {
-                let pending_requests = !self.live_requests.is_empty();
-                let pending_responses = !self.live_responses.is_empty();
+        while self.status.is_active() {
+            self.try_to_get_new_request()
+                .try_to_get_new_response()
+                .try_to_send_responses()
+                .try_to_flush_responses()
+                .check_if_finished();
+        }
 
-                if pending_requests || pending_responses {
-                    Ok(Async::NotReady)
-                } else {
-                    Ok(status)
-                }
-            })
+        self.poll_status()
     }
 }
