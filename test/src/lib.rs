@@ -12,3 +12,5 @@ pub mod line_codec;
 pub mod line_protocol;
 pub mod mock_line_service;
 pub mod mock_line_server;
+
+pub mod tests;
