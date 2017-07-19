@@ -1,4 +1,5 @@
 use std::collections::VecDeque;
+use std::fmt::Display;
 use std::io;
 use std::iter::FromIterator;
 use std::sync::{Arc, Mutex, PoisonError};
@@ -49,36 +50,50 @@ impl Into<io::Error> for Error {
 }
 
 #[derive(Clone, Default)]
-struct ExpectedRequest {
-    request: String,
-    response: String,
+struct ExpectedRequest<A, B>
+where
+    A: Clone,
+    B: Clone,
+{
+    request: A,
+    response: B,
 }
 
-pub struct MockLineServiceFactory {
-    expected_requests: Vec<ExpectedRequest>,
+pub struct MockServiceFactory<A, B>
+where
+    A: Clone,
+    B: Clone,
+{
+    expected_requests: Vec<ExpectedRequest<A, B>>,
 }
 
-impl MockLineServiceFactory {
+impl<A, B> MockServiceFactory<A, B>
+where
+    A: Clone,
+    B: Clone,
+{
     pub fn new() -> Self {
         Self {
             expected_requests: Vec::new(),
         }
     }
 
-    pub fn expect(&mut self, request: &str, response: &str) {
-        let request = String::from(request);
-        let response = String::from(response);
+    pub fn expect(&mut self, request: A, response: B) {
         let expected_request = ExpectedRequest { request, response };
 
         self.expected_requests.push(expected_request);
     }
 }
 
-impl NewService for MockLineServiceFactory {
-    type Request = String;
-    type Response = String;
+impl<A, B> NewService for MockServiceFactory<A, B>
+where
+    A: Clone + Display + PartialEq,
+    B: Clone,
+{
+    type Request = A;
+    type Response = B;
     type Error = io::Error;
-    type Instance = MockLineService;
+    type Instance = MockService<A, B>;
 
     fn new_service(&self) -> io::Result<Self::Instance> {
         let requests = self.expected_requests.clone();
@@ -87,12 +102,22 @@ impl NewService for MockLineServiceFactory {
     }
 }
 
-pub struct MockLineService {
-    expected_requests: Arc<Mutex<VecDeque<ExpectedRequest>>>,
+pub struct MockService<A, B>
+where
+    A: Clone + Display + PartialEq,
+    B: Clone,
+{
+    expected_requests: Arc<Mutex<VecDeque<ExpectedRequest<A, B>>>>,
 }
 
-impl MockLineService {
-    fn with_expected_requests(expected_requests: Vec<ExpectedRequest>) -> Self {
+impl<A, B> MockService<A, B>
+where
+    A: Clone + Display + PartialEq,
+    B: Clone,
+{
+    fn with_expected_requests(
+        expected_requests: Vec<ExpectedRequest<A, B>>,
+    ) -> Self {
         let expected_requests = VecDeque::from_iter(expected_requests);
 
         Self {
@@ -105,53 +130,65 @@ impl MockLineService {
     }
 }
 
-pub struct HandleRequest {
-    request: String,
-    expected_requests: Arc<Mutex<VecDeque<ExpectedRequest>>>,
+pub struct HandleRequest<A, B>
+where
+    A: Clone + Display + PartialEq,
+    B: Clone,
+{
+    request: A,
+    expected_requests: Arc<Mutex<VecDeque<ExpectedRequest<A, B>>>>,
 }
 
-impl HandleRequest {
-    fn handle_request(&self) -> Poll<String, Error> {
+impl<A, B> HandleRequest<A, B>
+where
+    A: Clone + Display + PartialEq,
+    B: Clone,
+{
+    fn handle_request(&self) -> Poll<B, Error> {
         let mut expected_requests = self.expected_requests.lock()?;
         let expected = self.get_next_expected_request(&mut expected_requests)?;
 
         if expected.request == self.request {
-            self.reply_to_request(&expected.response)
+            self.reply_to_request(expected.response)
         } else {
-            self.incorrect_request(&expected.request)
+            self.incorrect_request(expected.request)
         }
     }
 
     fn get_next_expected_request(
         &self,
-        expected_requests: &mut VecDeque<ExpectedRequest>,
-    ) -> Result<ExpectedRequest> {
+        expected_requests: &mut VecDeque<ExpectedRequest<A, B>>,
+    ) -> Result<ExpectedRequest<A, B>> {
         match expected_requests.pop_front() {
             Some(expected_request) => Ok(expected_request),
             None => self.unexpected_request(),
         }
     }
 
-    fn reply_to_request(&self, response: &str) -> Poll<String, Error> {
-        Ok(Async::Ready(String::from(response)))
+    fn reply_to_request(&self, response: B) -> Poll<B, Error> {
+        Ok(Async::Ready(response))
     }
 
-    fn unexpected_request(&self) -> Result<ExpectedRequest> {
-        let request = self.request.clone();
-
-        Err(ErrorKind::UnexpectedRequest(request).into())
+    fn unexpected_request(&self) -> Result<ExpectedRequest<A, B>> {
+        Err(
+            ErrorKind::UnexpectedRequest(self.request.to_string()).into(),
+        )
     }
 
-    fn incorrect_request(&self, expected_request: &str) -> Poll<String, Error> {
-        let received = self.request.clone();
-        let expected = String::from(expected_request);
+    fn incorrect_request(&self, expected_request: A) -> Poll<B, Error> {
+        let received = self.request.to_string();
+        let expected = expected_request.to_string();
 
         Err(ErrorKind::IncorrectRequest(received, expected).into())
     }
 }
 
-impl Future for HandleRequest {
-    type Item = String;
+impl<A, B> Future for HandleRequest<A, B>
+where
+    A: Clone + Display + PartialEq,
+    B: Clone,
+{
+    type Item = B;
     type Error = io::Error;
 
     fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
@@ -159,11 +196,15 @@ impl Future for HandleRequest {
     }
 }
 
-impl Service for MockLineService {
-    type Request = String;
-    type Response = String;
+impl<A, B> Service for MockService<A, B>
+where
+    A: Clone + Display + PartialEq,
+    B: Clone,
+{
+    type Request = A;
+    type Response = B;
     type Error = io::Error;
-    type Future = HandleRequest;
+    type Future = HandleRequest<A, B>;
 
     fn call(&self, request: Self::Request) -> Self::Future {
         HandleRequest {

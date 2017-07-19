@@ -1,11 +1,11 @@
 use std::io;
 use std::net::AddrParseError;
 
-use super::super::mock_line_service;
+use super::super::mock_service;
 
 error_chain! {
     links {
-        ServiceError(mock_line_service::Error, mock_line_service::ErrorKind);
+        ServiceError(mock_service::Error, mock_service::ErrorKind);
     }
 
     foreign_links {

@@ -9,11 +9,11 @@ use tokio_service::NewService;
 use super::active_mock_line_server::ActiveMockLineServer;
 use super::errors::{Error, ErrorKind, Result};
 use super::super::line_protocol::LineProtocol;
-use super::super::mock_line_service::MockLineServiceFactory;
+use super::super::mock_service::MockServiceFactory;
 
 pub struct MockLineServer {
     address: SocketAddr,
-    service_factory: MockLineServiceFactory,
+    service_factory: MockServiceFactory<String, String>,
 }
 
 pub type ServerFuture = Box<Future<Item = (), Error = Error>>;
@@ -22,11 +22,14 @@ impl MockLineServer {
     pub fn new(address: SocketAddr) -> MockLineServer {
         Self {
             address,
-            service_factory: MockLineServiceFactory::new(),
+            service_factory: MockServiceFactory::new(),
         }
     }
 
     pub fn expect(&mut self, request: &str, response: &str) -> &mut Self {
+        let request = String::from(request);
+        let response = String::from(response);
+
         self.service_factory.expect(request, response);
 
         self

@@ -9,12 +9,12 @@ use tokio_service::Service;
 use super::errors::Error;
 use super::status::Status;
 use super::super::line_codec::LineCodec;
-use super::super::mock_line_service::{HandleRequest, MockLineService};
+use super::super::mock_service::{HandleRequest, MockService};
 
 pub struct ActiveMockLineServer {
     connection: Framed<TcpStream, LineCodec>,
-    service: MockLineService,
-    live_requests: FuturesUnordered<HandleRequest>,
+    service: MockService<String, String>,
+    live_requests: FuturesUnordered<HandleRequest<String, String>>,
     live_responses: Vec<String>,
     status: Status,
 }
@@ -22,7 +22,7 @@ pub struct ActiveMockLineServer {
 impl ActiveMockLineServer {
     pub fn new(
         connection: Framed<TcpStream, LineCodec>,
-        service: MockLineService,
+        service: MockService<String, String>,
     ) -> Self {
         Self {
             connection,
