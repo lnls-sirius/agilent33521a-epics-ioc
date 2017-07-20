@@ -1,4 +1,5 @@
 mod errors;
+mod expected_request;
 
 use std::collections::VecDeque;
 use std::fmt::Display;
@@ -10,16 +11,7 @@ use futures::{Async, Future, Poll};
 use tokio_service::{NewService, Service};
 
 pub use self::errors::{Error, ErrorKind, Result};
-
-#[derive(Clone, Default)]
-struct ExpectedRequest<A, B>
-where
-    A: Clone,
-    B: Clone,
-{
-    request: A,
-    response: B,
-}
+use self::expected_request::ExpectedRequest;
 
 pub struct MockServiceFactory<A, B>
 where
