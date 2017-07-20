@@ -9,7 +9,7 @@ use tokio_proto::pipeline::ServerProto;
 use tokio_service::NewService;
 
 use super::active_mock_server::ActiveMockServer;
-use super::errors::{Error, ErrorKind, Result};
+use super::errors::{Error, ErrorKind, NormalizeError, Result};
 use super::super::mock_service::MockServiceFactory;
 
 pub struct MockServer<P>
@@ -98,8 +98,8 @@ where
                 });
 
             connection
+                .normalize_error()
                 .into_future()
-                .map_err::<_, Error>(|error| error.into())
                 .flatten()
                 .join(service.map_err(|error| error.into()))
                 .map(|(connection, service)| {
