@@ -81,7 +81,7 @@ where
 
                 future::result(maybe_connection.ok_or(no_connections))
             })
-            .map_err::<_, Error>(|(error, _)| error.into())
+            .normalize_error()
             .flatten();
 
         let protocol = self.protocol.clone();
@@ -94,14 +94,14 @@ where
                     protocol
                         .bind_transport(socket)
                         .into_future()
-                        .map_err::<_, Error>(|error| error.into())
+                        .normalize_error()
                 });
 
             connection
                 .normalize_error()
                 .into_future()
                 .flatten()
-                .join(service.map_err(|error| error.into()))
+                .join(service.normalize_error())
                 .map(|(connection, service)| {
                     ActiveMockServer::new(connection, service)
                 })
