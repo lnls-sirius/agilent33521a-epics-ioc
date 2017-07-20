@@ -2,13 +2,14 @@ use std::fmt::Display;
 use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
 
-use futures::{future, Future, IntoFuture, Stream};
+use futures::{future, Future, IntoFuture};
 use tokio_core::net::{TcpListener, TcpStream};
 use tokio_core::reactor::{Core, Handle};
 use tokio_proto::pipeline::ServerProto;
 use tokio_service::NewService;
 
 use super::active_mock_server::ActiveMockServer;
+use super::connection_future::ConnectionFuture;
 use super::errors::{Error, ErrorKind, NormalizeError, Result};
 use super::super::mock_service::MockServiceFactory;
 
@@ -71,22 +72,11 @@ where
     }
 
     fn serve_on_listener(&mut self, listener: TcpListener) -> ServerFuture {
-        let connections = listener.incoming();
-        let single_connection = connections
-            .take(1)
-            .into_future()
-            .map(|(maybe_connection, _)| {
-                let no_connections = ErrorKind::FailedToReceiveConnection;
-                let no_connections: Error = no_connections.into();
-
-                future::result(maybe_connection.ok_or(no_connections))
-            })
-            .normalize_error()
-            .flatten();
-
         let protocol = self.protocol.clone();
         let service = self.service_factory.new_service();
-        let server = single_connection.map(move |(socket, _client_address)| {
+        let connection = ConnectionFuture::from(listener);
+
+        let server = connection.map(move |(socket, _client_address)| {
             let lock_error: Error = ErrorKind::FailedToBindConnection.into();
 
             let connection =
