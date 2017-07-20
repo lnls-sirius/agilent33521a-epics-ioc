@@ -1,5 +1,6 @@
 mod errors;
 mod expected_request;
+mod handle_request;
 mod mock_service;
 
 use std::fmt::Display;
@@ -9,7 +10,8 @@ use tokio_service::NewService;
 
 pub use self::errors::{Error, ErrorKind, Result};
 use self::expected_request::ExpectedRequest;
-pub use self::mock_service::{HandleRequest, MockService};
+pub use self::handle_request::HandleRequest;
+pub use self::mock_service::MockService;
 
 pub struct MockServiceFactory<A, B>
 where
