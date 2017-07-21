@@ -9,8 +9,8 @@ use tokio_proto::pipeline::ServerProto;
 use tokio_service::NewService;
 
 use super::active_mock_server::ActiveMockServer;
-use super::connection_future::ConnectionFuture;
-use super::errors::{Error, ErrorKind, NormalizeError, Result};
+use super::bound_connection_future::BoundConnectionFuture;
+use super::errors::{Error, NormalizeError, Result};
 use super::super::mock_service::MockServiceFactory;
 
 pub struct MockServer<P>
@@ -72,32 +72,17 @@ where
     }
 
     fn serve_on_listener(&mut self, listener: TcpListener) -> ServerFuture {
-        let protocol = self.protocol.clone();
         let service = self.service_factory.new_service();
-        let connection = ConnectionFuture::from(listener);
+        let protocol = self.protocol.clone();
+        let connection = BoundConnectionFuture::from(listener, protocol);
 
-        let server = connection.map(move |(socket, _client_address)| {
-            let lock_error: Error = ErrorKind::FailedToBindConnection.into();
+        let server = connection
+            .join(service.normalize_error())
+            .map(|(connection, service)| {
+                ActiveMockServer::new(connection, service)
+            })
+            .flatten();
 
-            let connection =
-                protocol.lock().map_err(|_| lock_error).map(|protocol| {
-                    protocol
-                        .bind_transport(socket)
-                        .into_future()
-                        .normalize_error()
-                });
-
-            connection
-                .normalize_error()
-                .into_future()
-                .flatten()
-                .join(service.normalize_error())
-                .map(|(connection, service)| {
-                    ActiveMockServer::new(connection, service)
-                })
-                .flatten()
-        });
-
-        server.flatten().boxed()
+        server.boxed()
     }
 }
