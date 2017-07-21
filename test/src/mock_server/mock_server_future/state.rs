@@ -3,16 +3,15 @@ use std::mem;
 use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
 
-use futures::{Future, Poll};
+use futures::Poll;
 use tokio_core::net::TcpStream;
 use tokio_core::reactor::Handle;
 use tokio_proto::pipeline::ServerProto;
 
+use super::server_ready::ServerReady;
 use super::wait_for_parameters::WaitForParameters;
 use super::wait_to_start::WaitToStart;
-use super::super::active_mock_server::ActiveMockServer;
 use super::super::errors::Error;
-use super::super::super::mock_service::MockService;
 use super::super::super::mock_service::MockServiceFactory;
 
 pub enum State<P>
@@ -62,35 +61,5 @@ where
             State::ServerReady(handler) => handler.advance(),
             State::Processing => panic!("State has more than one owner"),
         }
-    }
-}
-
-pub struct ServerReady<P>
-where
-    P: ServerProto<TcpStream>,
-    P::Request: Clone + Display + PartialEq,
-    P::Response: Clone,
-{
-    server: ActiveMockServer<P::Transport>,
-}
-
-impl<P> ServerReady<P>
-where
-    P: ServerProto<TcpStream>,
-    P::Request: Clone + Display + PartialEq,
-    P::Response: Clone,
-{
-    pub fn advance_with(
-        parameters_tuple: (P::Transport, MockService<P::Request, P::Response>),
-    ) -> (Poll<(), Error>, State<P>) {
-        let server_ready = Self {
-            server: ActiveMockServer::from_tuple(parameters_tuple),
-        };
-
-        server_ready.advance()
-    }
-
-    fn advance(mut self) -> (Poll<(), Error>, State<P>) {
-        (self.server.poll(), State::ServerReady(self))
     }
 }
