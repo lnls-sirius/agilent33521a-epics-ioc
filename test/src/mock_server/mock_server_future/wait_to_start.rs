@@ -8,7 +8,7 @@ use tokio_core::reactor::Handle;
 use tokio_proto::pipeline::ServerProto;
 
 use super::state::State;
-use super::state::WaitForParameters;
+use super::wait_for_parameters::WaitForParameters;
 use super::super::errors::Error;
 use super::super::super::mock_service::MockServiceFactory;
 
