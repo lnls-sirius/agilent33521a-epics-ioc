@@ -10,6 +10,7 @@ use tokio_core::reactor::Handle;
 use tokio_proto::pipeline::ServerProto;
 use tokio_service::NewService;
 
+use super::wait_to_start::WaitToStart;
 use super::super::active_mock_server::ActiveMockServer;
 use super::super::bound_connection_future::BoundConnectionFuture;
 use super::super::errors::{Error, NormalizeError};
@@ -66,62 +67,6 @@ where
     }
 }
 
-pub struct WaitToStart<P>
-where
-    P: ServerProto<TcpStream>,
-    P::Request: Clone + Display + PartialEq,
-    P::Response: Clone,
-{
-    address: SocketAddr,
-    service_factory: MockServiceFactory<P::Request, P::Response>,
-    protocol: Arc<Mutex<P>>,
-    handle: Handle,
-}
-
-impl<P> WaitToStart<P>
-where
-    P: ServerProto<TcpStream>,
-    P::Request: Clone + Display + PartialEq,
-    P::Response: Clone,
-{
-    fn new(
-        address: SocketAddr,
-        service_factory: MockServiceFactory<P::Request, P::Response>,
-        protocol: Arc<Mutex<P>>,
-        handle: Handle,
-    ) -> Self {
-        Self {
-            address,
-            service_factory,
-            protocol,
-            handle,
-        }
-    }
-
-    fn advance(self) -> (Poll<(), Error>, State<P>) {
-        let bind_result = TcpListener::bind(&self.address, &self.handle);
-
-        match bind_result {
-            Ok(listener) => self.create_server_parameters(listener),
-            Err(error) => (Err(error.into()), self.same_state()),
-        }
-    }
-
-    fn create_server_parameters(
-        self,
-        listener: TcpListener,
-    ) -> (Poll<(), Error>, State<P>) {
-        let service_factory = self.service_factory;
-        let protocol = self.protocol;
-
-        WaitForParameters::advance_with(listener, service_factory, protocol)
-    }
-
-    fn same_state(self) -> State<P> {
-        State::WaitingToStart(self)
-    }
-}
-
 pub struct WaitForParameters<P>
 where
     P: ServerProto<TcpStream>,
@@ -140,7 +85,7 @@ where
     P::Request: Clone + Display + PartialEq,
     P::Response: Clone,
 {
-    fn advance_with(
+    pub fn advance_with(
         listener: TcpListener,
         service_factory: MockServiceFactory<P::Request, P::Response>,
         protocol: Arc<Mutex<P>>,
