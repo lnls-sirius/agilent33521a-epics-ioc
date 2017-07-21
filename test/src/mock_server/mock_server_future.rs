@@ -12,14 +12,9 @@ use tokio_service::NewService;
 
 use super::active_mock_server::ActiveMockServer;
 use super::bound_connection_future::BoundConnectionFuture;
-use super::errors::{Error, NormalizeError, Result};
+use super::errors::{Error, NormalizeError};
 use super::super::mock_service::MockService;
 use super::super::mock_service::MockServiceFactory;
-
-type ServerParametersFuture<P: ServerProto<TcpStream>> = Join<
-    BoundConnectionFuture<P>,
-    FutureResult<MockService<P::Request, P::Response>, Error>,
->;
 
 pub struct MockServerFuture<P>
 where
@@ -27,12 +22,7 @@ where
     P::Request: Clone + Display + PartialEq,
     P::Response: Clone,
 {
-    address: SocketAddr,
-    service_factory: MockServiceFactory<P::Request, P::Response>,
-    protocol: Arc<Mutex<P>>,
-    handle: Handle,
-    server_parameters: Option<Result<ServerParametersFuture<P>>>,
-    server: Option<ActiveMockServer<P::Transport>>,
+    state: State<P>,
 }
 
 impl<P> MockServerFuture<P>
@@ -47,89 +37,10 @@ where
         protocol: Arc<Mutex<P>>,
         handle: Handle,
     ) -> MockServerFuture<P> {
-        Self {
-            address,
-            service_factory,
-            protocol,
-            handle,
-            server_parameters: None,
-            server: None,
-        }
-    }
+        let state =
+            State::start_with(address, service_factory, protocol, handle);
 
-    fn start_listening(&mut self) -> Poll<(), Error> {
-        let bind_result = TcpListener::bind(&self.address, &self.handle);
-
-        self.server_parameters = match bind_result {
-            Ok(listener) => Some(Ok(self.create_server_parameters(listener))),
-            Err(error) => Some(Err(error.into())),
-        };
-
-        self.poll_server_parameters()
-    }
-
-    fn create_server_parameters(
-        &mut self,
-        listener: TcpListener,
-    ) -> ServerParametersFuture<P> {
-        let service = self.service_factory.new_service();
-        let protocol = self.protocol.clone();
-        let connection = BoundConnectionFuture::from(listener, protocol);
-
-        connection.join(service.normalize_error())
-    }
-
-    fn poll_server_parameters(&mut self) -> Poll<(), Error> {
-        let parameters = mem::replace(&mut self.server_parameters, None);
-
-        let (poll_result, maybe_parameters) = match parameters {
-            Some(Ok(mut parameters)) => {
-                (parameters.poll(), Some(Ok(parameters)))
-            }
-            Some(Err(error)) => (Err(error), None),
-            None => {
-                panic!(
-                    "Attempt to poll server parameters future before it is \
-                     created"
-                )
-            }
-        };
-
-        mem::replace(&mut self.server_parameters, maybe_parameters);
-
-        match poll_result {
-            Ok(Async::Ready(parameters)) => self.start_server(parameters),
-            Ok(Async::NotReady) => Ok(Async::NotReady),
-            Err(error) => Err(error),
-        }
-    }
-
-    fn start_server(
-        &mut self,
-        parameters: (P::Transport, MockService<P::Request, P::Response>),
-    ) -> Poll<(), Error> {
-        self.server = Some(ActiveMockServer::from_tuple(parameters));
-
-        self.poll_server()
-    }
-
-    fn poll_server(&mut self) -> Poll<(), Error> {
-        match self.server {
-            Some(ref mut server) => server.poll(),
-            None => {
-                panic!("Attempt to poll server future before it is created")
-            }
-        }
-    }
-
-    fn state(&self) -> State {
-        if self.server.is_some() {
-            State::ServerReady
-        } else if self.server_parameters.is_some() {
-            State::WaitingForParameters
-        } else {
-            State::NoParameters
-        }
+        Self { state }
     }
 }
 
@@ -143,16 +54,194 @@ where
     type Error = Error;
 
     fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
-        match self.state() {
-            State::NoParameters => self.start_listening(),
-            State::WaitingForParameters => self.poll_server_parameters(),
-            State::ServerReady => self.poll_server(),
+        self.state.advance()
+    }
+}
+
+enum State<P>
+where
+    P: ServerProto<TcpStream>,
+    P::Request: Clone + Display + PartialEq,
+    P::Response: Clone,
+{
+    WaitingToStart(WaitToStart<P>),
+    WaitingForParameters(WaitForParameters<P>),
+    ServerReady(ServerReady<P>),
+    Processing,
+}
+
+impl<P> State<P>
+where
+    P: ServerProto<TcpStream>,
+    P::Request: Clone + Display + PartialEq,
+    P::Response: Clone,
+{
+    fn start_with(
+        address: SocketAddr,
+        service_factory: MockServiceFactory<P::Request, P::Response>,
+        protocol: Arc<Mutex<P>>,
+        handle: Handle,
+    ) -> Self {
+        let wait_to_start =
+            WaitToStart::new(address, service_factory, protocol, handle);
+
+        State::WaitingToStart(wait_to_start)
+    }
+
+    fn advance(&mut self) -> Poll<(), Error> {
+        let state = mem::replace(self, State::Processing);
+
+        let (poll_result, new_state) = state.advance_to_new_state();
+
+        mem::replace(self, new_state);
+
+        poll_result
+    }
+
+    fn advance_to_new_state(self) -> (Poll<(), Error>, Self) {
+        match self {
+            State::WaitingToStart(handler) => handler.advance(),
+            State::WaitingForParameters(handler) => handler.advance(),
+            State::ServerReady(handler) => handler.advance(),
+            State::Processing => panic!("State has more than one owner"),
         }
     }
 }
 
-enum State {
-    NoParameters,
-    WaitingForParameters,
-    ServerReady,
+struct WaitToStart<P>
+where
+    P: ServerProto<TcpStream>,
+    P::Request: Clone + Display + PartialEq,
+    P::Response: Clone,
+{
+    address: SocketAddr,
+    service_factory: MockServiceFactory<P::Request, P::Response>,
+    protocol: Arc<Mutex<P>>,
+    handle: Handle,
+}
+
+impl<P> WaitToStart<P>
+where
+    P: ServerProto<TcpStream>,
+    P::Request: Clone + Display + PartialEq,
+    P::Response: Clone,
+{
+    fn new(
+        address: SocketAddr,
+        service_factory: MockServiceFactory<P::Request, P::Response>,
+        protocol: Arc<Mutex<P>>,
+        handle: Handle,
+    ) -> Self {
+        Self {
+            address,
+            service_factory,
+            protocol,
+            handle,
+        }
+    }
+
+    fn advance(self) -> (Poll<(), Error>, State<P>) {
+        let bind_result = TcpListener::bind(&self.address, &self.handle);
+
+        match bind_result {
+            Ok(listener) => self.create_server_parameters(listener),
+            Err(error) => (Err(error.into()), self.same_state()),
+        }
+    }
+
+    fn create_server_parameters(
+        self,
+        listener: TcpListener,
+    ) -> (Poll<(), Error>, State<P>) {
+        let service_factory = self.service_factory;
+        let protocol = self.protocol;
+
+        WaitForParameters::advance_with(listener, service_factory, protocol)
+    }
+
+    fn same_state(self) -> State<P> {
+        State::WaitingToStart(self)
+    }
+}
+
+struct WaitForParameters<P>
+where
+    P: ServerProto<TcpStream>,
+    P::Request: Clone + Display + PartialEq,
+    P::Response: Clone,
+{
+    parameters: Join<
+        BoundConnectionFuture<P>,
+        FutureResult<MockService<P::Request, P::Response>, Error>,
+    >,
+}
+
+impl<P> WaitForParameters<P>
+where
+    P: ServerProto<TcpStream>,
+    P::Request: Clone + Display + PartialEq,
+    P::Response: Clone,
+{
+    fn advance_with(
+        listener: TcpListener,
+        service_factory: MockServiceFactory<P::Request, P::Response>,
+        protocol: Arc<Mutex<P>>,
+    ) -> (Poll<(), Error>, State<P>) {
+        let service = service_factory.new_service();
+        let connection = BoundConnectionFuture::from(listener, protocol);
+        let parameters = connection.join(service.normalize_error());
+
+        let wait_for_parameters = WaitForParameters { parameters };
+
+        wait_for_parameters.advance()
+    }
+
+    fn advance(mut self) -> (Poll<(), Error>, State<P>) {
+        match self.parameters.poll() {
+            Ok(Async::Ready(parameters)) => self.create_server(parameters),
+            Ok(Async::NotReady) => (Ok(Async::NotReady), self.same_state()),
+            Err(error) => (Err(error), self.same_state()),
+        }
+    }
+
+    fn create_server(
+        self,
+        parameters_tuple: (P::Transport, MockService<P::Request, P::Response>),
+    ) -> (Poll<(), Error>, State<P>) {
+        ServerReady::advance_with(parameters_tuple)
+    }
+
+    fn same_state(self) -> State<P> {
+        State::WaitingForParameters(self)
+    }
+}
+
+struct ServerReady<P>
+where
+    P: ServerProto<TcpStream>,
+    P::Request: Clone + Display + PartialEq,
+    P::Response: Clone,
+{
+    server: ActiveMockServer<P::Transport>,
+}
+
+impl<P> ServerReady<P>
+where
+    P: ServerProto<TcpStream>,
+    P::Request: Clone + Display + PartialEq,
+    P::Response: Clone,
+{
+    fn advance_with(
+        parameters_tuple: (P::Transport, MockService<P::Request, P::Response>),
+    ) -> (Poll<(), Error>, State<P>) {
+        let server_ready = Self {
+            server: ActiveMockServer::from_tuple(parameters_tuple),
+        };
+
+        server_ready.advance()
+    }
+
+    fn advance(mut self) -> (Poll<(), Error>, State<P>) {
+        (self.server.poll(), State::ServerReady(self))
+    }
 }
