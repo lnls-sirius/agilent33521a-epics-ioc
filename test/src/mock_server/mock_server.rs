@@ -78,9 +78,7 @@ where
 
         let server = connection
             .join(service.normalize_error())
-            .map(|(connection, service)| {
-                ActiveMockServer::new(connection, service)
-            })
+            .map(ActiveMockServer::from_tuple)
             .flatten();
 
         server.boxed()
