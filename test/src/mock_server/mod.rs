@@ -1,6 +1,7 @@
 mod errors;
 mod status;
 mod mock_server;
+mod mock_server_future;
 mod active_mock_server;
 mod connection_future;
 mod bound_connection_future;

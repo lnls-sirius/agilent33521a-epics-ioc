@@ -2,15 +2,13 @@ use std::fmt::Display;
 use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
 
-use futures::{future, Future, IntoFuture};
-use tokio_core::net::{TcpListener, TcpStream};
+use futures::IntoFuture;
+use tokio_core::net::TcpStream;
 use tokio_core::reactor::{Core, Handle};
 use tokio_proto::pipeline::ServerProto;
-use tokio_service::NewService;
 
-use super::active_mock_server::ActiveMockServer;
-use super::bound_connection_future::BoundConnectionFuture;
-use super::errors::{Error, NormalizeError, Result};
+use super::errors::Result;
+use super::mock_server_future::MockServerFuture;
 use super::super::mock_service::MockServiceFactory;
 
 pub struct MockServer<P>
@@ -25,8 +23,6 @@ where
     service_factory: MockServiceFactory<P::Request, P::Response>,
     protocol: Arc<Mutex<P>>,
 }
-
-pub type ServerFuture = Box<Future<Item = (), Error = Error>>;
 
 impl<P> MockServer<P>
 where
@@ -64,23 +60,11 @@ where
         }
     }
 
-    pub fn serve_with_handle(&mut self, handle: Handle) -> ServerFuture {
-        match TcpListener::bind(&self.address, &handle) {
-            Ok(listener) => self.serve_on_listener(listener),
-            Err(error) => future::result(Err(error.into())).boxed(),
-        }
-    }
-
-    fn serve_on_listener(&mut self, listener: TcpListener) -> ServerFuture {
-        let service = self.service_factory.new_service();
+    pub fn serve_with_handle(&mut self, handle: Handle) -> MockServerFuture<P> {
+        let address = self.address.clone();
         let protocol = self.protocol.clone();
-        let connection = BoundConnectionFuture::from(listener, protocol);
+        let service_factory = self.service_factory.clone();
 
-        let server = connection
-            .join(service.normalize_error())
-            .map(ActiveMockServer::from_tuple)
-            .flatten();
-
-        server.boxed()
+        MockServerFuture::new(address, service_factory, protocol, handle)
     }
 }

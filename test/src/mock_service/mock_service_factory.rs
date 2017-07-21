@@ -6,6 +6,7 @@ use tokio_service::NewService;
 use super::expected_request::ExpectedRequest;
 use super::mock_service::MockService;
 
+#[derive(Clone)]
 pub struct MockServiceFactory<A, B>
 where
     A: Clone,
