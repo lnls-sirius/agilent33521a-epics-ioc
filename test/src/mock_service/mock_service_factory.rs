@@ -27,14 +27,19 @@ where
         }
     }
 
-    pub fn when(&mut self, request: A) -> When<A, B> {
-        When::new(self, request)
+    pub fn when<C>(&mut self, request: C) -> When<A, B>
+    where
+        C: Into<A>,
+    {
+        When::new(self, request.into())
     }
 
-    pub fn expect(&mut self, request: A, response: B) {
+    pub fn expect(&mut self, request: A, response: B) -> &mut Self {
         let expected_request = ExpectedRequest { request, response };
 
         self.expected_requests.push(expected_request);
+
+        self
     }
 }
 
