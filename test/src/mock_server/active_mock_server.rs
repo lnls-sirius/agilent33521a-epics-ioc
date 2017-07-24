@@ -1,4 +1,5 @@
 use std::fmt::Display;
+use std::hash::Hash;
 use std::mem;
 
 use futures::{Async, AsyncSink, Future, Poll, Sink, StartSend, Stream};
@@ -12,7 +13,7 @@ use super::super::mock_service::{HandleRequest, MockService};
 pub struct ActiveMockServer<T>
 where
     T: Stream + Sink,
-    T::Item: Clone + Display + PartialEq,
+    T::Item: Clone + Display + Eq,
     T::SinkItem: Clone,
     T::Error: Into<Error>,
     T::SinkError: Into<Error>,
@@ -27,7 +28,7 @@ where
 impl<T> ActiveMockServer<T>
 where
     T: Stream + Sink,
-    T::Item: Clone + Display + PartialEq,
+    T::Item: Clone + Display + Eq + Hash,
     T::SinkItem: Clone,
     T::Error: Into<Error>,
     T::SinkError: Into<Error>,
@@ -144,7 +145,7 @@ impl<T> Future for ActiveMockServer<T>
 where
     T: Stream + Sink,
     T: Stream + Sink,
-    T::Item: Clone + Display + PartialEq,
+    T::Item: Clone + Display + Eq + Hash,
     T::SinkItem: Clone,
     T::Error: Into<Error>,
     T::SinkError: Into<Error>,

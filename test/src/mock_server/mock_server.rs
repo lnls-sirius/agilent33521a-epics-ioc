@@ -1,4 +1,5 @@
 use std::fmt::Display;
+use std::hash::Hash;
 use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
 
@@ -27,7 +28,7 @@ where
 impl<P> MockServer<P>
 where
     P: ServerProto<TcpStream> + Send,
-    P::Request: Clone + Display + PartialEq + Send,
+    P::Request: Clone + Display + Eq + Hash + Send,
     P::Response: Clone + Send,
     P::Transport: Send,
     <P::BindTransport as IntoFuture>::Future: Send,

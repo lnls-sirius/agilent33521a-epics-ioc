@@ -1,4 +1,5 @@
 use std::fmt::Display;
+use std::hash::Hash;
 use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
 
@@ -14,7 +15,7 @@ use super::super::super::mock_service::MockServiceFactory;
 pub struct MockServerFuture<P>
 where
     P: ServerProto<TcpStream>,
-    P::Request: Clone + Display + PartialEq,
+    P::Request: Clone + Display + Eq,
     P::Response: Clone,
 {
     state: State<P>,
@@ -23,7 +24,7 @@ where
 impl<P> MockServerFuture<P>
 where
     P: ServerProto<TcpStream>,
-    P::Request: Clone + Display + PartialEq,
+    P::Request: Clone + Display + Eq + Hash,
     P::Response: Clone,
 {
     pub fn new(
@@ -42,7 +43,7 @@ where
 impl<P> Future for MockServerFuture<P>
 where
     P: ServerProto<TcpStream>,
-    P::Request: Clone + Display + PartialEq,
+    P::Request: Clone + Display + Eq + Hash,
     P::Response: Clone,
 {
     type Item = ();

@@ -1,4 +1,5 @@
 use std::fmt::Display;
+use std::hash::Hash;
 use std::mem;
 use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
@@ -17,7 +18,7 @@ use super::super::super::mock_service::MockServiceFactory;
 pub enum State<P>
 where
     P: ServerProto<TcpStream>,
-    P::Request: Clone + Display + PartialEq,
+    P::Request: Clone + Display + Eq,
     P::Response: Clone,
 {
     WaitingToStart(WaitToStart<P>),
@@ -29,7 +30,7 @@ where
 impl<P> State<P>
 where
     P: ServerProto<TcpStream>,
-    P::Request: Clone + Display + PartialEq,
+    P::Request: Clone + Display + Eq + Hash,
     P::Response: Clone,
 {
     pub fn start_with(

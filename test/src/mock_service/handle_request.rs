@@ -1,79 +1,68 @@
-use std::collections::VecDeque;
+use std::collections::{HashMap, HashSet};
 use std::fmt::Display;
+use std::hash::Hash;
 use std::io;
 use std::sync::{Arc, Mutex};
 
 use futures::{Async, Future, Poll};
 
-use super::errors::{Error, ErrorKind, Result};
-use super::expected_request::ExpectedRequest;
+use super::errors::{Error, ErrorKind};
 
 pub struct HandleRequest<A, B>
 where
-    A: Clone + Display + PartialEq,
+    A: Clone + Display + Eq,
     B: Clone,
 {
     request: A,
-    expected_requests: Arc<Mutex<VecDeque<ExpectedRequest<A, B>>>>,
+    expected_requests: Arc<Mutex<HashMap<A, B>>>,
+    remaining_requests: Arc<Mutex<HashSet<A>>>,
 }
 
 impl<A, B> HandleRequest<A, B>
 where
-    A: Clone + Display + PartialEq,
+    A: Clone + Display + Eq + Hash,
     B: Clone,
 {
     pub fn new(
         request: A,
-        expected_requests: Arc<Mutex<VecDeque<ExpectedRequest<A, B>>>>,
+        expected_requests: Arc<Mutex<HashMap<A, B>>>,
+        remaining_requests: Arc<Mutex<HashSet<A>>>,
     ) -> Self {
         Self {
             request,
             expected_requests,
+            remaining_requests,
         }
     }
 
     fn handle_request(&self) -> Poll<B, Error> {
-        let mut expected_requests = self.expected_requests.lock()?;
-        let expected = self.get_next_expected_request(&mut expected_requests)?;
+        let expected_requests = self.expected_requests.lock()?;
 
-        if expected.request == self.request {
-            self.reply_to_request(expected.response)
+        if let Some(response) = expected_requests.get(&self.request) {
+            self.reply_to_request(response.clone())
         } else {
-            self.incorrect_request(expected.request)
-        }
-    }
-
-    fn get_next_expected_request(
-        &self,
-        expected_requests: &mut VecDeque<ExpectedRequest<A, B>>,
-    ) -> Result<ExpectedRequest<A, B>> {
-        match expected_requests.pop_front() {
-            Some(expected_request) => Ok(expected_request),
-            None => self.unexpected_request(),
+            self.unexpected_request()
         }
     }
 
     fn reply_to_request(&self, response: B) -> Poll<B, Error> {
+        let mut remaining_requests = self.remaining_requests.lock()?;
+
+        remaining_requests.remove(&self.request);
+
         Ok(Async::Ready(response))
     }
 
-    fn unexpected_request(&self) -> Result<ExpectedRequest<A, B>> {
+    fn unexpected_request(&self) -> Poll<B, Error> {
         Err(
             ErrorKind::UnexpectedRequest(self.request.to_string()).into(),
         )
-    }
-
-    fn incorrect_request(&self, expected_request: A) -> Poll<B, Error> {
-        let received = self.request.to_string();
-        let expected = expected_request.to_string();
-
-        Err(ErrorKind::IncorrectRequest(received, expected).into())
     }
 }
 
 impl<A, B> Future for HandleRequest<A, B>
 where
-    A: Clone + Display + PartialEq,
+    A: Clone + Display + Eq + Hash,
     B: Clone,
 {
     type Item = B;

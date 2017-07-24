@@ -1,4 +1,5 @@
 use std::fmt::Display;
+use std::hash::Hash;
 use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
 
@@ -27,7 +28,7 @@ where
 impl<P> WaitToStart<P>
 where
     P: ServerProto<TcpStream>,
-    P::Request: Clone + Display + PartialEq,
+    P::Request: Clone + Display + Eq + Hash,
     P::Response: Clone,
 {
     pub fn new(

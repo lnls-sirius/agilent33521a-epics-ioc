@@ -1,4 +1,5 @@
 use std::fmt::Display;
+use std::hash::Hash;
 use std::io;
 
 use tokio_service::NewService;
@@ -45,7 +46,7 @@ where
 
 impl<A, B> NewService for MockServiceFactory<A, B>
 where
-    A: Clone + Display + PartialEq,
+    A: Clone + Display + Eq + Hash,
     B: Clone,
 {
     type Request = A;

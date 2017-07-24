@@ -1,4 +1,5 @@
 use std::fmt::Display;
+use std::hash::Hash;
 
 use tokio_core::net::TcpStream;
 use tokio_proto::pipeline::ServerProto;
@@ -12,7 +13,7 @@ use super::super::super::mock_service::MockService;
 pub struct ServerReady<P>
 where
     P: ServerProto<TcpStream>,
-    P::Request: Clone + Display + PartialEq,
+    P::Request: Clone + Display + Eq,
     P::Response: Clone,
 {
     server: ActiveMockServer<P::Transport>,
@@ -21,7 +22,7 @@ where
 impl<P> ServerReady<P>
 where
     P: ServerProto<TcpStream>,
-    P::Request: Clone + Display + PartialEq,
+    P::Request: Clone + Display + Eq + Hash,
     P::Response: Clone,
 {
     pub fn advance_with(
