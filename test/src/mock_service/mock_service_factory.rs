@@ -8,6 +8,12 @@ use super::expected_request::ExpectedRequest;
 use super::mock_service::MockService;
 use super::when::When;
 
+macro_rules! request_response_map {
+    ( $object:expr , $($request:expr => $response:expr),+ $(,)* ) => {
+        $object $(.when($request).reply_with($response))+
+    }
+}
+
 #[derive(Clone)]
 pub struct MockServiceFactory<A, B>
 where

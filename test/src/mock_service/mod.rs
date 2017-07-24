@@ -4,6 +4,7 @@ mod handle_request;
 mod mock_service;
 
 mod when;
+#[macro_use]
 mod mock_service_factory;
 
 pub use self::errors::{Error, ErrorKind, Result};
