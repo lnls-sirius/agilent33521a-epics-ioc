@@ -9,7 +9,7 @@ use tokio_proto::pipeline::ServerProto;
 
 use super::errors::Result;
 use super::mock_server_future::MockServerFuture;
-use super::super::mock_service::MockServiceFactory;
+use super::super::mock_service::{MockServiceFactory, When};
 
 pub struct MockServer<P>
 where
@@ -48,6 +48,13 @@ where
         self.service_factory.expect(request.into(), response.into());
 
         self
+    }
+
+    pub fn when<A>(&mut self, request: A) -> When<P::Request, P::Response>
+    where
+        A: Into<P::Request>,
+    {
+        self.service_factory.when(request.into())
     }
 
     pub fn serve(&mut self) -> Result<()> {

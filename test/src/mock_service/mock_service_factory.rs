@@ -5,6 +5,7 @@ use tokio_service::NewService;
 
 use super::expected_request::ExpectedRequest;
 use super::mock_service::MockService;
+use super::when::When;
 
 #[derive(Clone)]
 pub struct MockServiceFactory<A, B>
@@ -24,6 +25,10 @@ where
         Self {
             expected_requests: Vec::new(),
         }
+    }
+
+    pub fn when(&mut self, request: A) -> When<A, B> {
+        When::new(self, request)
     }
 
     pub fn expect(&mut self, request: A, response: B) {
