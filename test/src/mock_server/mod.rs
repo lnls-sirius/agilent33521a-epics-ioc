@@ -8,3 +8,4 @@ mod bound_connection_future;
 
 pub use self::errors::{Error, ErrorKind};
 pub use self::mock_server::MockServer;
+pub use self::mock_server_future::MockServerFuture;
