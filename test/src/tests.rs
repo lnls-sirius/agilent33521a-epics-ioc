@@ -30,23 +30,23 @@ fn create_mock_server(port: u16) -> Result<MockServer<LineProtocol>> {
     let mut server = MockServer::new(address, protocol);
 
     request_response_map! { server,
+        "OUTPut1?" => "OFF",
         "SOURce1:VOLT?" => "1",
-        "SOURce1:FUNCtion:ARBitrary:SRATe?" => "1",
-        "SOURce1:FREQuency?" => "1",
-        "SOURce1:FUNCtion:NOISe:BANDwidth?" => "1",
         "SOURce1:VOLT:OFFSet?" => "1",
+        "SOURce1:FREQuency?" => "1",
         "SOURce1:PHASe?" => "1",
+        "SOURce1:FUNCtion?" => "SQUare",
+        "SOURce1:FUNCtion:ARBitrary?" => "\"DUMMY.FILE\"",
+        "SOURce1:FUNCtion:ARBitrary:SRATe?" => "1",
+        "SOURce1:FUNCtion:NOISe:BANDwidth?" => "1",
         "SOURce1:FUNCtion:PRBS:BRATe?" => "1",
+        "SOURce1:FUNCtion:PRBS:DATA?" => "PN7",
         "SOURce1:FUNCtion:PRBS:TRANsition?" => "1",
         "SOURce1:FUNCtion:PULSe:TRANsition:LEADing?" => "1",
         "SOURce1:FUNCtion:PULSe:TRANsition:TRAiling?" => "1",
         "SOURce1:FUNCtion:PULSe:WIDTh?" => "1",
         "SOURce1:FUNCtion:RAMP:SYMMetry?" => "1",
         "SOURce1:FUNCtion:SQUare:DCYCle?" => "1",
-        "OUTPut1?" => "OFF",
-        "SOURce1:FUNCtion:PRBS:DATA?" => "PN7",
-        "SOURce1:FUNCtion?" => "SQUare",
-        "SOURce1:FUNCtion:ARBitrary?" => "\"DUMMY.FILE\"",
     };
 
     Ok(server)
