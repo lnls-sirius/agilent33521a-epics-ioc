@@ -67,9 +67,9 @@ where
     }
 
     pub fn start(self, handle: Handle) -> MockServerStart<P> {
-        let address = self.address.clone();
-        let protocol = self.protocol.clone();
-        let service_factory = self.service_factory.clone();
+        let address = self.address;
+        let protocol = self.protocol;
+        let service_factory = self.service_factory;
 
         MockServerStart::new(address, service_factory, protocol, handle)
     }
