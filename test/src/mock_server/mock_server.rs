@@ -49,7 +49,7 @@ where
         self.service_factory.when(request.into())
     }
 
-    pub fn serve(&mut self) -> Result<()> {
+    pub fn serve(self) -> Result<()> {
         match Core::new() {
             Ok(mut reactor) => {
                 let server = self.serve_with_handle(reactor.handle());
@@ -60,13 +60,13 @@ where
     }
 
     pub fn serve_with_handle(
-        &mut self,
+        self,
         handle: Handle,
     ) -> Flatten<MockServerStart<P>> {
         self.start(handle).flatten()
     }
 
-    pub fn start(&mut self, handle: Handle) -> MockServerStart<P> {
+    pub fn start(self, handle: Handle) -> MockServerStart<P> {
         let address = self.address.clone();
         let protocol = self.protocol.clone();
         let service_factory = self.service_factory.clone();

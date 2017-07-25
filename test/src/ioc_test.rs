@@ -1,4 +1,5 @@
 use std::io;
+use std::mem;
 use std::net::{AddrParseError, SocketAddr};
 
 use futures::{Async, Future, Poll};
@@ -30,10 +31,37 @@ error_chain! {
     }
 }
 
+enum Server {
+    Building(MockServer<LineProtocol>),
+    Starting,
+    Ready(Flatten<MockServerStart<LineProtocol>>),
+}
+
+impl Server {
+    fn start_if_necessary(
+        &mut self,
+        handle: &Handle,
+    ) -> &mut Flatten<MockServerStart<LineProtocol>> {
+        let started_server = match mem::replace(self, Server::Starting) {
+            Server::Building(server) => {
+                Server::Ready(server.start(handle.clone()).flatten())
+            }
+            Server::Ready(server) => Server::Ready(server),
+            Server::Starting => panic!("more than one owner of server state"),
+        };
+
+        mem::replace(self, started_server);
+
+        match *self {
+            Server::Ready(ref mut server) => server,
+            _ => unreachable!(),
+        }
+    }
+}
+
 pub struct IocTest {
     handle: Handle,
-    server: MockServer<LineProtocol>,
-    server_future: Option<Flatten<MockServerStart<LineProtocol>>>,
+    server: Server,
     ioc: IocInstance,
 }
 
@@ -49,8 +77,7 @@ impl IocTest {
         Ok(Self {
             ioc,
             handle,
-            server,
-            server_future: None,
+            server: Server::Building(server),
         })
     }
 
@@ -58,7 +85,10 @@ impl IocTest {
     where
         A: Into<String>,
     {
-        self.server.when(request)
+        match self.server {
+            Server::Building(ref mut server) => server.when(request),
+            _ => panic!("Can't update mock server after it has started"),
+        }
     }
 
     pub fn set_variable(&mut self, name: &str, value: &str) {
@@ -89,26 +119,6 @@ impl IocTest {
         };
     }
 
-    fn maybe_start_server(
-        &mut self,
-    ) -> Result<&mut Flatten<MockServerStart<LineProtocol>>> {
-        if self.server_future.is_none() {
-            self.start_server();
-        }
-
-        if let Some(ref mut server_future) = self.server_future {
-            Ok(server_future)
-        } else {
-            panic!("Server start-up failed but didn't produce an error");
-        }
-    }
-
-    fn start_server(&mut self) {
-        let server_future = self.server.serve_with_handle(self.handle.clone());
-
-        self.server_future = Some(server_future);
-    }
-
     fn poll_ioc(&mut self) -> Poll<(), Error> {
         match self.ioc.poll() {
             Ok(Async::Ready(_)) => Ok(Async::Ready(())),
@@ -130,7 +140,7 @@ impl Future for IocTest {
     type Error = Error;
 
     fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
-        let poll_result = self.maybe_start_server()?.poll();
+        let poll_result = self.server.start_if_necessary(&self.handle).poll();
 
         match poll_result {
             Ok(Async::Ready(_)) => self.kill_ioc(),
