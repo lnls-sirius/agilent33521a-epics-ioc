@@ -1,10 +1,11 @@
 use std::io;
-use std::io::{BufWriter, Write};
-use std::mem;
-use std::process::{Child, Command, Stdio};
+use std::process::{Command, ExitStatus, Stdio};
 
-use bytes::{Buf, BytesMut, IntoBuf};
+use bytes::{BytesMut, IntoBuf};
 use futures::{Async, Future, Poll};
+use tokio_core::reactor::Handle;
+use tokio_io::AsyncWrite;
+use tokio_process::{Child, CommandExt};
 
 error_chain! {
     foreign_links {
@@ -24,14 +25,14 @@ pub struct IocInstance {
 }
 
 impl IocInstance {
-    pub fn new(ip_port: u16) -> Result<Self> {
+    pub fn new(handle: &Handle, ip_port: u16) -> Result<Self> {
         let process = Command::new("/project/iocBoot/iocagilent33521a/run.sh")
             .env("IPADDR", "127.0.0.1")
             .env("IPPORT", ip_port.to_string())
             .stdout(Stdio::null())
             .stderr(Stdio::null())
             .stdin(Stdio::piped())
-            .spawn()?;
+            .spawn_async(handle)?;
 
         Ok(Self {
             process,
@@ -53,16 +54,25 @@ impl IocInstance {
 
     fn try_to_write_iocsh_commands(&mut self) -> Result<()> {
         if !self.iocsh_commands.is_empty() {
-            let process_input = self.process
-                .stdin
-                .as_mut()
-                .ok_or::<Error>(ErrorKind::IocStdinAccessError.into())?;
+            if let &mut Some(ref mut process_input) = self.process.stdin() {
+                let mut ready_to_write = true;
 
-            let mut iocsh_writer = BufWriter::new(process_input);
-            let iocsh_commands =
-                mem::replace(&mut self.iocsh_commands, BytesMut::new());
+                while !self.iocsh_commands.is_empty() && ready_to_write {
+                    let write_result = {
+                        let ref buffer = self.iocsh_commands;
+                        let mut buffer = buffer.into_buf();
 
-            iocsh_writer.write_all(iocsh_commands.into_buf().bytes())?;
+                        process_input.write_buf(&mut buffer)?
+                    };
+
+                    match write_result {
+                        Async::Ready(bytes_written) => {
+                            self.iocsh_commands.split_to(bytes_written);
+                        }
+                        Async::NotReady => ready_to_write = false,
+                    };
+                }
+            }
         }
 
         Ok(())
@@ -70,12 +80,12 @@ impl IocInstance {
 }
 
 impl Future for IocInstance {
-    type Item = ();
+    type Item = ExitStatus;
     type Error = Error;
 
     fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
         self.try_to_write_iocsh_commands()?;
 
-        Ok(Async::Ready(()))
+        Ok(self.process.poll()?)
     }
 }

@@ -38,7 +38,7 @@ pub struct IocTest {
 
 impl IocTest {
     pub fn new(handle: Handle, ip_port: u16) -> Result<Self> {
-        let ioc = IocInstance::new(ip_port)?;
+        let ioc = IocInstance::new(&handle, ip_port)?;
         let address = SocketAddr::new("0.0.0.0".parse()?, ip_port);
         let protocol = LineProtocol::with_separator('\n' as u8);
         let mut server = MockServer::new(address, protocol);
@@ -109,9 +109,11 @@ impl IocTest {
     }
 
     fn poll_ioc(&mut self) -> Poll<(), Error> {
-        self.ioc.poll()?;
-
-        Ok(Async::NotReady)
+        match self.ioc.poll() {
+            Ok(Async::Ready(_)) => Ok(Async::Ready(())),
+            Ok(Async::NotReady) => Ok(Async::NotReady),
+            Err(error) => Err(error.into()),
+        }
     }
 
     fn kill_ioc(&mut self) -> Poll<(), Error> {
