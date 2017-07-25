@@ -33,18 +33,16 @@ where
     P::Request: Clone + Display + Eq + Hash,
     P::Response: Clone,
 {
-    pub fn advance_with(
+    pub fn new(
         listener: TcpListener,
         service_factory: MockServiceFactory<P::Request, P::Response>,
         protocol: Arc<Mutex<P>>,
-    ) -> (Poll<(), Error>, State<P>) {
+    ) -> Self {
         let service = service_factory.new_service();
         let connection = BoundConnectionFuture::from(listener, protocol);
         let parameters = connection.join(service.normalize_error());
 
-        let wait_for_parameters = WaitForParameters { parameters };
-
-        wait_for_parameters.advance()
+        WaitForParameters { parameters }
     }
 
     pub fn advance(mut self) -> (Poll<(), Error>, State<P>) {

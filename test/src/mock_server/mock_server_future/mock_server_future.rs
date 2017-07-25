@@ -1,11 +1,9 @@
 use std::fmt::Display;
 use std::hash::Hash;
-use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
 
 use futures::{Future, Poll};
-use tokio_core::net::TcpStream;
-use tokio_core::reactor::Handle;
+use tokio_core::net::{TcpListener, TcpStream};
 use tokio_proto::pipeline::ServerProto;
 
 use super::state::State;
@@ -28,15 +26,13 @@ where
     P::Response: Clone,
 {
     pub fn new(
-        address: SocketAddr,
+        listener: TcpListener,
         service_factory: MockServiceFactory<P::Request, P::Response>,
         protocol: Arc<Mutex<P>>,
-        handle: Handle,
     ) -> MockServerFuture<P> {
-        let state =
-            State::start_with(address, service_factory, protocol, handle);
-
-        Self { state }
+        Self {
+            state: State::start_with(listener, service_factory, protocol),
+        }
     }
 }
 

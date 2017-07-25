@@ -1,17 +1,14 @@
 use std::fmt::Display;
 use std::hash::Hash;
 use std::mem;
-use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
 
 use futures::Poll;
-use tokio_core::net::TcpStream;
-use tokio_core::reactor::Handle;
+use tokio_core::net::{TcpListener, TcpStream};
 use tokio_proto::pipeline::ServerProto;
 
 use super::server_ready::ServerReady;
 use super::wait_for_parameters::WaitForParameters;
-use super::wait_to_start::WaitToStart;
 use super::super::errors::Error;
 use super::super::super::mock_service::MockServiceFactory;
 
@@ -21,7 +18,6 @@ where
     P::Request: Clone + Display + Eq,
     P::Response: Clone,
 {
-    WaitingToStart(WaitToStart<P>),
     WaitingForParameters(WaitForParameters<P>),
     ServerReady(ServerReady<P>),
     Processing,
@@ -34,15 +30,14 @@ where
     P::Response: Clone,
 {
     pub fn start_with(
-        address: SocketAddr,
+        listener: TcpListener,
         service_factory: MockServiceFactory<P::Request, P::Response>,
         protocol: Arc<Mutex<P>>,
-        handle: Handle,
     ) -> Self {
-        let wait_to_start =
-            WaitToStart::new(address, service_factory, protocol, handle);
+        let wait_for_parameters =
+            WaitForParameters::new(listener, service_factory, protocol);
 
-        State::WaitingToStart(wait_to_start)
+        State::WaitingForParameters(wait_for_parameters)
     }
 
     pub fn advance(&mut self) -> Poll<(), Error> {
@@ -57,7 +52,6 @@ where
 
     fn advance_to_new_state(self) -> (Poll<(), Error>, Self) {
         match self {
-            State::WaitingToStart(handler) => handler.advance(),
             State::WaitingForParameters(handler) => handler.advance(),
             State::ServerReady(handler) => handler.advance(),
             State::Processing => panic!("State has more than one owner"),

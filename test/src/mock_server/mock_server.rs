@@ -3,13 +3,14 @@ use std::hash::Hash;
 use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
 
-use futures::IntoFuture;
+use futures::{Future, IntoFuture};
+use futures::future::Flatten;
 use tokio_core::net::TcpStream;
 use tokio_core::reactor::{Core, Handle};
 use tokio_proto::pipeline::ServerProto;
 
 use super::errors::Result;
-use super::mock_server_future::MockServerFuture;
+use super::mock_server_start::MockServerStart;
 use super::super::mock_service::{MockServiceFactory, When};
 
 pub struct MockServer<P>
@@ -68,11 +69,18 @@ where
         }
     }
 
-    pub fn serve_with_handle(&mut self, handle: Handle) -> MockServerFuture<P> {
+    pub fn serve_with_handle(
+        &mut self,
+        handle: Handle,
+    ) -> Flatten<MockServerStart<P>> {
+        self.start(handle).flatten()
+    }
+
+    pub fn start(&mut self, handle: Handle) -> MockServerStart<P> {
         let address = self.address.clone();
         let protocol = self.protocol.clone();
         let service_factory = self.service_factory.clone();
 
-        MockServerFuture::new(address, service_factory, protocol, handle)
+        MockServerStart::new(address, service_factory, protocol, handle)
     }
 }

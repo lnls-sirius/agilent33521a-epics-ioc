@@ -2,13 +2,14 @@ use std::io;
 use std::net::{AddrParseError, SocketAddr};
 
 use futures::{Async, Future, Poll};
+use futures::future::Flatten;
 use tokio_core::reactor::Handle;
 
 use super::ioc_instance;
 use super::ioc_instance::IocInstance;
 use super::line_protocol::LineProtocol;
 use super::mock_server;
-use super::mock_server::{MockServer, MockServerFuture};
+use super::mock_server::{MockServer, MockServerStart};
 use super::mock_service::When;
 
 error_chain! {
@@ -32,7 +33,7 @@ error_chain! {
 pub struct IocTest {
     handle: Handle,
     server: MockServer<LineProtocol>,
-    server_future: Option<MockServerFuture<LineProtocol>>,
+    server_future: Option<Flatten<MockServerStart<LineProtocol>>>,
     ioc: IocInstance,
 }
 
@@ -90,7 +91,7 @@ impl IocTest {
 
     fn maybe_start_server(
         &mut self,
-    ) -> Result<&mut MockServerFuture<LineProtocol>> {
+    ) -> Result<&mut Flatten<MockServerStart<LineProtocol>>> {
         if self.server_future.is_none() {
             self.start_server();
         }
