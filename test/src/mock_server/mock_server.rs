@@ -42,16 +42,6 @@ where
         }
     }
 
-    pub fn expect<A, B>(&mut self, request: A, response: B) -> &mut Self
-    where
-        A: Into<P::Request>,
-        B: Into<P::Response>,
-    {
-        self.service_factory.expect(request.into(), response.into());
-
-        self
-    }
-
     pub fn when<A>(&mut self, request: A) -> When<P::Request, P::Response>
     where
         A: Into<P::Request>,
