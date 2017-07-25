@@ -14,5 +14,6 @@ pub mod line_protocol;
 pub mod mock_service;
 pub mod mock_server;
 
+pub mod ioc_instance;
 pub mod ioc_test;
 pub mod tests;
