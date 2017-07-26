@@ -1,7 +1,7 @@
 use futures::{Async, Future, Poll};
 use futures::future::Flatten;
 
-use super::errors::{Error, Result};
+use super::errors::Error;
 use super::super::ioc::IocInstance;
 use super::super::line_protocol::LineProtocol;
 use super::super::mock_server::MockServerStart;
@@ -15,8 +15,8 @@ impl IocTest {
     pub fn new(
         ioc: IocInstance,
         server: Flatten<Flatten<MockServerStart<LineProtocol>>>,
-    ) -> Result<Self> {
-        Ok(Self { ioc, server })
+    ) -> Self {
+        Self { ioc, server }
     }
 
     fn poll_ioc(&mut self) -> Poll<(), Error> {
