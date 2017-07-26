@@ -3,15 +3,15 @@ use std::io;
 use futures::{Async, Future, Poll};
 use futures::future::Flatten;
 
-use super::ioc_instance;
-use super::ioc_instance::IocInstance;
+use super::ioc;
+use super::ioc::IocInstance;
 use super::line_protocol::LineProtocol;
 use super::mock_server;
 use super::mock_server::MockServerStart;
 
 error_chain! {
     links {
-        IocError(ioc_instance::Error, ioc_instance::ErrorKind);
+        IocError(ioc::Error, ioc::ErrorKind);
         ServerError(mock_server::Error, mock_server::ErrorKind);
     }
 

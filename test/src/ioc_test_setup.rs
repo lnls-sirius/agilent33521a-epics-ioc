@@ -4,8 +4,8 @@ use std::net::{AddrParseError, SocketAddr};
 use futures::{Future, IntoFuture};
 use tokio_core::reactor::Handle;
 
-use super::ioc_instance;
-use super::ioc_instance::IocInstance;
+use super::ioc;
+use super::ioc::IocInstance;
 use super::ioc_test;
 use super::ioc_test::IocTest;
 use super::line_protocol::LineProtocol;
@@ -15,7 +15,7 @@ use super::mock_service::When;
 
 error_chain! {
     links {
-        IocError(ioc_instance::Error, ioc_instance::ErrorKind);
+        IocError(ioc::Error, ioc::ErrorKind);
         ServerError(mock_server::Error, mock_server::ErrorKind);
     }
 
