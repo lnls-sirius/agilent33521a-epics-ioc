@@ -27,14 +27,14 @@ error_chain! {
 }
 
 pub struct IocTest {
-    server: Flatten<MockServerStart<LineProtocol>>,
+    server: Flatten<Flatten<MockServerStart<LineProtocol>>>,
     ioc: IocInstance,
 }
 
 impl IocTest {
     pub fn new(
         ioc: IocInstance,
-        server: Flatten<MockServerStart<LineProtocol>>,
+        server: Flatten<Flatten<MockServerStart<LineProtocol>>>,
     ) -> Result<Self> {
         Ok(Self { ioc, server })
     }

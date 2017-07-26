@@ -62,8 +62,8 @@ where
     pub fn serve_with_handle(
         self,
         handle: Handle,
-    ) -> Flatten<MockServerStart<P>> {
-        self.start(handle).flatten()
+    ) -> Flatten<Flatten<MockServerStart<P>>> {
+        self.start(handle).flatten().flatten()
     }
 
     pub fn start(self, handle: Handle) -> MockServerStart<P> {

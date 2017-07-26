@@ -110,7 +110,7 @@ impl IntoFuture for IocTestSetup {
 
     fn into_future(self) -> Self::Future {
         let ioc = self.build_ioc_instance();
-        let server = self.server.start(self.handle).flatten();
+        let server = self.server.start(self.handle).flatten().flatten();
 
         IocTest::new(ioc, server).unwrap()
     }
