@@ -48,10 +48,9 @@ impl IocTest {
     }
 
     fn kill_ioc(&mut self) -> Poll<(), Error> {
-        match self.ioc.kill() {
-            Ok(_) => Ok(Async::Ready(())),
-            Err(error) => Err(error.into()),
-        }
+        self.ioc.kill();
+
+        self.poll_ioc()
     }
 }
 

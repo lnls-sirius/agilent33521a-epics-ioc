@@ -93,7 +93,7 @@ impl IocTestSetup {
     }
 
     fn build_ioc_instance(&self) -> IocInstance {
-        let mut ioc = IocInstance::new(&self.handle, self.ip_port).unwrap();
+        let mut ioc = IocInstance::new(&self.handle, self.ip_port);
 
         for &(ref name, ref value) in self.ioc_variables_to_set.iter() {
             ioc.set_variable(&name, &value);
