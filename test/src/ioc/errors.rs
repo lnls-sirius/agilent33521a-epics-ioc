@@ -6,16 +6,8 @@ error_chain! {
     }
 
     errors {
-        IocSpawnCancelled {
-            description("cancelled IOC process start-up")
-        }
-
         IocStdinAccessError {
             description("failed to access child IOC process standard input")
-        }
-
-        IocProcessPolledAfterEnd {
-            description("IOC process Future was polled after it ended")
         }
     }
 }

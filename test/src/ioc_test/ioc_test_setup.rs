@@ -1,11 +1,12 @@
 use std::net::SocketAddr;
 
-use futures::{Future, IntoFuture};
+use futures::{Async, Future, IntoFuture};
 use tokio_core::reactor::Handle;
 
 use super::errors::{Error, Result};
 use super::ioc_test::IocTest;
 use super::super::ioc::IocInstance;
+use super::super::ioc::IocSpawn;
 use super::super::line_protocol::LineProtocol;
 use super::super::mock_server::MockServer;
 use super::super::mock_service::When;
@@ -72,7 +73,13 @@ impl IocTestSetup {
     }
 
     fn build_ioc_instance(&self) -> IocInstance {
-        let mut ioc = IocInstance::new(&self.handle, self.ip_port);
+        let mut ioc_spawn = IocSpawn::new(self.handle.clone(), self.ip_port);
+        let ioc_process = match ioc_spawn.poll() {
+            Ok(Async::Ready(process)) => process,
+            _ => panic!("IocSpawn was expected to spawn the IOC immediately"),
+        };
+
+        let mut ioc = IocInstance::new(ioc_process);
 
         for &(ref name, ref value) in self.ioc_variables_to_set.iter() {
             ioc.set_variable(&name, &value);
