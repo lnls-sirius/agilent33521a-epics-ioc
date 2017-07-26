@@ -1,30 +1,10 @@
-use std::io;
-
 use futures::{Async, Future, Poll};
 use futures::future::Flatten;
 
-use super::ioc;
-use super::ioc::IocInstance;
-use super::line_protocol::LineProtocol;
-use super::mock_server;
-use super::mock_server::MockServerStart;
-
-error_chain! {
-    links {
-        IocError(ioc::Error, ioc::ErrorKind);
-        ServerError(mock_server::Error, mock_server::ErrorKind);
-    }
-
-    foreign_links {
-        Io(io::Error);
-    }
-
-    errors {
-        NoIocShellInput {
-            description("spawned IOC has no shell input")
-        }
-    }
-}
+use super::errors::{Error, Result};
+use super::super::ioc::IocInstance;
+use super::super::line_protocol::LineProtocol;
+use super::super::mock_server::MockServerStart;
 
 pub struct IocTest {
     server: Flatten<Flatten<MockServerStart<LineProtocol>>>,

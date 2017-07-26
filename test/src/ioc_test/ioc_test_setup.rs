@@ -1,35 +1,14 @@
-use std::io;
-use std::net::{AddrParseError, SocketAddr};
+use std::net::SocketAddr;
 
 use futures::{Future, IntoFuture};
 use tokio_core::reactor::Handle;
 
-use super::ioc;
-use super::ioc::IocInstance;
-use super::ioc_test;
+use super::errors::{Error, Result};
 use super::ioc_test::IocTest;
-use super::line_protocol::LineProtocol;
-use super::mock_server;
-use super::mock_server::MockServer;
-use super::mock_service::When;
-
-error_chain! {
-    links {
-        IocError(ioc::Error, ioc::ErrorKind);
-        ServerError(mock_server::Error, mock_server::ErrorKind);
-    }
-
-    foreign_links {
-        Io(io::Error);
-        InvalidAddress(AddrParseError);
-    }
-
-    errors {
-        NoIocShellInput {
-            description("spawned IOC has no shell input")
-        }
-    }
-}
+use super::super::ioc::IocInstance;
+use super::super::line_protocol::LineProtocol;
+use super::super::mock_server::MockServer;
+use super::super::mock_service::When;
 
 pub struct IocTestSetup {
     handle: Handle,
@@ -106,7 +85,7 @@ impl IocTestSetup {
 impl IntoFuture for IocTestSetup {
     type Future = IocTest;
     type Item = ();
-    type Error = ioc_test::Error;
+    type Error = Error;
 
     fn into_future(self) -> Self::Future {
         let ioc = self.build_ioc_instance();
