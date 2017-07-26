@@ -4,17 +4,17 @@ use futures::future::Flatten;
 use super::errors::Error;
 use super::super::ioc::IocInstance;
 use super::super::line_protocol::LineProtocol;
-use super::super::mock_server::MockServerStart;
+use super::super::mock_server::ListeningMockServer;
 
 pub struct IocTest {
-    server: Flatten<Flatten<MockServerStart<LineProtocol>>>,
+    server: Flatten<ListeningMockServer<LineProtocol>>,
     ioc: IocInstance,
 }
 
 impl IocTest {
     pub fn new(
         ioc: IocInstance,
-        server: Flatten<Flatten<MockServerStart<LineProtocol>>>,
+        server: Flatten<ListeningMockServer<LineProtocol>>,
     ) -> Self {
         Self { ioc, server }
     }

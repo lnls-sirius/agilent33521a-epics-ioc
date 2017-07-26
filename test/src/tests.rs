@@ -1,4 +1,4 @@
-use futures::IntoFuture;
+use futures::{Future, IntoFuture};
 use tokio_core::reactor::Core;
 
 use super::ioc_test::{IocTestSetup, Result};
@@ -17,7 +17,7 @@ pub fn run_test() -> Result<()> {
 
     test_enable_channel_output(&mut test);
 
-    reactor.run(test.into_future())?;
+    reactor.run(test.into_future().flatten())?;
 
     Ok(())
 }

@@ -1,11 +1,11 @@
 use std::net::SocketAddr;
 
-use futures::{Async, Future, IntoFuture};
+use futures::IntoFuture;
 use tokio_core::reactor::Handle;
 
 use super::errors::{Error, Result};
 use super::ioc_test::IocTest;
-use super::super::ioc::IocInstance;
+use super::ioc_test_start::IocTestStart;
 use super::super::ioc::IocSpawn;
 use super::super::line_protocol::LineProtocol;
 use super::super::mock_server::MockServer;
@@ -71,33 +71,17 @@ impl IocTestSetup {
             "SOURce1:FUNCtion:SQUare:DCYCle?" => "1",
         };
     }
-
-    fn build_ioc_instance(&self) -> IocInstance {
-        let mut ioc_spawn = IocSpawn::new(self.handle.clone(), self.ip_port);
-        let ioc_process = match ioc_spawn.poll() {
-            Ok(Async::Ready(process)) => process,
-            _ => panic!("IocSpawn was expected to spawn the IOC immediately"),
-        };
-
-        let mut ioc = IocInstance::new(ioc_process);
-
-        for &(ref name, ref value) in self.ioc_variables_to_set.iter() {
-            ioc.set_variable(&name, &value);
-        }
-
-        ioc
-    }
 }
 
 impl IntoFuture for IocTestSetup {
-    type Future = IocTest;
-    type Item = ();
+    type Future = IocTestStart;
+    type Item = IocTest;
     type Error = Error;
 
     fn into_future(self) -> Self::Future {
-        let ioc = self.build_ioc_instance();
-        let server = self.server.start(self.handle).flatten().flatten();
+        let ioc = IocSpawn::new(self.handle.clone(), self.ip_port);
+        let server = self.server.start(self.handle);
 
-        IocTest::new(ioc, server)
+        IocTestStart::new(ioc, server, self.ioc_variables_to_set)
     }
 }
