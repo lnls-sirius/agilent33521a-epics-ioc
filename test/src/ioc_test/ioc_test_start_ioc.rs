@@ -3,6 +3,7 @@ use futures::{Async, Future, Poll};
 use super::errors::Error;
 use super::ioc_test::IocTest;
 use super::super::ioc::IocInstance;
+use super::super::ioc::IocProcess;
 use super::super::ioc::IocSpawn;
 use super::super::line_protocol::LineProtocol;
 use super::super::mock_server::ListeningMockServer;
@@ -33,6 +34,7 @@ impl Future for IocTestStartIoc {
 
     fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
         let ioc_process = try_ready!(self.ioc.poll());
+        let ioc_process = IocProcess::new(ioc_process)?;
         let mut ioc = IocInstance::new(ioc_process);
 
         for &(ref name, ref value) in self.ioc_variables_to_set.iter() {
