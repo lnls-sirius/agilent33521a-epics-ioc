@@ -1,6 +1,7 @@
 mod errors;
 mod ioc_test;
 mod ioc_test_setup;
+mod ioc_test_start_ioc;
 mod ioc_test_start;
 
 pub use self::errors::{Error, ErrorKind, Result};

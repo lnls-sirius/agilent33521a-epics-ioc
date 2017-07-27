@@ -17,7 +17,7 @@ pub fn run_test() -> Result<()> {
 
     test_enable_channel_output(&mut test);
 
-    reactor.run(test.into_future().flatten())?;
+    reactor.run(test.into_future().flatten().flatten())?;
 
     Ok(())
 }

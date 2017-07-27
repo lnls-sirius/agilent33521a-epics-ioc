@@ -4,7 +4,7 @@ use futures::IntoFuture;
 use tokio_core::reactor::Handle;
 
 use super::errors::{Error, Result};
-use super::ioc_test::IocTest;
+use super::ioc_test_start_ioc::IocTestStartIoc;
 use super::ioc_test_start::IocTestStart;
 use super::super::ioc::IocSpawn;
 use super::super::line_protocol::LineProtocol;
@@ -75,7 +75,7 @@ impl IocTestSetup {
 
 impl IntoFuture for IocTestSetup {
     type Future = IocTestStart;
-    type Item = IocTest;
+    type Item = IocTestStartIoc;
     type Error = Error;
 
     fn into_future(self) -> Self::Future {
