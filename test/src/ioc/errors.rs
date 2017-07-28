@@ -1,7 +1,5 @@
 use std::io;
 
-use super::ioc_process::IocProcess;
-
 error_chain! {
     foreign_links {
         Io(io::Error);
@@ -24,12 +22,13 @@ error_chain! {
             description("IOC instance Future was polled after it ended")
         }
 
-        KillingIoc {
-            description("IOC was accessed while it was being killed")
+        IocProcessPolledAfterEnd {
+            description("IOC process Future was polled after it ended")
         }
 
-        KilledIoc(process: IocProcess) {
-            description("IOC was successfully killed")
+        IocProcessPolledWhileCheckingForError {
+            description("IOC process Future was polled while checking for \
+                         error")
         }
     }
 }

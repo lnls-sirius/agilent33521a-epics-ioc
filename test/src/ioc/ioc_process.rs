@@ -1,3 +1,4 @@
+use std::mem;
 use std::process::ExitStatus;
 
 use bytes::{Bytes, BytesMut, IntoBuf};
@@ -12,6 +13,7 @@ pub struct IocProcess {
     process: Child,
     input: ChildStdin,
     input_buffer: BytesMut,
+    error: Option<Error>,
 }
 
 impl IocProcess {
@@ -23,11 +25,32 @@ impl IocProcess {
             process,
             input,
             input_buffer: BytesMut::new(),
+            error: None,
         })
     }
 
-    pub fn kill(&mut self) -> Result<()> {
-        Ok(self.process.kill()?)
+    pub fn kill(&mut self) {
+        if let Err(error) = self.process.kill() {
+            if self.error.is_none() {
+                self.error = Some(error.into());
+            }
+        }
+    }
+
+    fn check_error(&mut self) -> Result<()> {
+        let temporary_error = ErrorKind::IocProcessPolledWhileCheckingForError;
+        let error_status =
+            mem::replace(&mut self.error, Some(temporary_error.into()));
+
+        let (result, new_error_status) = if let Some(error) = error_status {
+            (Err(error), Some(ErrorKind::IocProcessPolledAfterEnd.into()))
+        } else {
+            (Ok(()), None)
+        };
+
+        let _temporary_error = mem::replace(&mut self.error, new_error_status);
+
+        result
     }
 }
 
@@ -36,6 +59,7 @@ impl Future for IocProcess {
     type Error = Error;
 
     fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
+        self.check_error()?;
         self.poll_complete()?;
 
         Ok(self.process.poll()?)
@@ -50,12 +74,16 @@ impl Sink for IocProcess {
         &mut self,
         item: Self::SinkItem,
     ) -> StartSend<Self::SinkItem, Self::SinkError> {
+        self.check_error()?;
+
         self.input_buffer.extend(item);
 
         Ok(AsyncSink::Ready)
     }
 
     fn poll_complete(&mut self) -> Poll<(), Self::SinkError> {
+        self.check_error()?;
+
         if !self.input_buffer.is_empty() {
             let bytes_written = {
                 let ref buffer = self.input_buffer;

@@ -40,22 +40,9 @@ impl IocInstance {
     }
 
     pub fn kill(&mut self) {
-        let error = Err(ErrorKind::KillingIoc.into());
-        let old_process_value = mem::replace(&mut self.process, error);
-
-        let new_process_value = if let Ok(mut process) = old_process_value {
-            let kill_result = process.kill();
-            let next_access_error = ErrorKind::KilledIoc(process);
-
-            match kill_result {
-                Ok(()) => Err(next_access_error.into()),
-                Err(error) => Err(error.into()),
-            }
-        } else {
-            old_process_value
-        };
-
-        let _ = mem::replace(&mut self.process, new_process_value);
+        if let Ok(ref mut process) = self.process {
+            process.kill();
+        }
     }
 }
 
@@ -69,9 +56,6 @@ impl Future for IocInstance {
 
         let (poll_result, new_process_value) = match old_process_value {
             Ok(mut process) => (process.poll(), Ok(process)),
-            Err(Error(ErrorKind::KilledIoc(mut process), _)) => {
-                (process.poll(), Err(ErrorKind::KilledIoc(process).into()))
-            }
             Err(error) => return Err(error),
         };
 
