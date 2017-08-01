@@ -63,6 +63,6 @@ where
     fn new_service(&self) -> io::Result<Self::Instance> {
         let requests = self.expected_requests.clone();
 
-        Ok(Self::Instance::with_expected_requests(requests))
+        Ok(Self::Instance::new(requests))
     }
 }

@@ -24,9 +24,7 @@ where
     A: Clone + Display + Eq + Hash,
     B: Clone,
 {
-    pub fn with_expected_requests(
-        expected_requests: Vec<ExpectedRequest<A, B>>,
-    ) -> Self {
+    pub fn new(expected_requests: Vec<ExpectedRequest<A, B>>) -> Self {
         let number_of_requests = expected_requests.len();
         let mut request_map = HashMap::with_capacity(number_of_requests);
         let mut remaining_requests = HashSet::with_capacity(number_of_requests);
