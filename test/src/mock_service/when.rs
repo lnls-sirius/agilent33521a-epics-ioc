@@ -20,10 +20,19 @@ where
         Self { parent, request }
     }
 
-    pub fn reply_with<C>(self, response: C) -> &'a mut MockServiceFactory<A, B>
+    pub fn reply_with<C>(self, response: C) -> Self
     where
         C: Into<B>,
     {
-        self.parent.expect(self.request, response.into())
+        self.parent.expect(self.request.clone(), response.into());
+
+        self
+    }
+
+    pub fn when<C>(self, request: C) -> Self
+    where
+        C: Into<A>,
+    {
+        Self::new(self.parent, request.into())
     }
 }
