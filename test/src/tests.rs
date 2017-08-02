@@ -4,7 +4,7 @@ use tokio_core::reactor::Core;
 use super::ioc_test::{IocTestSetup, Result};
 
 fn test_enable_channel_output(test: &mut IocTestSetup) {
-    test.when("OUTPut1 ON").reply_with("");
+    test.when("OUTPut1 ON").reply_with("").verify();
 
     test.set_variable("channelOutput-Sel", "ON");
 }
