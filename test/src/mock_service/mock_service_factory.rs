@@ -1,3 +1,4 @@
+use std::collections::HashSet;
 use std::fmt::Display;
 use std::hash::Hash;
 use std::io;
@@ -17,20 +18,22 @@ macro_rules! request_response_map {
 #[derive(Clone)]
 pub struct MockServiceFactory<A, B>
 where
-    A: Clone,
+    A: Clone + Eq + Hash,
     B: Clone,
 {
     expected_requests: Vec<ExpectedRequest<A, B>>,
+    requests_to_verify: HashSet<A>,
 }
 
 impl<A, B> MockServiceFactory<A, B>
 where
-    A: Clone,
+    A: Clone + Eq + Hash,
     B: Clone,
 {
     pub fn new() -> Self {
         Self {
             expected_requests: Vec::new(),
+            requests_to_verify: HashSet::new(),
         }
     }
 
@@ -62,7 +65,8 @@ where
 
     fn new_service(&self) -> io::Result<Self::Instance> {
         let requests = self.expected_requests.clone();
+        let requests_to_verify = self.requests_to_verify.clone();
 
-        Ok(Self::Instance::new(requests))
+        Ok(Self::Instance::new(requests, requests_to_verify))
     }
 }

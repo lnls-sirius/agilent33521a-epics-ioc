@@ -16,7 +16,7 @@ where
     B: Clone,
 {
     expected_requests: Arc<Mutex<HashMap<A, B>>>,
-    remaining_requests: Arc<Mutex<HashSet<A>>>,
+    requests_to_verify: Arc<Mutex<HashSet<A>>>,
 }
 
 impl<A, B> MockService<A, B>
@@ -24,27 +24,28 @@ where
     A: Clone + Display + Eq + Hash,
     B: Clone,
 {
-    pub fn new(expected_requests: Vec<ExpectedRequest<A, B>>) -> Self {
+    pub fn new(
+        expected_requests: Vec<ExpectedRequest<A, B>>,
+        requests_to_verify: HashSet<A>,
+    ) -> Self {
         let number_of_requests = expected_requests.len();
         let mut request_map = HashMap::with_capacity(number_of_requests);
-        let mut remaining_requests = HashSet::with_capacity(number_of_requests);
 
         for expected_request in expected_requests {
             let request = expected_request.request;
             let response = expected_request.response;
 
-            remaining_requests.insert(request.clone());
             request_map.insert(request, response);
         }
 
         Self {
+            requests_to_verify: Arc::new(Mutex::new(requests_to_verify)),
             expected_requests: Arc::new(Mutex::new(request_map)),
-            remaining_requests: Arc::new(Mutex::new(remaining_requests)),
         }
     }
 
     pub fn has_finished(&self) -> Result<bool> {
-        Ok(self.remaining_requests.lock()?.is_empty())
+        Ok(self.requests_to_verify.lock()?.is_empty())
     }
 }
 
@@ -62,7 +63,7 @@ where
         HandleRequest::new(
             request,
             self.expected_requests.clone(),
-            self.remaining_requests.clone(),
+            self.requests_to_verify.clone(),
         )
     }
 }

@@ -15,7 +15,7 @@ use super::super::mock_service::MockServiceFactory;
 pub struct MockServerStart<P>
 where
     P: ServerProto<TcpStream>,
-    P::Request: Clone + Display + PartialEq,
+    P::Request: Clone + Display + Eq + Hash,
     P::Response: Clone,
 {
     address: SocketAddr,

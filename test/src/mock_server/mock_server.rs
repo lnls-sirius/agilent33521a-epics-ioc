@@ -16,7 +16,7 @@ use super::super::mock_service::{MockServiceFactory, When};
 pub struct MockServer<P>
 where
     P: ServerProto<TcpStream> + Send,
-    P::Request: Clone + Display + PartialEq + Send,
+    P::Request: Clone + Display + Eq + Hash + Send,
     P::Response: Clone + Send,
     P::Transport: Send,
     <P::BindTransport as IntoFuture>::Future: Send,
