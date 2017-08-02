@@ -29,6 +29,12 @@ where
         self
     }
 
+    pub fn verify(self) -> Self {
+        self.parent.verify(self.request.clone());
+
+        self
+    }
+
     pub fn when<C>(self, request: C) -> Self
     where
         C: Into<A>,
