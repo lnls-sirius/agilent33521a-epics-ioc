@@ -51,6 +51,12 @@ where
 
         self
     }
+
+    pub fn verify(&mut self, request: A) -> &mut Self {
+        self.requests_to_verify.insert(request);
+
+        self
+    }
 }
 
 impl<A, B> NewService for MockServiceFactory<A, B>
