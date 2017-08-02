@@ -20,9 +20,9 @@ where
         Self { parent, request }
     }
 
-    pub fn reply_with<C>(self, response: C) -> Self
+    pub fn reply_with<D>(self, response: D) -> Self
     where
-        C: Into<B>,
+        D: Into<B>,
     {
         self.parent.expect(self.request.clone(), response.into());
 
