@@ -49,6 +49,13 @@ where
         self.service_factory.when(request.into())
     }
 
+    pub fn verify<A>(&mut self, request: A)
+    where
+        A: Into<P::Request>,
+    {
+        self.service_factory.verify(request);
+    }
+
     pub fn serve(self) -> Result<()> {
         match Core::new() {
             Ok(mut reactor) => {
