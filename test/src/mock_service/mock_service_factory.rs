@@ -52,8 +52,11 @@ where
         self
     }
 
-    pub fn verify(&mut self, request: A) -> &mut Self {
-        self.requests_to_verify.insert(request);
+    pub fn verify<C>(&mut self, request: C) -> &mut Self
+    where
+        C: Into<A>,
+    {
+        self.requests_to_verify.insert(request.into());
 
         self
     }
