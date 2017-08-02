@@ -41,6 +41,13 @@ impl IocTestSetup {
         self.server.when(request)
     }
 
+    pub fn verify<A>(&mut self, request: A)
+    where
+        A: Into<String>,
+    {
+        self.server.verify(request);
+    }
+
     pub fn set_variable(&mut self, name: &str, value: &str) {
         let name = String::from(name);
         let value = String::from(value);
