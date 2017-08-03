@@ -1,23 +1,37 @@
+use std::fmt::Display;
+use std::hash::Hash;
+
 use futures::{Async, Future, Poll};
+use tokio_core::net::TcpStream;
+use tokio_proto::pipeline::ServerProto;
 
 use super::errors::Error;
 use super::ioc_test::IocTest;
 use super::super::ioc::IocInstance;
 use super::super::ioc::IocProcess;
 use super::super::ioc::IocSpawn;
-use super::super::line_protocol::LineProtocol;
 use super::super::mock_server::ListeningMockServer;
 
-pub struct IocTestStartIoc {
+pub struct IocTestStartIoc<P>
+where
+    P: ServerProto<TcpStream>,
+    <P as ServerProto<TcpStream>>::Request: Clone + Display + Eq + Hash,
+    <P as ServerProto<TcpStream>>::Response: Clone,
+{
     ioc: IocSpawn,
-    listening_server: Option<ListeningMockServer<LineProtocol>>,
+    listening_server: Option<ListeningMockServer<P>>,
     ioc_variables_to_set: Vec<(String, String)>,
 }
 
-impl IocTestStartIoc {
+impl<P> IocTestStartIoc<P>
+where
+    P: ServerProto<TcpStream>,
+    <P as ServerProto<TcpStream>>::Request: Clone + Display + Eq + Hash,
+    <P as ServerProto<TcpStream>>::Response: Clone,
+{
     pub fn new(
         ioc: IocSpawn,
-        listening_server: ListeningMockServer<LineProtocol>,
+        listening_server: ListeningMockServer<P>,
         ioc_variables_to_set: Vec<(String, String)>,
     ) -> Self {
         Self {
@@ -28,8 +42,13 @@ impl IocTestStartIoc {
     }
 }
 
-impl Future for IocTestStartIoc {
-    type Item = IocTest;
+impl<P> Future for IocTestStartIoc<P>
+where
+    P: ServerProto<TcpStream>,
+    <P as ServerProto<TcpStream>>::Request: Clone + Display + Eq + Hash,
+    <P as ServerProto<TcpStream>>::Response: Clone,
+{
+    type Item = IocTest<P>;
     type Error = Error;
 
     fn poll(&mut self) -> Poll<Self::Item, Self::Error> {

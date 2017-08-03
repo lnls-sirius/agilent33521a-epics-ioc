@@ -1,27 +1,44 @@
+use std::fmt::Display;
+use std::hash::Hash;
 use std::net::SocketAddr;
 
 use futures::IntoFuture;
+use tokio_core::net::TcpStream;
 use tokio_core::reactor::Handle;
+use tokio_proto::pipeline::ServerProto;
 
 use super::errors::{Error, Result};
 use super::ioc_test_start_ioc::IocTestStartIoc;
 use super::ioc_test_start::IocTestStart;
 use super::super::ioc::IocSpawn;
-use super::super::line_protocol::LineProtocol;
 use super::super::mock_server::MockServer;
 use super::super::mock_service::When;
 
-pub struct IocTestSetup {
+pub struct IocTestSetup<P>
+where
+    P: ServerProto<TcpStream> + Send,
+    <P as ServerProto<TcpStream>>::Request: Clone + Display + Eq + Hash + Send,
+    <P as ServerProto<TcpStream>>::Response: Clone + Send,
+    <P as ServerProto<TcpStream>>::Transport: Send,
+    <<P as ServerProto<TcpStream>>::BindTransport as IntoFuture>::Future: Send,
+{
     handle: Handle,
-    server: MockServer<LineProtocol>,
+    server: MockServer<P>,
     ip_port: u16,
     ioc_variables_to_set: Vec<(String, String)>,
 }
 
-impl IocTestSetup {
-    pub fn new(handle: Handle, ip_port: u16) -> Result<Self> {
+impl<'a, 'b, P> IocTestSetup<P>
+where
+    P: ServerProto<TcpStream> + Send,
+    <P as ServerProto<TcpStream>>::Request:
+        Clone + Display + Eq + From<&'a str> + Hash + Send,
+    <P as ServerProto<TcpStream>>::Response: Clone + From<&'b str> + Send,
+    <P as ServerProto<TcpStream>>::Transport: Send,
+    <<P as ServerProto<TcpStream>>::BindTransport as IntoFuture>::Future: Send,
+{
+    pub fn new(handle: Handle, protocol: P, ip_port: u16) -> Result<Self> {
         let address = SocketAddr::new("0.0.0.0".parse()?, ip_port);
-        let protocol = LineProtocol::with_separator('\n' as u8);
         let mut server = MockServer::new(address, protocol);
 
         Self::setup_initial_request_response_map(&mut server);
@@ -34,16 +51,16 @@ impl IocTestSetup {
         })
     }
 
-    pub fn when<A>(&mut self, request: A) -> When<String, String>
+    pub fn when<A>(&mut self, request: A) -> When<P::Request, P::Response>
     where
-        A: Into<String>,
+        A: Into<<P as ServerProto<TcpStream>>::Request>,
     {
         self.server.when(request)
     }
 
     pub fn verify<A>(&mut self, request: A)
     where
-        A: Into<String>,
+        A: Into<<P as ServerProto<TcpStream>>::Request>,
     {
         self.server.verify(request);
     }
@@ -55,9 +72,7 @@ impl IocTestSetup {
         self.ioc_variables_to_set.push((name, value));
     }
 
-    fn setup_initial_request_response_map(
-        server: &mut MockServer<LineProtocol>,
-    ) {
+    fn setup_initial_request_response_map(server: &mut MockServer<P>) {
         request_response_map! { server,
             "OUTPut1?" => "0",
             "SOURce1:VOLT?" => "1",
@@ -80,9 +95,17 @@ impl IocTestSetup {
     }
 }
 
-impl IntoFuture for IocTestSetup {
-    type Future = IocTestStart;
-    type Item = IocTestStartIoc;
+impl<P> IntoFuture for IocTestSetup<P>
+where
+    P: ServerProto<TcpStream> + Send,
+    <P as ServerProto<TcpStream>>::Request: Clone + Display + Eq + Hash + Send,
+    <P as ServerProto<TcpStream>>::Response: Clone + Send,
+    <P as ServerProto<TcpStream>>::Transport: Send,
+    <P as ServerProto<TcpStream>>::BindTransport: Send,
+    <<P as ServerProto<TcpStream>>::BindTransport as IntoFuture>::Future: Send,
+{
+    type Future = IocTestStart<P>;
+    type Item = IocTestStartIoc<P>;
     type Error = Error;
 
     fn into_future(self) -> Self::Future {
