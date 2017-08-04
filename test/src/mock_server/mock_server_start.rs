@@ -43,6 +43,21 @@ where
             service_factory: Some(service_factory),
         }
     }
+
+    fn start_server(&mut self) -> Poll<ListeningMockServer<P>, Error> {
+        let listener = TcpListener::bind(&self.address, &self.handle)?;
+        let protocol = self.protocol.clone();
+
+        if let Some(service_factory) = self.service_factory.take() {
+            Ok(Async::Ready(ListeningMockServer::new(
+                listener,
+                service_factory,
+                protocol,
+            )))
+        } else {
+            Err(ErrorKind::AttemptToStartServerTwice.into())
+        }
+    }
 }
 
 impl<P> Future for MockServerStart<P>
@@ -56,18 +71,7 @@ where
 
     fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
         if self.service_factory.is_some() {
-            let listener = TcpListener::bind(&self.address, &self.handle)?;
-            let protocol = self.protocol.clone();
-
-            if let Some(service_factory) = self.service_factory.take() {
-                Ok(Async::Ready(ListeningMockServer::new(
-                    listener,
-                    service_factory,
-                    protocol,
-                )))
-            } else {
-                Err(ErrorKind::AttemptToStartServerTwice.into())
-            }
+            self.start_server()
         } else {
             Err(ErrorKind::AttemptToStartServerTwice.into())
         }
