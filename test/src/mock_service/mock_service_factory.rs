@@ -15,12 +15,7 @@ macro_rules! request_response_map {
     }
 }
 
-#[derive(Clone)]
-pub struct MockServiceFactory<A, B>
-where
-    A: Clone + Eq + Hash,
-    B: Clone,
-{
+pub struct MockServiceFactory<A, B> {
     expected_requests: Vec<ExpectedRequest<A, B>>,
     requests_to_verify: HashSet<A>,
 }
@@ -28,7 +23,6 @@ where
 impl<A, B> MockServiceFactory<A, B>
 where
     A: Clone + Eq + Hash,
-    B: Clone,
 {
     pub fn new() -> Self {
         Self {

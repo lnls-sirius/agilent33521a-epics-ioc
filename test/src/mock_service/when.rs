@@ -4,7 +4,7 @@ use super::mock_service_factory::MockServiceFactory;
 
 pub struct When<'a, A, B>
 where
-    A: Eq + Hash + 'a,
+    A: 'a,
     B: 'a,
 {
     parent: &'a mut MockServiceFactory<A, B>,

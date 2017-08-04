@@ -10,19 +10,14 @@ use super::errors::Result;
 use super::expected_request::ExpectedRequest;
 use super::handle_request::HandleRequest;
 
-pub struct MockService<A, B>
-where
-    A: Clone + Display + PartialEq,
-    B: Clone,
-{
+pub struct MockService<A, B> {
     expected_requests: Arc<Mutex<HashMap<A, B>>>,
     requests_to_verify: Arc<Mutex<HashSet<A>>>,
 }
 
 impl<A, B> MockService<A, B>
 where
-    A: Clone + Display + Eq + Hash,
-    B: Clone,
+    A: Eq + Hash,
 {
     pub fn new(
         expected_requests: Vec<ExpectedRequest<A, B>>,
