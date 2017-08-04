@@ -4,8 +4,8 @@ use super::mock_service_factory::MockServiceFactory;
 
 pub struct When<'a, A, B>
 where
-    A: Clone + Eq + Hash + 'a,
-    B: Clone + 'a,
+    A: Eq + Hash + 'a,
+    B: 'a,
 {
     parent: &'a mut MockServiceFactory<A, B>,
     request: A,
@@ -14,7 +14,6 @@ where
 impl<'a, A, B> When<'a, A, B>
 where
     A: Clone + Eq + Hash,
-    B: Clone,
 {
     pub fn new(parent: &'a mut MockServiceFactory<A, B>, request: A) -> Self {
         Self { parent, request }
