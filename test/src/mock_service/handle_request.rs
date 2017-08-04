@@ -8,11 +8,7 @@ use futures::{Async, Future, Poll};
 
 use super::errors::{Error, ErrorKind};
 
-pub struct HandleRequest<A, B>
-where
-    A: Clone + Display + Eq,
-    B: Clone,
-{
+pub struct HandleRequest<A, B> {
     request: A,
     expected_requests: Arc<Mutex<HashMap<A, B>>>,
     remaining_requests: Arc<Mutex<HashSet<A>>>,
@@ -20,7 +16,7 @@ where
 
 impl<A, B> HandleRequest<A, B>
 where
-    A: Clone + Display + Eq + Hash,
+    A: Display + Eq + Hash,
     B: Clone,
 {
     pub fn new(
@@ -62,7 +58,7 @@ where
 
 impl<A, B> Future for HandleRequest<A, B>
 where
-    A: Clone + Display + Eq + Hash,
+    A: Display + Eq + Hash,
     B: Clone,
 {
     type Item = B;
