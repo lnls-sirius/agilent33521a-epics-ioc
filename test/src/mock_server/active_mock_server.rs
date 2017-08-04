@@ -13,10 +13,6 @@ use super::super::mock_service::{HandleRequest, MockService};
 pub struct ActiveMockServer<T>
 where
     T: Stream + Sink,
-    T::Item: Clone + Display + Eq,
-    T::SinkItem: Clone,
-    T::Error: Into<Error>,
-    T::SinkError: Into<Error>,
 {
     connection: T,
     service: MockService<T::Item, T::SinkItem>,
@@ -137,7 +133,6 @@ where
 
 impl<T> Future for ActiveMockServer<T>
 where
-    T: Stream + Sink,
     T: Stream + Sink,
     T::Item: Clone + Display + Eq + Hash,
     T::SinkItem: Clone,
