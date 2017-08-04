@@ -17,8 +17,6 @@ use super::super::mock_service::MockServiceFactory;
 pub struct ListeningMockServer<P>
 where
     P: ServerProto<TcpStream>,
-    P::Request: Clone + Display + PartialEq,
-    P::Response: Clone,
 {
     connection_and_service: Join<
         BoundConnectionFuture<P>,
