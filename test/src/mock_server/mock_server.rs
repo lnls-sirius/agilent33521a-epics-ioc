@@ -3,7 +3,7 @@ use std::hash::Hash;
 use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
 
-use futures::{Future, IntoFuture};
+use futures::Future;
 use futures::future::Flatten;
 use tokio_core::net::TcpStream;
 use tokio_core::reactor::{Core, Handle};
@@ -15,11 +15,7 @@ use super::super::mock_service::{MockServiceFactory, When};
 
 pub struct MockServer<P>
 where
-    P: ServerProto<TcpStream> + Send,
-    P::Request: Clone + Display + Eq + Hash + Send,
-    P::Response: Clone + Send,
-    P::Transport: Send,
-    <P::BindTransport as IntoFuture>::Future: Send,
+    P: ServerProto<TcpStream>,
 {
     address: SocketAddr,
     service_factory: MockServiceFactory<P::Request, P::Response>,
@@ -28,11 +24,9 @@ where
 
 impl<P> MockServer<P>
 where
-    P: ServerProto<TcpStream> + Send,
-    P::Request: Clone + Display + Eq + Hash + Send,
-    P::Response: Clone + Send,
-    P::Transport: Send,
-    <P::BindTransport as IntoFuture>::Future: Send,
+    P: ServerProto<TcpStream>,
+    P::Request: Clone + Display + Eq + Hash,
+    P::Response: Clone,
 {
     pub fn new(address: SocketAddr, protocol: P) -> MockServer<P> {
         Self {
