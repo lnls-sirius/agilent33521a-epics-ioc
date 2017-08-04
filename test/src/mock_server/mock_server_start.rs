@@ -8,7 +8,7 @@ use tokio_core::net::{TcpListener, TcpStream};
 use tokio_core::reactor::Handle;
 use tokio_proto::pipeline::ServerProto;
 
-use super::errors::Error;
+use super::errors::{Error, ErrorKind};
 use super::listening_mock_server::ListeningMockServer;
 use super::super::mock_service::MockServiceFactory;
 
@@ -19,7 +19,7 @@ where
     P::Response: Clone,
 {
     address: SocketAddr,
-    service_factory: MockServiceFactory<P::Request, P::Response>,
+    service_factory: Option<MockServiceFactory<P::Request, P::Response>>,
     protocol: Arc<Mutex<P>>,
     handle: Handle,
 }
@@ -38,9 +38,9 @@ where
     ) -> Self {
         Self {
             address,
-            service_factory,
             protocol,
             handle,
+            service_factory: Some(service_factory),
         }
     }
 }
@@ -55,15 +55,21 @@ where
     type Error = Error;
 
     fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
-        let service_factory = self.service_factory.clone();
-        let protocol = self.protocol.clone();
+        if self.service_factory.is_some() {
+            let listener = TcpListener::bind(&self.address, &self.handle)?;
+            let protocol = self.protocol.clone();
 
-        let listener = TcpListener::bind(&self.address, &self.handle)?;
-
-        Ok(Async::Ready(ListeningMockServer::new(
-            listener,
-            service_factory,
-            protocol,
-        )))
+            if let Some(service_factory) = self.service_factory.take() {
+                Ok(Async::Ready(ListeningMockServer::new(
+                    listener,
+                    service_factory,
+                    protocol,
+                )))
+            } else {
+                Err(ErrorKind::AttemptToStartServerTwice.into())
+            }
+        } else {
+            Err(ErrorKind::AttemptToStartServerTwice.into())
+        }
     }
 }

@@ -16,6 +16,11 @@ error_chain! {
     }
 
     errors {
+        AttemptToStartServerTwice {
+            description("server can't be started twice from same \
+                        MockServerStart future")
+        }
+
         FailedToReceiveConnection {
             description("failed to receive a connection")
         }
