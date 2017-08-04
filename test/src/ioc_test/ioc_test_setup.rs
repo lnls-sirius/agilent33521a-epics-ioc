@@ -16,11 +16,7 @@ use super::super::mock_service::When;
 
 pub struct IocTestSetup<P>
 where
-    P: ServerProto<TcpStream> + Send,
-    <P as ServerProto<TcpStream>>::Request: Clone + Display + Eq + Hash + Send,
-    <P as ServerProto<TcpStream>>::Response: Clone + Send,
-    <P as ServerProto<TcpStream>>::Transport: Send,
-    <<P as ServerProto<TcpStream>>::BindTransport as IntoFuture>::Future: Send,
+    P: ServerProto<TcpStream>,
 {
     handle: Handle,
     server: MockServer<P>,
@@ -30,12 +26,13 @@ where
 
 impl<'a, 'b, P> IocTestSetup<P>
 where
-    P: ServerProto<TcpStream> + Send,
-    <P as ServerProto<TcpStream>>::Request:
-        Clone + Display + Eq + From<&'a str> + Hash + Send,
-    <P as ServerProto<TcpStream>>::Response: Clone + From<&'b str> + Send,
-    <P as ServerProto<TcpStream>>::Transport: Send,
-    <<P as ServerProto<TcpStream>>::BindTransport as IntoFuture>::Future: Send,
+    P: ServerProto<TcpStream>,
+    <P as ServerProto<TcpStream>>::Request: Clone
+        + Display
+        + Eq
+        + From<&'a str>
+        + Hash,
+    <P as ServerProto<TcpStream>>::Response: Clone + From<&'b str>,
 {
     pub fn new(handle: Handle, protocol: P, ip_port: u16) -> Result<Self> {
         let address = SocketAddr::new("0.0.0.0".parse()?, ip_port);
@@ -97,12 +94,9 @@ where
 
 impl<P> IntoFuture for IocTestSetup<P>
 where
-    P: ServerProto<TcpStream> + Send,
-    <P as ServerProto<TcpStream>>::Request: Clone + Display + Eq + Hash + Send,
-    <P as ServerProto<TcpStream>>::Response: Clone + Send,
-    <P as ServerProto<TcpStream>>::Transport: Send,
-    <P as ServerProto<TcpStream>>::BindTransport: Send,
-    <<P as ServerProto<TcpStream>>::BindTransport as IntoFuture>::Future: Send,
+    P: ServerProto<TcpStream>,
+    <P as ServerProto<TcpStream>>::Request: Clone + Display + Eq + Hash,
+    <P as ServerProto<TcpStream>>::Response: Clone,
 {
     type Future = IocTestStart<P>;
     type Item = IocTestStartIoc<P>;
