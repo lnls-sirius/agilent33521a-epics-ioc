@@ -10,6 +10,8 @@ extern crate tokio_service;
 #[macro_use]
 extern crate error_chain;
 
+pub mod scpi;
+
 pub mod line_codec;
 pub mod line_protocol;
 #[macro_use]
