@@ -11,6 +11,7 @@ use super::errors::{Error, Result};
 use super::ioc_test_start_ioc::IocTestStartIoc;
 use super::ioc_test_start::IocTestStart;
 use super::super::ioc::IocSpawn;
+use super::super::mock_server;
 use super::super::mock_server::MockServer;
 use super::super::mock_service::When;
 
@@ -33,6 +34,7 @@ where
         + From<&'a str>
         + Hash,
     <P as ServerProto<TcpStream>>::Response: Clone + From<&'b str>,
+    <P as ServerProto<TcpStream>>::Error: Into<mock_server::Error>,
 {
     pub fn new(handle: Handle, protocol: P, ip_port: u16) -> Result<Self> {
         let address = SocketAddr::new("0.0.0.0".parse()?, ip_port);
@@ -97,6 +99,7 @@ where
     P: ServerProto<TcpStream>,
     <P as ServerProto<TcpStream>>::Request: Clone + Display + Eq + Hash,
     <P as ServerProto<TcpStream>>::Response: Clone,
+    <P as ServerProto<TcpStream>>::Error: Into<mock_server::Error>,
 {
     type Future = IocTestStart<P>;
     type Item = IocTestStartIoc<P>;

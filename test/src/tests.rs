@@ -1,3 +1,5 @@
+use std::io;
+
 use futures::{Future, IntoFuture};
 use tokio_core::net::TcpStream;
 use tokio_core::reactor::Core;
@@ -6,7 +8,14 @@ use tokio_proto::pipeline::ServerProto;
 use super::line_protocol::LineProtocol;
 use super::ioc_test::{IocTestSetup, Result};
 
-trait Protocol: ServerProto<TcpStream, Request = String, Response = String> {}
+trait Protocol:
+    ServerProto<
+        TcpStream,
+        Request = String,
+        Response = String,
+        Error = io::Error>
+{
+}
 
 impl Protocol for LineProtocol {}
 

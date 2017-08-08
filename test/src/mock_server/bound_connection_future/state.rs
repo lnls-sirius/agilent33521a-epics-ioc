@@ -21,6 +21,7 @@ where
 impl<P> State<P>
 where
     P: ServerProto<TcpStream>,
+    P::Error: Into<Error>,
 {
     pub fn start_with(
         connection: ConnectionFuture,
@@ -59,6 +60,7 @@ pub struct WaitForConnection<P> {
 impl<P> WaitForConnection<P>
 where
     P: ServerProto<TcpStream>,
+    P::Error: Into<Error>,
 {
     pub fn from(connection: ConnectionFuture, protocol: Arc<Mutex<P>>) -> Self {
         Self {
@@ -113,6 +115,7 @@ where
 impl<P> WaitForBindResult<P>
 where
     P: ServerProto<TcpStream>,
+    P::Error: Into<Error>,
 {
     fn advance_with(
         protocol: MutexGuard<P>,

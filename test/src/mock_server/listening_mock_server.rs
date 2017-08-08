@@ -17,6 +17,7 @@ use super::super::mock_service::MockServiceFactory;
 pub struct ListeningMockServer<P>
 where
     P: ServerProto<TcpStream>,
+    P::Error: Into<Error>,
 {
     connection_and_service: Join<
         BoundConnectionFuture<P>,
@@ -29,6 +30,7 @@ where
     P: ServerProto<TcpStream>,
     P::Request: Clone + Display + Eq + Hash,
     P::Response: Clone,
+    P::Error: Into<Error>,
 {
     pub fn new(
         listener: TcpListener,
@@ -49,6 +51,7 @@ where
     P: ServerProto<TcpStream>,
     P::Request: Clone + Display + Eq + Hash,
     P::Response: Clone,
+    P::Error: Into<Error>,
 {
     type Item = ActiveMockServer<P::Transport>;
     type Error = Error;

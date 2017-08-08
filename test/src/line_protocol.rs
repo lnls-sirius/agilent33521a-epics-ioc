@@ -19,6 +19,7 @@ impl LineProtocol {
 impl<T: AsyncRead + AsyncWrite + 'static> ServerProto<T> for LineProtocol {
     type Request = String;
     type Response = String;
+    type Error = io::Error;
     type Transport = Framed<T, LineCodec>;
     type BindTransport = io::Result<Self::Transport>;
 

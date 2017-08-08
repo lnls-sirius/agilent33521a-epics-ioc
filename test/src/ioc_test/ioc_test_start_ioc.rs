@@ -10,6 +10,7 @@ use super::ioc_test::IocTest;
 use super::super::ioc::IocInstance;
 use super::super::ioc::IocProcess;
 use super::super::ioc::IocSpawn;
+use super::super::mock_server;
 use super::super::mock_server::ListeningMockServer;
 
 pub struct IocTestStartIoc<P>
@@ -17,6 +18,7 @@ where
     P: ServerProto<TcpStream>,
     <P as ServerProto<TcpStream>>::Request: Clone + Display + Eq + Hash,
     <P as ServerProto<TcpStream>>::Response: Clone,
+    <P as ServerProto<TcpStream>>::Error: Into<mock_server::Error>,
 {
     ioc: IocSpawn,
     listening_server: Option<ListeningMockServer<P>>,
@@ -28,6 +30,7 @@ where
     P: ServerProto<TcpStream>,
     <P as ServerProto<TcpStream>>::Request: Clone + Display + Eq + Hash,
     <P as ServerProto<TcpStream>>::Response: Clone,
+    <P as ServerProto<TcpStream>>::Error: Into<mock_server::Error>,
 {
     pub fn new(
         ioc: IocSpawn,
@@ -47,6 +50,7 @@ where
     P: ServerProto<TcpStream>,
     <P as ServerProto<TcpStream>>::Request: Clone + Display + Eq + Hash,
     <P as ServerProto<TcpStream>>::Response: Clone,
+    <P as ServerProto<TcpStream>>::Error: Into<mock_server::Error>,
 {
     type Item = IocTest<P>;
     type Error = Error;

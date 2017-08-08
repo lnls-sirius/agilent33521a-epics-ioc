@@ -9,7 +9,7 @@ use tokio_core::net::TcpStream;
 use tokio_core::reactor::{Core, Handle};
 use tokio_proto::pipeline::ServerProto;
 
-use super::errors::Result;
+use super::errors::{Error, Result};
 use super::mock_server_start::MockServerStart;
 use super::super::mock_service::{MockServiceFactory, When};
 
@@ -27,6 +27,7 @@ where
     P: ServerProto<TcpStream>,
     P::Request: Clone + Display + Eq + Hash,
     P::Response: Clone,
+    P::Error: Into<Error>,
 {
     pub fn new(address: SocketAddr, protocol: P) -> MockServer<P> {
         Self {

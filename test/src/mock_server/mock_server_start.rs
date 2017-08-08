@@ -27,6 +27,7 @@ where
     P: ServerProto<TcpStream>,
     P::Request: Clone + Display + Eq + Hash,
     P::Response: Clone,
+    P::Error: Into<Error>,
 {
     pub fn new(
         address: SocketAddr,
@@ -63,6 +64,7 @@ where
     P: ServerProto<TcpStream>,
     P::Request: Clone + Display + Eq + Hash,
     P::Response: Clone,
+    P::Error: Into<Error>,
 {
     type Item = ListeningMockServer<P>;
     type Error = Error;
