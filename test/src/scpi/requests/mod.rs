@@ -1,10 +1,12 @@
+mod str_extensions;
+
+mod output;
+
 use std::fmt;
 use std::fmt::{Display, Formatter};
 
+use self::str_extensions::StrExtensions;
 use super::errors::{ErrorKind, Result};
-
-mod str_extensions;
-mod output;
 
 #[derive(Clone, Eq, Hash, PartialEq)]
 pub enum ScpiRequest {
@@ -15,20 +17,12 @@ pub enum ScpiRequest {
 
 impl ScpiRequest {
     pub fn from(string: &str) -> Result<ScpiRequest> {
-        if string.len() > 4 {
-            let mut fourth_char = 4;
+        let (first_four_chars, _) = string.split_at_nth_char(4);
 
-            while !string.is_char_boundary(fourth_char) {
-                fourth_char += 1;
-            }
-
-            let (first_four_chars, _) = string.split_at(fourth_char);
-
-            match first_four_chars {
-                "OUTP" => return output::decode(string),
-                _ => {}
-            };
-        }
+        match first_four_chars {
+            "OUTP" => return output::decode(string),
+            _ => {}
+        };
 
         Err(ErrorKind::UnknownScpiRequest(String::from(string)).into())
     }

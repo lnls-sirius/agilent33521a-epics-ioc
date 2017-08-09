@@ -1,12 +1,21 @@
 use std::cmp;
 
 pub trait StrExtensions {
+    fn split_at_nth_char(&self, index: usize) -> (&Self, &Self);
     fn skip_bytes(&self, bytes_to_skip: usize) -> &Self;
     fn skip_expected_chars(&self, expected: &str) -> &Self;
     fn parse_integer(&self) -> Option<(usize, &Self)>;
 }
 
 impl StrExtensions for str {
+    fn split_at_nth_char(&self, index: usize) -> (&str, &str) {
+        if let Some((byte_index, _)) = self.char_indices().skip(index).next() {
+            self.split_at(byte_index)
+        } else {
+            self.split_at(self.len())
+        }
+    }
+
     fn skip_bytes(&self, bytes_to_skip: usize) -> &str {
         let (_skipped_bytes, remaining_bytes) = self.split_at(bytes_to_skip);
 
