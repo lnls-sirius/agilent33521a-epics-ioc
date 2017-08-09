@@ -5,7 +5,7 @@ use tokio_io::codec::{Decoder, Encoder};
 
 use super::errors::{Error, Result};
 use super::message::ScpiMessage;
-use super::root_messages::Messages;
+use super::requests::ScpiRequest;
 
 pub struct ScpiCodec;
 
@@ -25,7 +25,7 @@ impl Encoder for ScpiCodec {
 }
 
 impl Decoder for ScpiCodec {
-    type Item = Box<ScpiMessage>;
+    type Item = ScpiRequest;
     type Error = Error;
 
     fn decode(&mut self, buffer: &mut BytesMut) -> Result<Option<Self::Item>> {
@@ -37,7 +37,7 @@ impl Decoder for ScpiCodec {
 
             buffer.split_to(1);
 
-            Ok(Some(Messages::decode(message)?))
+            Ok(Some(ScpiRequest::from(message)?))
         } else {
             Ok(None)
         }
