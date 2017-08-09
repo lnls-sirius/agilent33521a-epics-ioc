@@ -9,6 +9,7 @@ mod codec;
 pub mod messages;
 
 pub use self::codec::ScpiCodec;
+pub use self::errors::{Error, ErrorKind};
 pub use self::message::ScpiMessage;
 pub use self::requests::ScpiRequest;
 pub use self::response::ScpiResponse;

@@ -3,10 +3,11 @@ use std::net::AddrParseError;
 
 use futures::{Future, Poll, Stream};
 
-use super::super::mock_service;
+use super::super::{mock_service, scpi};
 
 error_chain! {
     links {
+        ScpiError(scpi::Error, scpi::ErrorKind);
         ServiceError(mock_service::Error, mock_service::ErrorKind);
     }
 
