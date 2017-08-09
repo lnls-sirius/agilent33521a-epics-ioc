@@ -1,6 +1,7 @@
 mod str_extensions;
 
 mod output;
+mod source;
 
 use std::fmt;
 use std::fmt::{Display, Formatter};
@@ -13,6 +14,7 @@ pub enum ScpiRequest {
     OutputOn(usize),
     OutputOff(usize),
     OutputStatus(usize),
+    SourceVoltageGet(usize),
 }
 
 impl ScpiRequest {
@@ -21,6 +23,7 @@ impl ScpiRequest {
 
         match first_four_chars {
             "OUTP" => return output::decode(string),
+            "SOUR" => return source::decode(string),
             _ => {}
         };
 
@@ -29,6 +32,10 @@ impl ScpiRequest {
 
     pub fn output(channel: usize) -> output::Builder {
         output::Builder::with_channel(channel)
+    }
+
+    pub fn source(source: usize) -> source::Builder {
+        source::Builder::with_source(source)
     }
 }
 
@@ -43,6 +50,9 @@ impl Display for ScpiRequest {
             }
             ScpiRequest::OutputStatus(channel) => {
                 write!(formatter, "OUTP{}?", channel)
+            }
+            ScpiRequest::SourceVoltageGet(source) => {
+                write!(formatter, "SOUR{}:VOLT?", source)
             }
         }
     }
