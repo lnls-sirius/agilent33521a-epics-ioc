@@ -3,6 +3,7 @@ use std::cmp;
 pub trait StrExtensions {
     fn byte_index_of_nth_char(&self, char_index: usize) -> usize;
     fn split_at_nth_char(&self, char_index: usize) -> (&Self, &Self);
+    fn view_first_chars(&self, num_chars: usize) -> &Self;
     fn skip_chars(&self, chars_to_skip: usize) -> &Self;
     fn skip_bytes(&self, bytes_to_skip: usize) -> &Self;
     fn skip_expected_chars(&self, expected: &str) -> &Self;
@@ -11,7 +12,9 @@ pub trait StrExtensions {
 
 impl StrExtensions for str {
     fn byte_index_of_nth_char(&self, char_index: usize) -> usize {
-        if let Some((byte_index, _)) = self.char_indices().skip(index).next() {
+        let nth_char = self.char_indices().skip(char_index).next();
+
+        if let Some((byte_index, _)) = nth_char {
             byte_index
         } else {
             self.len()
@@ -20,6 +23,12 @@ impl StrExtensions for str {
 
     fn split_at_nth_char(&self, char_index: usize) -> (&str, &str) {
         self.split_at(self.byte_index_of_nth_char(char_index))
+    }
+
+    fn view_first_chars(&self, num_chars: usize) -> &Self {
+        let (view, _rest) = self.split_at_nth_char(num_chars);
+
+        view
     }
 
     fn skip_chars(&self, chars_to_skip: usize) -> &str {
