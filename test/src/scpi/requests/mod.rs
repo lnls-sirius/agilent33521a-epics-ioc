@@ -3,6 +3,7 @@ use std::fmt::{Display, Formatter};
 
 use super::errors::{ErrorKind, Result};
 
+mod str_extensions;
 mod output;
 
 #[derive(Clone, Eq, Hash, PartialEq)]
