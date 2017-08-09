@@ -4,21 +4,21 @@ use bytes::BytesMut;
 use tokio_io::codec::{Decoder, Encoder};
 
 use super::errors::{Error, Result};
-use super::message::ScpiMessage;
 use super::requests::ScpiRequest;
+use super::response::ScpiResponse;
 
 pub struct ScpiCodec;
 
 impl Encoder for ScpiCodec {
-    type Item = Box<ScpiMessage>;
+    type Item = ScpiResponse;
     type Error = Error;
 
     fn encode(
         &mut self,
-        message: Self::Item,
+        response: Self::Item,
         buffer: &mut BytesMut,
     ) -> Result<()> {
-        message.encode(buffer);
+        response.encode(buffer);
 
         Ok(())
     }
