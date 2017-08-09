@@ -1,19 +1,29 @@
 use std::cmp;
 
 pub trait StrExtensions {
-    fn split_at_nth_char(&self, index: usize) -> (&Self, &Self);
+    fn byte_index_of_nth_char(&self, char_index: usize) -> usize;
+    fn split_at_nth_char(&self, char_index: usize) -> (&Self, &Self);
+    fn skip_chars(&self, chars_to_skip: usize) -> &Self;
     fn skip_bytes(&self, bytes_to_skip: usize) -> &Self;
     fn skip_expected_chars(&self, expected: &str) -> &Self;
     fn parse_integer(&self) -> Option<(usize, &Self)>;
 }
 
 impl StrExtensions for str {
-    fn split_at_nth_char(&self, index: usize) -> (&str, &str) {
+    fn byte_index_of_nth_char(&self, char_index: usize) -> usize {
         if let Some((byte_index, _)) = self.char_indices().skip(index).next() {
-            self.split_at(byte_index)
+            byte_index
         } else {
-            self.split_at(self.len())
+            self.len()
         }
+    }
+
+    fn split_at_nth_char(&self, char_index: usize) -> (&str, &str) {
+        self.split_at(self.byte_index_of_nth_char(char_index))
+    }
+
+    fn skip_chars(&self, chars_to_skip: usize) -> &str {
+        self.skip_bytes(self.byte_index_of_nth_char(chars_to_skip))
     }
 
     fn skip_bytes(&self, bytes_to_skip: usize) -> &str {
