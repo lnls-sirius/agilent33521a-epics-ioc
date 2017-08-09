@@ -1,5 +1,6 @@
 use super::errors::{ErrorKind, Result};
 
+#[derive(Clone, Eq, Hash, PartialEq)]
 pub enum ScpiRequest {}
 
 impl ScpiRequest {
