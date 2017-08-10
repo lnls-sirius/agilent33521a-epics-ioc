@@ -1,6 +1,7 @@
 mod arbitrary;
 mod noise;
 mod prbs;
+mod pulse;
 
 use super::super::ScpiRequest;
 use super::super::str_extensions::StrExtensions;
@@ -19,6 +20,7 @@ pub fn decode(string: &str, source: usize) -> Option<ScpiRequest> {
         match command.view_first_chars(4) {
             "NOIS" => return noise::decode(command, source),
             "PRBS" => return prbs::decode(command, source),
+            "PULS" => return pulse::decode(command, source),
             _ => {}
         }
     }
