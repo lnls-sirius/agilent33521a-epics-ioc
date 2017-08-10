@@ -17,16 +17,8 @@ error_chain! {
         }
 
         UnexpectedRequest(request: String) {
-            description("unexpected request after processing all expected \
-                         requests")
-            display("received an unexpected request after processing all \
-                     expected requests: '{}'", request)
-        }
-
-        IncorrectRequest(request: String, expected: String) {
-            description("incorrect request received")
-            display("received incorrect request '{}' while expecting for '{}'",
-                    request, expected)
+            description("received an unexpected request")
+            display("received an unexpected request: '{}'", request)
         }
     }
 }
