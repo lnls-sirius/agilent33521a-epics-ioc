@@ -1,6 +1,7 @@
 use std::cmp;
 
 pub trait StrExtensions {
+    fn get_nth_char(&self, char_index: usize) -> Option<char>;
     fn byte_index_of_nth_char(&self, char_index: usize) -> usize;
     fn split_at_nth_char(&self, char_index: usize) -> (&Self, &Self);
     fn view_first_chars(&self, num_chars: usize) -> &Self;
@@ -11,6 +12,12 @@ pub trait StrExtensions {
 }
 
 impl StrExtensions for str {
+    fn get_nth_char(&self, char_index: usize) -> Option<char> {
+        let char_index = if char_index < 1 { 0 } else { char_index - 1 };
+
+        self.chars().skip(char_index).next()
+    }
+
     fn byte_index_of_nth_char(&self, char_index: usize) -> usize {
         let nth_char = self.char_indices().skip(char_index).next();
 
