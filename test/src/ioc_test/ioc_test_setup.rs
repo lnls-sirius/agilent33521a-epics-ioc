@@ -25,22 +25,16 @@ where
     ioc_variables_to_set: Vec<(String, String)>,
 }
 
-impl<'a, 'b, P> IocTestSetup<P>
+impl<P> IocTestSetup<P>
 where
     P: ServerProto<TcpStream>,
-    <P as ServerProto<TcpStream>>::Request: Clone
-        + Display
-        + Eq
-        + From<&'a str>
-        + Hash,
-    <P as ServerProto<TcpStream>>::Response: Clone + From<&'b str>,
+    <P as ServerProto<TcpStream>>::Request: Clone + Display + Eq + Hash,
+    <P as ServerProto<TcpStream>>::Response: Clone,
     <P as ServerProto<TcpStream>>::Error: Into<mock_server::Error>,
 {
     pub fn new(handle: Handle, protocol: P, ip_port: u16) -> Result<Self> {
         let address = SocketAddr::new("0.0.0.0".parse()?, ip_port);
-        let mut server = MockServer::new(address, protocol);
-
-        Self::setup_initial_request_response_map(&mut server);
+        let server = MockServer::new(address, protocol);
 
         Ok(Self {
             handle,
@@ -69,28 +63,6 @@ where
         let value = String::from(value);
 
         self.ioc_variables_to_set.push((name, value));
-    }
-
-    fn setup_initial_request_response_map(server: &mut MockServer<P>) {
-        request_response_map! { server,
-            "OUTPut1?" => "0",
-            "SOURce1:VOLT?" => "1",
-            "SOURce1:VOLT:OFFSet?" => "1",
-            "SOURce1:FREQuency?" => "1",
-            "SOURce1:PHASe?" => "1",
-            "SOURce1:FUNCtion?" => "SQUare",
-            "SOURce1:FUNCtion:ARBitrary?" => "\"DUMMY.FILE\"",
-            "SOURce1:FUNCtion:ARBitrary:SRATe?" => "1",
-            "SOURce1:FUNCtion:NOISe:BANDwidth?" => "1",
-            "SOURce1:FUNCtion:PRBS:BRATe?" => "1",
-            "SOURce1:FUNCtion:PRBS:DATA?" => "PN7",
-            "SOURce1:FUNCtion:PRBS:TRANsition?" => "1",
-            "SOURce1:FUNCtion:PULSe:TRANsition:LEADing?" => "1",
-            "SOURce1:FUNCtion:PULSe:TRANsition:TRAiling?" => "1",
-            "SOURce1:FUNCtion:PULSe:WIDTh?" => "1",
-            "SOURce1:FUNCtion:RAMP:SYMMetry?" => "1",
-            "SOURce1:FUNCtion:SQUare:DCYCle?" => "1",
-        };
     }
 }
 
