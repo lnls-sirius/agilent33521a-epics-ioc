@@ -2,6 +2,7 @@ mod arbitrary;
 mod noise;
 mod prbs;
 mod pulse;
+mod ramp;
 
 use super::super::ScpiRequest;
 use super::super::str_extensions::StrExtensions;
@@ -21,6 +22,7 @@ pub fn decode(string: &str, source: usize) -> Option<ScpiRequest> {
             "NOIS" => return noise::decode(command, source),
             "PRBS" => return prbs::decode(command, source),
             "PULS" => return pulse::decode(command, source),
+            "RAMP" => return ramp::decode(command, source),
             _ => {}
         }
     }
