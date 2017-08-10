@@ -25,9 +25,7 @@ pub enum ScpiRequest {
 
 impl ScpiRequest {
     pub fn from(string: &str) -> Result<ScpiRequest> {
-        let first_four_chars = string.view_first_chars(4);
-
-        let decoded_request = match first_four_chars {
+        let decoded_request = match string.view_first_chars(4) {
             "OUTP" => output::decode(string),
             "SOUR" => source::decode(string),
             _ => None,

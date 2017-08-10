@@ -8,9 +8,8 @@ pub fn decode(string: &str, source: usize) -> Option<ScpiRequest> {
 
     if command.starts_with(":") {
         let command = command.skip_chars(1);
-        let first_four_chars = command.view_first_chars(4);
 
-        match first_four_chars {
+        match command.view_first_chars(4) {
             "BAND" => return bandwidth::decode(command, source),
             _ => {}
         }

@@ -10,9 +10,8 @@ pub fn decode(string: &str, source: usize) -> Option<ScpiRequest> {
 
     if command.starts_with(":") {
         let command = command.skip_chars(1);
-        let first_three_chars = command.view_first_chars(3);
 
-        match first_three_chars {
+        match command.view_first_chars(3) {
             "ARB" => return arbitrary::decode(command, source),
             _ => {}
         }

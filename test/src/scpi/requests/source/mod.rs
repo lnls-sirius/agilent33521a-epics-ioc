@@ -12,9 +12,8 @@ pub fn decode(string: &str) -> Option<ScpiRequest> {
     if let Some((source, command)) = request_data.parse_integer() {
         if command.starts_with(":") {
             let command = command.skip_chars(1);
-            let first_four_chars = command.view_first_chars(4);
 
-            match first_four_chars {
+            match command.view_first_chars(4) {
                 "FREQ" => return frequency::decode(command, source),
                 "FUNC" => return function::decode(command, source),
                 "PHAS" => return phase::decode(command, source),
