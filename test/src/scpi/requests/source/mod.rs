@@ -1,5 +1,6 @@
 mod frequency;
 mod function;
+mod phase;
 mod voltage;
 
 use super::ScpiRequest;
@@ -16,6 +17,7 @@ pub fn decode(string: &str) -> Option<ScpiRequest> {
             match first_four_chars {
                 "FREQ" => return frequency::decode(command, source),
                 "FUNC" => return function::decode(command, source),
+                "PHAS" => return phase::decode(command, source),
                 "VOLT" => return voltage::decode(command, source),
                 _ => {}
             }

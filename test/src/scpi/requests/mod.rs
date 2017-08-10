@@ -15,6 +15,7 @@ pub enum ScpiRequest {
     OutputOff(usize),
     OutputStatus(usize),
     SourceFrequencyGet(usize),
+    SourcePhaseGet(usize),
     SourceVoltageGet(usize),
     SourceVoltageOffsetGet(usize),
     SourceArbitraryFunctionSampleRateGet(usize),
@@ -53,6 +54,9 @@ impl Display for ScpiRequest {
             }
             ScpiRequest::SourceFrequencyGet(source) => {
                 write!(formatter, "SOUR{}:FREQ?", source)
+            }
+            ScpiRequest::SourcePhaseGet(source) => {
+                write!(formatter, "SOUR{}:PHAS?", source)
             }
             ScpiRequest::SourceVoltageGet(source) => {
                 write!(formatter, "SOUR{}:VOLT?", source)
