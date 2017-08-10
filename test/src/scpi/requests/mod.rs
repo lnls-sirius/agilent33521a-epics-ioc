@@ -17,6 +17,7 @@ pub enum ScpiRequest {
     SourceFrequencyGet(usize),
     SourceVoltageGet(usize),
     SourceArbitraryFunctionSampleRateGet(usize),
+    SourceNoiseFunctionBandwidthGet(usize),
 }
 
 impl ScpiRequest {
@@ -57,6 +58,9 @@ impl Display for ScpiRequest {
             }
             ScpiRequest::SourceArbitraryFunctionSampleRateGet(source) => {
                 write!(formatter, "SOUR{}:FUNC:ARB:SRAT?", source)
+            }
+            ScpiRequest::SourceNoiseFunctionBandwidthGet(source) => {
+                write!(formatter, "SOUR{}:FUNC:NOIS:BAND?", source)
             }
         }
     }
