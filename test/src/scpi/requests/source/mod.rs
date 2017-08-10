@@ -1,3 +1,4 @@
+mod frequency;
 mod function;
 mod voltage;
 
@@ -13,6 +14,7 @@ pub fn decode(string: &str) -> Option<ScpiRequest> {
             let first_four_chars = command.view_first_chars(4);
 
             match first_four_chars {
+                "FREQ" => return frequency::decode(command, source),
                 "FUNC" => return function::decode(command, source),
                 "VOLT" => return voltage::decode(command, source),
                 _ => {}
