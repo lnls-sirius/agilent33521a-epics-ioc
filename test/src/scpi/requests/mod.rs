@@ -19,6 +19,7 @@ pub enum ScpiRequest {
     SourceVoltageGet(usize),
     SourceVoltageOffsetGet(usize),
     SourceFunctionQuery(usize),
+    SourceArbitraryFunctionFileQuery(usize),
     SourceArbitraryFunctionSampleRateGet(usize),
     SourceNoiseFunctionBandwidthGet(usize),
     SourcePrbsFunctionBitRateGet(usize),
@@ -73,6 +74,9 @@ impl Display for ScpiRequest {
             }
             ScpiRequest::SourceFunctionQuery(source) => {
                 write!(formatter, "SOUR{}:FUNC?", source)
+            }
+            ScpiRequest::SourceArbitraryFunctionFileQuery(source) => {
+                write!(formatter, "SOUR{}:FUNC:ARB?", source)
             }
             ScpiRequest::SourceArbitraryFunctionSampleRateGet(source) => {
                 write!(formatter, "SOUR{}:FUNC:ARB:SRAT?", source)
