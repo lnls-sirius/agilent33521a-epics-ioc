@@ -1,3 +1,4 @@
+mod function;
 mod voltage;
 
 use super::ScpiRequest;
@@ -16,6 +17,10 @@ impl Builder {
     pub fn voltage(self) -> voltage::Builder {
         voltage::Builder::with_source(self.source)
     }
+
+    pub fn function(self) -> function::Builder {
+        function::Builder::with_source(self.source)
+    }
 }
 
 pub fn decode(string: &str) -> Result<ScpiRequest> {
@@ -32,6 +37,7 @@ pub fn try_decode(string: &str) -> Option<ScpiRequest> {
             let first_four_chars = command.view_first_chars(4);
 
             match first_four_chars {
+                "FUNC" => return function::try_decode(command, source),
                 "VOLT" => return voltage::try_decode(command, source),
                 _ => {}
             }

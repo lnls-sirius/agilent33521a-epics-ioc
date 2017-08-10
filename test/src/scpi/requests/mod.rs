@@ -15,6 +15,7 @@ pub enum ScpiRequest {
     OutputOff(usize),
     OutputStatus(usize),
     SourceVoltageGet(usize),
+    SourceArbitraryFunctionSampleRateGet(usize),
 }
 
 impl ScpiRequest {
@@ -53,6 +54,9 @@ impl Display for ScpiRequest {
             }
             ScpiRequest::SourceVoltageGet(source) => {
                 write!(formatter, "SOUR{}:VOLT?", source)
+            }
+            ScpiRequest::SourceArbitraryFunctionSampleRateGet(source) => {
+                write!(formatter, "SOUR{}:FUNC:ARB:SRAT?", source)
             }
         }
     }
