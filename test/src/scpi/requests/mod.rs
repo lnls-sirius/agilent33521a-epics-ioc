@@ -23,6 +23,7 @@ pub enum ScpiRequest {
     SourcePrbsFunctionBitRateGet(usize),
     SourcePrbsFunctionTransitionGet(usize),
     SourcePulseFunctionLeadingEdgeTransitionGet(usize),
+    SourcePulseFunctionTrailingEdgeTransitionGet(usize),
 }
 
 impl ScpiRequest {
@@ -80,6 +81,9 @@ impl Display for ScpiRequest {
             ScpiRequest::SourcePulseFunctionLeadingEdgeTransitionGet(
                 source,
             ) => write!(formatter, "SOUR{}:FUNC:PULS:TRAN:LEAD?", source),
+            ScpiRequest::SourcePulseFunctionTrailingEdgeTransitionGet(
+                source,
+            ) => write!(formatter, "SOUR{}:FUNC:PULS:TRAN:TRA?", source),
         }
     }
 }
