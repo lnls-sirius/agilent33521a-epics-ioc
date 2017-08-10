@@ -1,4 +1,5 @@
 mod transition;
+mod width;
 
 use super::super::super::ScpiRequest;
 use super::super::super::str_extensions::StrExtensions;
@@ -11,6 +12,7 @@ pub fn decode(string: &str, source: usize) -> Option<ScpiRequest> {
 
         match command.view_first_chars(4) {
             "TRAN" => return transition::decode(command, source),
+            "WIDT" => return width::decode(command, source),
             _ => {}
         }
     }
