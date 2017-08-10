@@ -21,6 +21,7 @@ pub enum ScpiRequest {
     SourceArbitraryFunctionSampleRateGet(usize),
     SourceNoiseFunctionBandwidthGet(usize),
     SourcePrbsFunctionBitRateGet(usize),
+    SourcePrbsFunctionPolynomialGet(usize),
     SourcePrbsFunctionTransitionGet(usize),
     SourcePulseFunctionLeadingEdgeTransitionGet(usize),
     SourcePulseFunctionTrailingEdgeTransitionGet(usize),
@@ -77,6 +78,9 @@ impl Display for ScpiRequest {
             }
             ScpiRequest::SourcePrbsFunctionBitRateGet(source) => {
                 write!(formatter, "SOUR{}:FUNC:PRBS:BRAT?", source)
+            }
+            ScpiRequest::SourcePrbsFunctionPolynomialGet(source) => {
+                write!(formatter, "SOUR{}:FUNC:PRBS:DATA?", source)
             }
             ScpiRequest::SourcePrbsFunctionTransitionGet(source) => {
                 write!(formatter, "SOUR{}:FUNC:PRBS:TRAN?", source)
