@@ -1,4 +1,5 @@
 mod bitrate;
+mod transition;
 
 use super::super::super::ScpiRequest;
 use super::super::super::str_extensions::StrExtensions;
@@ -11,6 +12,7 @@ pub fn decode(string: &str, source: usize) -> Option<ScpiRequest> {
 
         match command.view_first_chars(4) {
             "BRAT" => return bitrate::decode(command, source),
+            "TRAN" => return transition::decode(command, source),
             _ => {}
         }
     }

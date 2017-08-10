@@ -21,6 +21,7 @@ pub enum ScpiRequest {
     SourceArbitraryFunctionSampleRateGet(usize),
     SourceNoiseFunctionBandwidthGet(usize),
     SourcePrbsFunctionBitRateGet(usize),
+    SourcePrbsFunctionTransitionGet(usize),
 }
 
 impl ScpiRequest {
@@ -71,6 +72,9 @@ impl Display for ScpiRequest {
             }
             ScpiRequest::SourcePrbsFunctionBitRateGet(source) => {
                 write!(formatter, "SOUR{}:FUNC:PRBS:BRAT?", source)
+            }
+            ScpiRequest::SourcePrbsFunctionTransitionGet(source) => {
+                write!(formatter, "SOUR{}:FUNC:PRBS:TRAN?", source)
             }
         }
     }
