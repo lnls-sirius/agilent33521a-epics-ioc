@@ -3,25 +3,6 @@ mod voltage;
 
 use super::ScpiRequest;
 use super::str_extensions::StrExtensions;
-use super::super::errors::{ErrorKind, Result};
-
-pub struct Builder {
-    source: usize,
-}
-
-impl Builder {
-    pub fn with_source(source: usize) -> Builder {
-        Builder { source }
-    }
-
-    pub fn voltage(self) -> voltage::Builder {
-        voltage::Builder::with_source(self.source)
-    }
-
-    pub fn function(self) -> function::Builder {
-        function::Builder::with_source(self.source)
-    }
-}
 
 pub fn decode(string: &str) -> Option<ScpiRequest> {
     let request_data = string.skip_expected_chars("SOURce");

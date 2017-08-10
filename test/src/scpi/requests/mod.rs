@@ -34,14 +34,6 @@ impl ScpiRequest {
             Err(ErrorKind::UnknownScpiRequest(String::from(string)).into())
         }
     }
-
-    pub fn output(channel: usize) -> output::Builder {
-        output::Builder::with_channel(channel)
-    }
-
-    pub fn source(source: usize) -> source::Builder {
-        source::Builder::with_source(source)
-    }
 }
 
 impl Display for ScpiRequest {
