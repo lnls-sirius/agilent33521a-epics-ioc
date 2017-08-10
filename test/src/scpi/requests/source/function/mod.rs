@@ -3,6 +3,7 @@ mod noise;
 mod prbs;
 mod pulse;
 mod ramp;
+mod square;
 
 use super::super::ScpiRequest;
 use super::super::str_extensions::StrExtensions;
@@ -15,6 +16,7 @@ pub fn decode(string: &str, source: usize) -> Option<ScpiRequest> {
 
         match command.view_first_chars(3) {
             "ARB" => return arbitrary::decode(command, source),
+            "SQU" => return square::decode(command, source),
             _ => {}
         }
 

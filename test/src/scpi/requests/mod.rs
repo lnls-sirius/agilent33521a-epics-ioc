@@ -26,6 +26,7 @@ pub enum ScpiRequest {
     SourcePulseFunctionTrailingEdgeTransitionGet(usize),
     SourcePulseFunctionPulseWidthGet(usize),
     SourceRampFunctionSymmetryGet(usize),
+    SourceSquareFunctionDutyCycleGet(usize),
 }
 
 impl ScpiRequest {
@@ -91,6 +92,9 @@ impl Display for ScpiRequest {
             }
             ScpiRequest::SourceRampFunctionSymmetryGet(source) => {
                 write!(formatter, "SOUR{}:FUNC:RAMP:SYMM?", source)
+            }
+            ScpiRequest::SourceSquareFunctionDutyCycleGet(source) => {
+                write!(formatter, "SOUR{}:FUNC:SQU:DCYC?", source)
             }
         }
     }
