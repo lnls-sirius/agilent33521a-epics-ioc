@@ -1,5 +1,6 @@
 mod arbitrary;
 mod noise;
+mod prbs;
 
 use super::super::ScpiRequest;
 use super::super::str_extensions::StrExtensions;
@@ -13,11 +14,12 @@ pub fn decode(string: &str, source: usize) -> Option<ScpiRequest> {
 
         match first_three_chars {
             "ARB" => return arbitrary::decode(command, source),
-            "NOI" => {
-                if command.get_nth_char(4) == Some('S') {
-                    return noise::decode(command, source);
-                }
-            }
+            _ => {}
+        }
+
+        match command.view_first_chars(4) {
+            "NOIS" => return noise::decode(command, source),
+            "PRBS" => return prbs::decode(command, source),
             _ => {}
         }
     }

@@ -20,6 +20,7 @@ pub enum ScpiRequest {
     SourceVoltageOffsetGet(usize),
     SourceArbitraryFunctionSampleRateGet(usize),
     SourceNoiseFunctionBandwidthGet(usize),
+    SourcePrbsFunctionBitRateGet(usize),
 }
 
 impl ScpiRequest {
@@ -69,6 +70,9 @@ impl Display for ScpiRequest {
             }
             ScpiRequest::SourceNoiseFunctionBandwidthGet(source) => {
                 write!(formatter, "SOUR{}:FUNC:NOIS:BAND?", source)
+            }
+            ScpiRequest::SourcePrbsFunctionBitRateGet(source) => {
+                write!(formatter, "SOUR{}:FUNC:PRBS:BRAT?", source)
             }
         }
     }
