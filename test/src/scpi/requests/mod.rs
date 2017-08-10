@@ -22,13 +22,17 @@ impl ScpiRequest {
     pub fn from(string: &str) -> Result<ScpiRequest> {
         let first_four_chars = string.view_first_chars(4);
 
-        match first_four_chars {
-            "OUTP" => return output::decode(string),
-            "SOUR" => return source::decode(string),
-            _ => {}
+        let decoded_request = match first_four_chars {
+            "OUTP" => output::decode(string),
+            "SOUR" => source::decode(string),
+            _ => None,
         };
 
-        Err(ErrorKind::UnknownScpiRequest(String::from(string)).into())
+        if let Some(request) = decoded_request {
+            Ok(request)
+        } else {
+            Err(ErrorKind::UnknownScpiRequest(String::from(string)).into())
+        }
     }
 
     pub fn output(channel: usize) -> output::Builder {

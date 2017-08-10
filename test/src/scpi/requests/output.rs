@@ -24,12 +24,7 @@ impl Builder {
     }
 }
 
-pub fn decode(string: &str) -> Result<ScpiRequest> {
-    try_decode(string)
-        .ok_or(ErrorKind::UnknownScpiRequest(String::from(string)).into())
-}
-
-pub fn try_decode(string: &str) -> Option<ScpiRequest> {
+pub fn decode(string: &str) -> Option<ScpiRequest> {
     let request_data = string.skip_expected_chars("OUTPut");
 
     if let Some((channel, command)) = request_data.parse_integer() {

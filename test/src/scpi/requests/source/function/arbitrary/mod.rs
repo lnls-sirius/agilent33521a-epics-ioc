@@ -17,7 +17,7 @@ impl Builder {
     }
 }
 
-pub fn try_decode(string: &str, source: usize) -> Option<ScpiRequest> {
+pub fn decode(string: &str, source: usize) -> Option<ScpiRequest> {
     let command = string.skip_expected_chars("ARBitrary");
 
     if command.starts_with(":") {
@@ -25,7 +25,7 @@ pub fn try_decode(string: &str, source: usize) -> Option<ScpiRequest> {
         let first_four_chars = command.view_first_chars(4);
 
         match first_four_chars {
-            "SRAT" => return sample_rate::try_decode(command, source),
+            "SRAT" => return sample_rate::decode(command, source),
             _ => {}
         }
     }
