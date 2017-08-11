@@ -22,6 +22,8 @@ trait Protocol
 impl Protocol for ScpiProtocol {}
 
 fn test_enable_channel_output<P: Protocol>(test: &mut IocTestSetup<P>) {
+    test.name("enable channel output");
+
     test.set_variable("channelOutput-Sel", "ON");
 
     test.when(ScpiRequest::OutputOn(1))
@@ -30,6 +32,8 @@ fn test_enable_channel_output<P: Protocol>(test: &mut IocTestSetup<P>) {
 }
 
 fn test_disable_channel_output<P: Protocol>(test: &mut IocTestSetup<P>) {
+    test.name("disable channel output");
+
     test.set_variable("channelOutput-Sel", "OFF");
 
     test.when(ScpiRequest::OutputOff(1))
