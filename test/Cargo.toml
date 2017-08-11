@@ -12,3 +12,4 @@ tokio-proto = {path = "./tokio-proto"}
 tokio-process = "0.1"
 tokio-service = "0.1"
 error-chain = "0.10"
+termion = "1.5"
