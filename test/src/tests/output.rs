@@ -20,4 +20,12 @@ tests! {
             .reply_with(ScpiResponse::Empty)
             .verify();
     }
+
+    test("read channel output status") {
+        test.set_variable("channelOutput-Sts", "");
+
+        test.when(ScpiRequest::OutputStatus(1))
+            .reply_with(ScpiResponse::Utf8String(String::from("ON")))
+            .verify();
+    }
 }
