@@ -19,6 +19,7 @@ pub struct IocTestSetup<P>
 where
     P: ServerProto<TcpStream>,
 {
+    name: String,
     handle: Handle,
     server: MockServer<P>,
     ip_port: u16,
@@ -41,7 +42,12 @@ where
             server,
             ip_port,
             ioc_variables_to_set: Vec::new(),
+            name: String::from("Unnamed IOC test"),
         })
+    }
+
+    pub fn name(&mut self, name: &str) {
+        self.name = String::from(name);
     }
 
     pub fn when<A>(&mut self, request: A) -> When<P::Request, P::Response>
@@ -81,6 +87,6 @@ where
         let ioc = IocSpawn::new(self.handle.clone(), self.ip_port);
         let server = self.server.start(self.handle);
 
-        IocTest::new(ioc, server, self.ioc_variables_to_set)
+        IocTest::new(self.name, ioc, server, self.ioc_variables_to_set)
     }
 }

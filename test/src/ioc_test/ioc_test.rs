@@ -32,6 +32,7 @@ where
     <P as ServerProto<TcpStream>>::Error: Into<mock_server::Error>,
 {
     pub fn new(
+        name: String,
         ioc: IocSpawn,
         server: MockServerStart<P>,
         ioc_variables_to_set: Vec<(String, String)>,
@@ -39,7 +40,7 @@ where
         let test_start = IocTestStart::new(ioc, server, ioc_variables_to_set);
 
         Self {
-            name: String::from("IocTest"),
+            name,
             future: test_start.flatten().flatten(),
         }
     }
