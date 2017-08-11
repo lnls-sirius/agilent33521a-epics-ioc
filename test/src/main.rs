@@ -1,6 +1,6 @@
 extern crate agilent33521a_ioc_test;
 
-use agilent33521a_ioc_test::tests::*;
+use agilent33521a_ioc_test::tests::run_tests;
 
 fn main() {
     match run_tests() {

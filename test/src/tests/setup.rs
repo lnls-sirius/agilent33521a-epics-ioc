@@ -2,15 +2,15 @@ use tokio_core::net::TcpStream;
 use tokio_core::reactor::Core;
 use tokio_proto::pipeline::ServerProto;
 
-use super::ioc_test::{Error, IocTestSetup, Result};
-use super::scpi;
-use super::scpi::ScpiProtocol;
-use super::scpi::ScpiRequest;
-use super::scpi::ScpiResponse;
-use super::test_result::TestResult;
-use super::test_scheduler::TestScheduler;
+use super::super::ioc_test::{Error, IocTestSetup, Result};
+use super::super::scpi;
+use super::super::scpi::ScpiProtocol;
+use super::super::scpi::ScpiRequest;
+use super::super::scpi::ScpiResponse;
+use super::super::test_result::TestResult;
+use super::super::test_scheduler::TestScheduler;
 
-trait Protocol
+pub trait Protocol
     : ServerProto<
     TcpStream,
     Request = ScpiRequest,
@@ -23,7 +23,7 @@ impl Protocol for ScpiProtocol {}
 
 macro_rules! tests {
     ( $( $test:ident ($name:expr) $body:tt )* ) => {
-        fn add_tests<S, P>(
+        pub fn add_tests<S, P>(
             scheduler: &mut TestScheduler<S, IocTestSetup<P>, Error>
         )
         where
@@ -35,24 +35,6 @@ macro_rules! tests {
                 $body
             });)*
         }
-    }
-}
-
-tests! {
-    test("enable channel output") {
-        test.set_variable("channelOutput-Sel", "ON");
-
-        test.when(ScpiRequest::OutputOn(1))
-            .reply_with(ScpiResponse::Empty)
-            .verify();
-    }
-
-    test("disable channel output") {
-        test.set_variable("channelOutput-Sel", "OFF");
-
-        test.when(ScpiRequest::OutputOff(1))
-            .reply_with(ScpiResponse::Empty)
-            .verify();
     }
 }
 
@@ -72,7 +54,7 @@ pub fn run_tests() -> Result<Vec<TestResult<Error>>> {
         test
     });
 
-    add_tests(&mut tests);
+    super::add_tests(&mut tests);
 
     Ok(reactor.run(tests).unwrap())
 }
@@ -110,3 +92,4 @@ fn configure_initial_test_messages<P: Protocol>(test: &mut IocTestSetup<P>) {
             ScpiResponse::Integer(1),
     };
 }
+
