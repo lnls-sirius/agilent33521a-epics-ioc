@@ -21,30 +21,39 @@ trait Protocol
 
 impl Protocol for ScpiProtocol {}
 
-fn add_tests<S, P>(scheduler: &mut TestScheduler<S, IocTestSetup<P>, Error>)
-where
-    S: FnMut() -> IocTestSetup<P>,
-    P: Protocol,
-{
-    scheduler.add(|mut test| {
-        test.name("enable channel output");
+macro_rules! tests {
+    ( $( $test:ident ($name:expr) $body:tt )* ) => {
+        fn add_tests<S, P>(
+            scheduler: &mut TestScheduler<S, IocTestSetup<P>, Error>
+        )
+        where
+            S: FnMut() -> IocTestSetup<P>,
+            P: Protocol,
+        {
+            $(scheduler.add(|mut $test| {
+                $test.name($name);
+                $body
+            });)*
+        }
+    }
+}
 
+tests! {
+    test("enable channel output") {
         test.set_variable("channelOutput-Sel", "ON");
 
         test.when(ScpiRequest::OutputOn(1))
             .reply_with(ScpiResponse::Empty)
             .verify();
-    });
+    }
 
-    scheduler.add(|mut test| {
-        test.name("disable channel output");
-
+    test("disable channel output") {
         test.set_variable("channelOutput-Sel", "OFF");
 
         test.when(ScpiRequest::OutputOff(1))
             .reply_with(ScpiResponse::Empty)
             .verify();
-    });
+    }
 }
 
 pub fn run_tests() -> Result<Vec<TestResult<Error>>> {
