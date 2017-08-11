@@ -32,6 +32,17 @@ fn test_enable_channel_output<P: Protocol>(test: &mut IocTestSetup<P>) {
     test.verify(output1_on);
 }
 
+fn test_disable_channel_output<P: Protocol>(test: &mut IocTestSetup<P>) {
+    let output1_off = ScpiRequest::OutputOff(1);
+
+    test.when(output1_off.clone())
+        .reply_with(ScpiResponse::Empty);
+
+    test.set_variable("channelOutput-Sel", "OFF");
+
+    test.verify(output1_off);
+}
+
 pub fn run_tests() -> Result<Vec<TestResult<Error>>> {
     let mut reactor = Core::new()?;
     let handle = reactor.handle();
@@ -49,6 +60,7 @@ pub fn run_tests() -> Result<Vec<TestResult<Error>>> {
     });
 
     tests.add(test_enable_channel_output);
+    tests.add(test_disable_channel_output);
 
     Ok(reactor.run(tests).unwrap())
 }
