@@ -1,4 +1,3 @@
-use futures::IntoFuture;
 use tokio_core::net::TcpStream;
 use tokio_core::reactor::Core;
 use tokio_proto::pipeline::ServerProto;
@@ -9,6 +8,7 @@ use super::scpi::ScpiProtocol;
 use super::scpi::ScpiRequest;
 use super::scpi::ScpiResponse;
 use super::test_result::TestResult;
+use super::test_scheduler::TestScheduler;
 
 trait Protocol
     : ServerProto<
@@ -32,17 +32,25 @@ fn test_enable_channel_output<P: Protocol>(test: &mut IocTestSetup<P>) {
     test.verify(output1_on);
 }
 
-pub fn run_test() -> Result<TestResult<Error>> {
+pub fn run_tests() -> Result<Vec<TestResult<Error>>> {
     let mut reactor = Core::new()?;
-    let protocol = ScpiProtocol;
-    let port = 55000;
+    let handle = reactor.handle();
+    let mut ports = 55000..56000;
+    let mut tests = TestScheduler::new();
 
-    let mut test = IocTestSetup::new(reactor.handle(), protocol, port)?;
+    tests.spawn(|| {
+        let port = ports.next().unwrap();
+        let test = IocTestSetup::new(handle.clone(), ScpiProtocol, port);
+        let mut test = test.unwrap();
 
-    configure_initial_test_messages(&mut test);
-    test_enable_channel_output(&mut test);
+        configure_initial_test_messages(&mut test);
 
-    Ok(reactor.run(test.into_future()).unwrap())
+        test
+    });
+
+    tests.add(test_enable_channel_output);
+
+    Ok(reactor.run(tests).unwrap())
 }
 
 fn configure_initial_test_messages<P: Protocol>(test: &mut IocTestSetup<P>) {
