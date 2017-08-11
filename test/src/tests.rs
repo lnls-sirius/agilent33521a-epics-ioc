@@ -3,11 +3,12 @@ use tokio_core::net::TcpStream;
 use tokio_core::reactor::Core;
 use tokio_proto::pipeline::ServerProto;
 
-use super::ioc_test::{IocTestSetup, Result};
+use super::ioc_test::{Error, IocTestSetup, Result};
 use super::scpi;
 use super::scpi::ScpiProtocol;
 use super::scpi::ScpiRequest;
 use super::scpi::ScpiResponse;
+use super::test_result::TestResult;
 
 trait Protocol
     : ServerProto<
@@ -31,7 +32,7 @@ fn test_enable_channel_output<P: Protocol>(test: &mut IocTestSetup<P>) {
     test.verify(output1_on);
 }
 
-pub fn run_test() -> Result<()> {
+pub fn run_test() -> Result<TestResult<Error>> {
     let mut reactor = Core::new()?;
     let protocol = ScpiProtocol;
     let port = 55000;
@@ -41,9 +42,7 @@ pub fn run_test() -> Result<()> {
     configure_initial_test_messages(&mut test);
     test_enable_channel_output(&mut test);
 
-    reactor.run(test.into_future())?;
-
-    Ok(())
+    Ok(reactor.run(test.into_future()).unwrap())
 }
 
 fn configure_initial_test_messages<P: Protocol>(test: &mut IocTestSetup<P>) {

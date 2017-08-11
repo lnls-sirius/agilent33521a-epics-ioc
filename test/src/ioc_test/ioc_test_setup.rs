@@ -13,6 +13,7 @@ use super::super::ioc::IocSpawn;
 use super::super::mock_server;
 use super::super::mock_server::MockServer;
 use super::super::mock_service::When;
+use super::super::test_result::TestResult;
 
 pub struct IocTestSetup<P>
 where
@@ -73,8 +74,8 @@ where
     <P as ServerProto<TcpStream>>::Error: Into<mock_server::Error>,
 {
     type Future = IocTest<P>;
-    type Item = ();
-    type Error = Error;
+    type Item = TestResult<Error>;
+    type Error = ();
 
     fn into_future(self) -> Self::Future {
         let ioc = IocSpawn::new(self.handle.clone(), self.ip_port);
