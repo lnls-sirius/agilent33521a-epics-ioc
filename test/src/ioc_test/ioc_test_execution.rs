@@ -1,28 +1,28 @@
 use std::fmt::Display;
 use std::hash::Hash;
 
-use futures::{Future, Poll};
+use futures::{Async, Future, Poll};
 use futures::future::Flatten;
 use tokio_core::net::TcpStream;
 use tokio_proto::pipeline::ServerProto;
 
 use super::errors::Error;
-use super::ioc_test_start::IocTestStart;
-use super::super::ioc::IocSpawn;
+use super::super::ioc::IocInstance;
 use super::super::mock_server;
-use super::super::mock_server::MockServerStart;
+use super::super::mock_server::ListeningMockServer;
 
-pub struct IocTest<P>
+pub struct IocTestExecution<P>
 where
     P: ServerProto<TcpStream>,
     <P as ServerProto<TcpStream>>::Request: Clone + Display + Eq + Hash,
     <P as ServerProto<TcpStream>>::Response: Clone,
     <P as ServerProto<TcpStream>>::Error: Into<mock_server::Error>,
 {
-    future: Flatten<Flatten<IocTestStart<P>>>,
+    server: Flatten<ListeningMockServer<P>>,
+    ioc: IocInstance,
 }
 
-impl<P> IocTest<P>
+impl<P> IocTestExecution<P>
 where
     P: ServerProto<TcpStream>,
     <P as ServerProto<TcpStream>>::Request: Clone + Display + Eq + Hash,
@@ -30,19 +30,28 @@ where
     <P as ServerProto<TcpStream>>::Error: Into<mock_server::Error>,
 {
     pub fn new(
-        ioc: IocSpawn,
-        server: MockServerStart<P>,
-        ioc_variables_to_set: Vec<(String, String)>,
+        ioc: IocInstance,
+        server: Flatten<ListeningMockServer<P>>,
     ) -> Self {
-        let test_start = IocTestStart::new(ioc, server, ioc_variables_to_set);
+        Self { ioc, server }
+    }
 
-        Self {
-            future: test_start.flatten().flatten(),
+    fn poll_ioc(&mut self) -> Poll<(), Error> {
+        match self.ioc.poll() {
+            Ok(Async::Ready(_)) => Ok(Async::Ready(())),
+            Ok(Async::NotReady) => Ok(Async::NotReady),
+            Err(error) => Err(error.into()),
         }
+    }
+
+    fn kill_ioc(&mut self) -> Poll<(), Error> {
+        self.ioc.kill();
+
+        self.poll_ioc()
     }
 }
 
-impl<P> Future for IocTest<P>
+impl<P> Future for IocTestExecution<P>
 where
     P: ServerProto<TcpStream>,
     <P as ServerProto<TcpStream>>::Request: Clone + Display + Eq + Hash,
@@ -53,6 +62,13 @@ where
     type Error = Error;
 
     fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
-        self.future.poll()
+        let poll_result = self.server.poll();
+
+        match poll_result {
+            Ok(Async::Ready(_)) => self.kill_ioc(),
+            Ok(Async::NotReady) => self.poll_ioc(),
+            Err(error) => Err(error.into()),
+        }
     }
 }
+

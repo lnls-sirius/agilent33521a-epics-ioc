@@ -6,7 +6,7 @@ use tokio_core::net::TcpStream;
 use tokio_proto::pipeline::ServerProto;
 
 use super::errors::Error;
-use super::ioc_test::IocTest;
+use super::ioc_test_execution::IocTestExecution;
 use super::super::ioc::IocInstance;
 use super::super::ioc::IocProcess;
 use super::super::ioc::IocSpawn;
@@ -52,7 +52,7 @@ where
     <P as ServerProto<TcpStream>>::Response: Clone,
     <P as ServerProto<TcpStream>>::Error: Into<mock_server::Error>,
 {
-    type Item = IocTest<P>;
+    type Item = IocTestExecution<P>;
     type Error = Error;
 
     fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
@@ -69,6 +69,6 @@ where
             .expect("IocTestStartIoc polled after it finished");
         let server = listening_server.flatten();
 
-        Ok(Async::Ready(IocTest::new(ioc, server)))
+        Ok(Async::Ready(IocTestExecution::new(ioc, server)))
     }
 }

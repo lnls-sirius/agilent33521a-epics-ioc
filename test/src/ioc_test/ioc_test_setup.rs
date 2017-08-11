@@ -8,8 +8,7 @@ use tokio_core::reactor::Handle;
 use tokio_proto::pipeline::ServerProto;
 
 use super::errors::{Error, Result};
-use super::ioc_test_start_ioc::IocTestStartIoc;
-use super::ioc_test_start::IocTestStart;
+use super::ioc_test::IocTest;
 use super::super::ioc::IocSpawn;
 use super::super::mock_server;
 use super::super::mock_server::MockServer;
@@ -73,14 +72,14 @@ where
     <P as ServerProto<TcpStream>>::Response: Clone,
     <P as ServerProto<TcpStream>>::Error: Into<mock_server::Error>,
 {
-    type Future = IocTestStart<P>;
-    type Item = IocTestStartIoc<P>;
+    type Future = IocTest<P>;
+    type Item = ();
     type Error = Error;
 
     fn into_future(self) -> Self::Future {
         let ioc = IocSpawn::new(self.handle.clone(), self.ip_port);
         let server = self.server.start(self.handle);
 
-        IocTestStart::new(ioc, server, self.ioc_variables_to_set)
+        IocTest::new(ioc, server, self.ioc_variables_to_set)
     }
 }

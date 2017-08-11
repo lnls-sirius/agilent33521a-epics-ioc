@@ -1,4 +1,4 @@
-use futures::{Future, IntoFuture};
+use futures::IntoFuture;
 use tokio_core::net::TcpStream;
 use tokio_core::reactor::Core;
 use tokio_proto::pipeline::ServerProto;
@@ -41,7 +41,7 @@ pub fn run_test() -> Result<()> {
     configure_initial_test_messages(&mut test);
     test_enable_channel_output(&mut test);
 
-    reactor.run(test.into_future().flatten().flatten())?;
+    reactor.run(test.into_future())?;
 
     Ok(())
 }
