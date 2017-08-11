@@ -22,4 +22,6 @@ pub mod ioc;
 pub mod ioc_test;
 
 pub mod test_result;
+pub mod test_scheduler;
+
 pub mod tests;
