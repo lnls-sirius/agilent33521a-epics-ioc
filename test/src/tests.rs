@@ -22,25 +22,19 @@ trait Protocol
 impl Protocol for ScpiProtocol {}
 
 fn test_enable_channel_output<P: Protocol>(test: &mut IocTestSetup<P>) {
-    let output1_on = ScpiRequest::OutputOn(1);
-
-    test.when(output1_on.clone())
-        .reply_with(ScpiResponse::Empty);
-
     test.set_variable("channelOutput-Sel", "ON");
 
-    test.verify(output1_on);
+    test.when(ScpiRequest::OutputOn(1))
+        .reply_with(ScpiResponse::Empty)
+        .verify();
 }
 
 fn test_disable_channel_output<P: Protocol>(test: &mut IocTestSetup<P>) {
-    let output1_off = ScpiRequest::OutputOff(1);
-
-    test.when(output1_off.clone())
-        .reply_with(ScpiResponse::Empty);
-
     test.set_variable("channelOutput-Sel", "OFF");
 
-    test.verify(output1_off);
+    test.when(ScpiRequest::OutputOff(1))
+        .reply_with(ScpiResponse::Empty)
+        .verify();
 }
 
 pub fn run_tests() -> Result<Vec<TestResult<Error>>> {
