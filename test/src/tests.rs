@@ -21,24 +21,30 @@ trait Protocol
 
 impl Protocol for ScpiProtocol {}
 
-fn test_enable_channel_output<P: Protocol>(test: &mut IocTestSetup<P>) {
-    test.name("enable channel output");
+fn add_tests<S, P>(scheduler: &mut TestScheduler<S, IocTestSetup<P>, Error>)
+where
+    S: FnMut() -> IocTestSetup<P>,
+    P: Protocol,
+{
+    scheduler.add(|mut test| {
+        test.name("enable channel output");
 
-    test.set_variable("channelOutput-Sel", "ON");
+        test.set_variable("channelOutput-Sel", "ON");
 
-    test.when(ScpiRequest::OutputOn(1))
-        .reply_with(ScpiResponse::Empty)
-        .verify();
-}
+        test.when(ScpiRequest::OutputOn(1))
+            .reply_with(ScpiResponse::Empty)
+            .verify();
+    });
 
-fn test_disable_channel_output<P: Protocol>(test: &mut IocTestSetup<P>) {
-    test.name("disable channel output");
+    scheduler.add(|mut test| {
+        test.name("disable channel output");
 
-    test.set_variable("channelOutput-Sel", "OFF");
+        test.set_variable("channelOutput-Sel", "OFF");
 
-    test.when(ScpiRequest::OutputOff(1))
-        .reply_with(ScpiResponse::Empty)
-        .verify();
+        test.when(ScpiRequest::OutputOff(1))
+            .reply_with(ScpiResponse::Empty)
+            .verify();
+    });
 }
 
 pub fn run_tests() -> Result<Vec<TestResult<Error>>> {
@@ -57,8 +63,7 @@ pub fn run_tests() -> Result<Vec<TestResult<Error>>> {
         test
     });
 
-    tests.add(test_enable_channel_output);
-    tests.add(test_disable_channel_output);
+    add_tests(&mut tests);
 
     Ok(reactor.run(tests).unwrap())
 }
