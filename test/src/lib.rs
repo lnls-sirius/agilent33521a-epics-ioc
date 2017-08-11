@@ -21,4 +21,5 @@ pub mod mock_server;
 pub mod ioc;
 pub mod ioc_test;
 
+pub mod test_result;
 pub mod tests;
