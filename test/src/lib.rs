@@ -1,5 +1,8 @@
+#[macro_use]
 extern crate ioc_test;
 extern crate tokio_core;
+
+mod output;
 
 use std::io;
 
@@ -11,7 +14,9 @@ use tokio_core::reactor::Core;
 pub fn run_tests() -> Result<(), io::Error> {
     let mut reactor = Core::new()?;
     let spawner = IocTestSpawner::new(reactor.handle());
-    let tests = TestScheduler::new(spawner);
+    let mut tests = TestScheduler::new(spawner);
+
+    output::add_tests(&mut tests);
 
     Ok(reactor.run(TestReporter::new(tests)).unwrap())
 }
