@@ -4,3 +4,5 @@ version = "0.1.0"
 authors = ["Janito Vaqueiro Ferreira Filho <janito.vff@gmail.com>"]
 
 [dependencies]
+ioc-test = { git = "https://github.com/jvff/ioc-test.git" }
+tokio-core = "0.1"

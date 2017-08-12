@@ -1,6 +1,17 @@
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-    }
+extern crate ioc_test;
+extern crate tokio_core;
+
+use std::io;
+
+use ioc_test::tests::IocTestSpawner;
+use ioc_test::test_reporter::TestReporter;
+use ioc_test::test_scheduler::TestScheduler;
+use tokio_core::reactor::Core;
+
+pub fn run_tests() -> Result<(), io::Error> {
+    let mut reactor = Core::new()?;
+    let spawner = IocTestSpawner::new(reactor.handle());
+    let tests = TestScheduler::new(spawner);
+
+    Ok(reactor.run(TestReporter::new(tests)).unwrap())
 }
