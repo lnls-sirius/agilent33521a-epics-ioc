@@ -11,7 +11,8 @@ use tokio_core::reactor::Core;
 
 pub fn run_tests() -> Result<(), io::Error> {
     let mut reactor = Core::new()?;
-    let spawner = IocTestSpawner::new(reactor.handle());
+    let ioc_command = "/project/iocBoot/iocagilent33521a/run.sh";
+    let spawner = IocTestSpawner::new(ioc_command, reactor.handle());
     let mut tests = TestScheduler::new(spawner);
 
     output::add_tests(&mut tests);
