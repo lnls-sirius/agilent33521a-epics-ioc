@@ -6,9 +6,7 @@ mod output;
 
 use std::io;
 
-use ioc_test::tests::IocTestSpawner;
-use ioc_test::test_reporter::TestReporter;
-use ioc_test::test_scheduler::TestScheduler;
+use ioc_test::{IocTestSpawner, TestReporter, TestScheduler};
 use tokio_core::reactor::Core;
 
 pub fn run_tests() -> Result<(), io::Error> {

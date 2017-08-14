@@ -1,9 +1,5 @@
-use ioc_test::tests::Protocol;
-use ioc_test::ioc_test::IocTestSetup;
-use ioc_test::scpi::ScpiRequest;
-use ioc_test::scpi::ScpiResponse;
-use ioc_test::test_scheduler::TestScheduler;
-use ioc_test::test_spawner::TestSpawner;
+use ioc_test::scpi::{ScpiRequest, ScpiResponse};
+use ioc_test::{IocTestProtocol, IocTestSetup, TestScheduler, TestSpawner};
 
 tests! {
     test("enable channel output") {
