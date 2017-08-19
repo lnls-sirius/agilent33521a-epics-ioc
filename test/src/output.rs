@@ -1,5 +1,5 @@
 use ioc_test::scpi::{ScpiProtocol, ScpiRequest, ScpiResponse};
-use ioc_test::{IocTestSetup, TestScheduler, TestSpawner};
+use ioc_test::{IocTestSetup, MockTestParameters, TestScheduler, TestSpawner};
 
 tests! {
     type Protocol = ScpiProtocol;
