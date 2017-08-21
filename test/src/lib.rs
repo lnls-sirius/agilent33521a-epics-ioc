@@ -6,9 +6,9 @@ mod output;
 
 use std::io;
 
-use ioc_test::{IocTestParameters, IocTestSetup, IocTestSpawner, TestReporter,
-               TestScheduler};
-use ioc_test::scpi::{ScpiRequest, ScpiResponse};
+use ioc_test::{IocTestParameters, IocTestSetup, IocTestSpawner,
+               MockTestParameters, TestReporter, TestScheduler};
+use ioc_test::scpi::{ScpiProtocol, ScpiRequest, ScpiResponse};
 use tokio_core::reactor::Core;
 
 pub fn run_tests() -> Result<(), io::Error> {
@@ -19,6 +19,7 @@ pub fn run_tests() -> Result<(), io::Error> {
         ioc_command,
         reactor.handle(),
         configure_initial_test_messages,
+        MockTestParameters::new(ScpiProtocol),
     );
 
     let mut tests = TestScheduler::new(spawner);
