@@ -6,3 +6,4 @@ authors = ["Janito Vaqueiro Ferreira Filho <janito.vff@gmail.com>"]
 [dependencies]
 ioc-test = { git = "https://github.com/jvff/ioc-test.git" }
 tokio-core = "0.1"
+tokio-proto = { git = "https://github.com/jvff/tokio-proto", branch = "generic_error" }

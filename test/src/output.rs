@@ -1,5 +1,8 @@
+use tokio_core::net::TcpStream;
+use tokio_proto::pipeline::ServerProto;
+
 use ioc_test::scpi::{NoScpiExtension, ScpiProtocol, ScpiRequest, ScpiResponse};
-use ioc_test::{IocTestSetup, MockTestParameters, TestScheduler, TestSpawner};
+use ioc_test::{IocTestParameters, IocTestSetup, TestScheduler, TestSpawner};
 
 tests! {
     type Protocol = ScpiProtocol<NoScpiExtension>;

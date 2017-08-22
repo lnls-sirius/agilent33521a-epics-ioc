@@ -1,6 +1,7 @@
 #[macro_use]
 extern crate ioc_test;
 extern crate tokio_core;
+extern crate tokio_proto;
 
 mod output;
 

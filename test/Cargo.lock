@@ -4,6 +4,7 @@ version = "0.1.0"
 dependencies = [
  "ioc-test 0.1.0 (git+https://github.com/jvff/ioc-test.git)",
  "tokio-core 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)",
+ "tokio-proto 0.1.1 (git+https://github.com/jvff/tokio-proto?branch=generic_error)",
 ]
 
 [[package]]
@@ -96,7 +97,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "ioc-test"
 version = "0.1.0"
-source = "git+https://github.com/jvff/ioc-test.git#d6a5450a76752667a60bd24769b9f7fb7f16a3f3"
+source = "git+https://github.com/jvff/ioc-test.git#898f317b4841b47ed583a26aa2559ff4a9871f10"
 dependencies = [
  "bytes 0.4.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "error-chain 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
