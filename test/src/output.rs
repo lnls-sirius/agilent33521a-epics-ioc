@@ -1,8 +1,8 @@
-use ioc_test::scpi::{ScpiProtocol, ScpiRequest, ScpiResponse};
+use ioc_test::scpi::{NoScpiExtension, ScpiProtocol, ScpiRequest, ScpiResponse};
 use ioc_test::{IocTestSetup, MockTestParameters, TestScheduler, TestSpawner};
 
 tests! {
-    type Protocol = ScpiProtocol;
+    type Protocol = ScpiProtocol<NoScpiExtension>;
 
     test("enable channel output") {
         test.set_variable("channelOutput-Sel", "ON");

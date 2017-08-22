@@ -8,7 +8,7 @@ use std::io;
 
 use ioc_test::{IocTestParameters, IocTestSetup, IocTestSpawner,
                MockTestParameters, TestReporter, TestScheduler};
-use ioc_test::scpi::{ScpiProtocol, ScpiRequest, ScpiResponse};
+use ioc_test::scpi::{ScpiExtension, ScpiProtocol, ScpiRequest, ScpiResponse};
 use tokio_core::reactor::Core;
 
 pub fn run_tests() -> Result<(), io::Error> {
@@ -19,7 +19,7 @@ pub fn run_tests() -> Result<(), io::Error> {
         ioc_command,
         reactor.handle(),
         configure_initial_test_messages,
-        MockTestParameters::new(ScpiProtocol),
+        MockTestParameters::new(ScpiProtocol::new()),
     );
 
     let mut tests = TestScheduler::new(spawner);
@@ -29,10 +29,11 @@ pub fn run_tests() -> Result<(), io::Error> {
     Ok(reactor.run(TestReporter::new(tests)).unwrap())
 }
 
-fn configure_initial_test_messages<P>(test: &mut IocTestSetup<P>)
+fn configure_initial_test_messages<P, X>(test: &mut IocTestSetup<P>)
 where
+    X: ScpiExtension,
     P: IocTestParameters,
-    P::Request: From<ScpiRequest>,
+    P::Request: From<ScpiRequest<X>>,
     P::Response: From<ScpiResponse>,
 {
     request_response_map! { test,

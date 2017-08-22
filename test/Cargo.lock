@@ -96,7 +96,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "ioc-test"
 version = "0.1.0"
-source = "git+https://github.com/jvff/ioc-test.git#a7b8566bd12917daf84b498c42b59f6ddfbda15e"
+source = "git+https://github.com/jvff/ioc-test.git#d6a5450a76752667a60bd24769b9f7fb7f16a3f3"
 dependencies = [
  "bytes 0.4.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "error-chain 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
