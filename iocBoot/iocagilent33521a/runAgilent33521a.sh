@@ -18,8 +18,7 @@ if [ -z "$DEVICE_IP" ]; then
 fi
 
 if [ -z "$DEVICE_PORT" ]; then
-    echo "\$DEVICE_PORT is not set, Please use -p option" >&2
-    exit 7
+    DEVICE_PORT="5025"
 fi
 
 cd "$IOC_BOOT_DIR"
