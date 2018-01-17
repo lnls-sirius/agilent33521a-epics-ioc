@@ -1,0 +1,52 @@
+# This file specifies which PVs of the corresponding database should be saved.
+
+# Enable channel output
+$(P)$(R)channelOutput-Sel
+
+# Select waveform function
+$(P)$(R)waveformFunction-Sel
+
+# Configure frequency value
+$(P)$(R)frequency-SP
+
+# Configure amplitude value
+$(P)$(R)amplitude-SP
+
+# Configure DC offset
+$(P)$(R)offset-SP
+
+# Configure phase
+$(P)$(R)phase-SP
+
+# Configure square wave duty cycle
+$(P)$(R)square:dutyCycle-SP
+
+# Configure ramp function symmetry
+$(P)$(R)ramp:symmetry-SP
+
+# Configure pulse width
+$(P)$(R)pulse:width-SP
+
+# Configure pulse leading edge time
+$(P)$(R)pulse:leadingEdge-SP
+
+# Configure pulse trailing edge time
+$(P)$(R)pulse:trailingEdge-SP
+
+# Configure PRBS bit rate
+$(P)$(R)prbs:bitRate-SP
+
+# Configure PRBS edge time
+$(P)$(R)prbs:edgeTime-SP
+
+# Select PRBS sequence type
+$(P)$(R)prbs:sequenceType-Sel
+
+# Configure noise function bandwidth
+$(P)$(R)noise:bandwidth-SP
+
+# Set sample rate for arbitrary waveform
+$(P)$(R)arbitrary:sampleRate-SP
+
+# Set arbitrary waveform file path
+$(P)$(R)arbitrary:waveformFile-SP
