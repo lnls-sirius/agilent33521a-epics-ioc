@@ -180,3 +180,7 @@ setArbitraryWaveformFile {
 loadArbitraryWaveformData {
     out "SOURce1:DATA:ARBitrary %s"
 }
+
+clearMemory {
+    out "DATA:VOLatile:CLEar"
+}

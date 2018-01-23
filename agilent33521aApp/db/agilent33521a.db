@@ -315,3 +315,11 @@ record(waveform, "$(P)$(R)arbitrary:loadWaveformData-Cmd") {
     field(DTYP, "stream")
     field(INP, "@agilent33521a.proto loadArbitraryWaveformData $(PORT)")
 }
+
+record(bo, "$(P)$(R)clearMemory-Cmd") {
+    field(DESC, "Clear volatile memory")
+    field(ZNAM, "NOW")
+    field(DTYP, "stream")
+    field(OUT, "@agilent33521a.proto clearMemory $(PORT)")
+    field(FLNK, "$(P)$(R)arbitrary:waveformFile-RB")
+}
