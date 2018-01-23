@@ -176,3 +176,7 @@ setArbitraryWaveformFile {
     out "SOURce1:FUNCtion:ARBitrary \"%s\"";
     @init { getArbitraryWaveformFile }
 }
+
+loadArbitraryWaveformData {
+    out "SOURce1:DATA:ARBitrary %s"
+}

@@ -307,3 +307,11 @@ record(waveform, "$(P)$(R)arbitrary:waveformFile-SP") {
     field(INP, "@agilent33521a.proto setArbitraryWaveformFile $(PORT)")
     field(FLNK, "$(P)$(R)arbitrary:waveformFile-RB")
 }
+
+record(waveform, "$(P)$(R)arbitrary:loadWaveformData-Cmd") {
+    field(DESC, "Load arbitrary waveform data into memory")
+    field(NELM, 4096)
+    field(FTVL, "CHAR")
+    field(DTYP, "stream")
+    field(INP, "@agilent33521a.proto loadArbitraryWaveformData $(PORT)")
+}
