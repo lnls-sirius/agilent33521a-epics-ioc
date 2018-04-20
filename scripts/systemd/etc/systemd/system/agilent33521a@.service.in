@@ -14,7 +14,7 @@ PermissionsStartOnly=true
 Environment=AGILENT33521A_INSTANCE=%i
 ExecStartPre=/bin/mkdir -p /var/log/procServ/%p%i
 ExecStartPre=/bin/mkdir -p /var/run/procServ/%p%i
-WorkingDirectory=/opt/epics/startup/ioc/agilent33521a-epics-ioc/iocBoot/iocagilent33521a
+WorkingDirectory=<INSTALL_PREFIX>/<IOC_NAME>/iocBoot/iocagilent33521a
 # Run procServ with IOC
 ExecStart="/usr/local/bin/runAgilent33521A.sh"
 
