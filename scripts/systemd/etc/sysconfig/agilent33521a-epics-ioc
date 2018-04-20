@@ -1,5 +1,4 @@
 # General configuration
-AGILENT33521A_IOC_STARTUP=/opt/epics/startup/ioc/agilent33521a-epics-ioc/iocBoot/iocagilent33521a
 EPICS_HOST_ARCH=linux-x86_64
 PROCSERV_AGILENT33521A_PORT_PREFIX=400
 EPICS_CA_MAX_ARRAY_BYTES=50000000
