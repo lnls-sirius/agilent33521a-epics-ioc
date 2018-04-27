@@ -1,5 +1,8 @@
 #!/bin/sh
 
+set -e
+set +u
+
 # Source environment
 . ./checkEnv.sh
 
@@ -19,6 +22,10 @@ fi
 
 if [ -z "$DEVICE_PORT" ]; then
     DEVICE_PORT="5025"
+fi
+
+if [ -z "$EPICS_CA_MAX_ARRAY_BYTES" ]; then
+    export EPICS_CA_MAX_ARRAY_BYTES="50000000"
 fi
 
 cd "$IOC_BOOT_DIR"
