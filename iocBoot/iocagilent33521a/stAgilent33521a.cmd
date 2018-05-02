@@ -19,7 +19,6 @@ dbLoadRecords("$(TOP)/agilent33521aApp/Db/agilent33521a.db","P=${P}, R=${R}, POR
 
 < save_restore.cmd
 
-cd "${TOP}/iocBoot/${IOC}"
 iocInit
 
 ## Start any sequence programs
