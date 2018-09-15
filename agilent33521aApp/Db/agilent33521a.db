@@ -60,6 +60,8 @@ record(ao, "$(P)$(R)Freq-SP") {
     field(DESC, "Configure frequency value")
     field(EGU, "Hz")
     field(DTYP, "stream")
+    field(DRVH, "30000000")
+    field(DRVL, "0.000001")
     field(OUT, "@agilent33521a.proto setFrequency $(PORT)")
     field(FLNK, "$(P)$(R)Freq-RB")
 }
@@ -76,6 +78,8 @@ record(ao, "$(P)$(R)Ampl-SP") {
     field(DESC, "Configure amplitude value")
     field(EGU, "V")
     field(DTYP, "stream")
+    field(DRVH, "10")    # For 50 ohm, range is -5V to 5V
+    field(DRVL, "-10")
     field(OUT, "@agilent33521a.proto setAmplitude $(PORT)")
     field(FLNK, "$(P)$(R)Ampl-RB")
 }
@@ -92,6 +96,8 @@ record(ao, "$(P)$(R)Offset-SP") {
     field(DESC, "Configure DC offset")
     field(EGU, "V")
     field(DTYP, "stream")
+    field(DRVH, "10")    # For 50 ohm, range is -5V to 5V
+    field(DRVL, "-10")
     field(OUT, "@agilent33521a.proto setOffset $(PORT)")
     field(FLNK, "$(P)$(R)Offset-RB")
 }
@@ -108,6 +114,8 @@ record(ao, "$(P)$(R)Phs-SP") {
     field(DESC, "Configure phase")
     field(EGU, "degrees")
     field(DTYP, "stream")
+    field(DRVH, "360")
+    field(DRVL, "-360")
     field(OUT, "@agilent33521a.proto setPhase $(PORT)")
     field(FLNK, "$(P)$(R)Phs-RB")
 }
@@ -124,6 +132,8 @@ record(ao, "$(P)$(R)SquareDutyCycle-SP") {
     field(DESC, "Configure square wave duty cycle")
     field(EGU, "%")
     field(DTYP, "stream")
+    field(DRVH, "99.99")    # Limits become more restrict as frequency increases
+    field(DRVL, "0.01")
     field(OUT, "@agilent33521a.proto setSquareDutyCycle $(PORT)")
     field(FLNK, "$(P)$(R)SquareDutyCycle-RB")
 }
@@ -140,6 +150,8 @@ record(ao, "$(P)$(R)RmpSymmetry-SP") {
     field(DESC, "Configure ramp function symmetry")
     field(EGU, "%")
     field(DTYP, "stream")
+    field(DRVH, "100")
+    field(DRVL, "0")
     field(OUT, "@agilent33521a.proto setRampSymmetry $(PORT)")
     field(FLNK, "$(P)$(R)RmpSymmetry-RB")
 }
@@ -156,6 +168,8 @@ record(ao, "$(P)$(R)PulseWidth-SP") {
     field(DESC, "Configure pulse width")
     field(EGU, "s")
     field(DTYP, "stream")
+    field(DRVH, "1000000")    # Depends on period used
+    field(DRVL, "0.000000016")
     field(OUT, "@agilent33521a.proto setPulseWidth $(PORT)")
     field(FLNK, "$(P)$(R)PulseWidth-RB")
 }
@@ -172,6 +186,8 @@ record(ao, "$(P)$(R)PulseLeadingEdge-SP") {
     field(DESC, "Configure pulse leading edge time")
     field(EGU, "s")
     field(DTYP, "stream")
+    field(DRVH, "0.000001")    # Depends on pulse width and period
+    field(DRVL, "0.0000000084")
     field(OUT, "@agilent33521a.proto setPulseLeadingEdge $(PORT)")
     field(FLNK, "$(P)$(R)PulseLeadingEdge-RB")
 }
@@ -188,6 +204,8 @@ record(ao, "$(P)$(R)PulseTrailingEdge-SP") {
     field(DESC, "Configure pulse trailing edge time")
     field(EGU, "s")
     field(DTYP, "stream")
+    field(DRVH, "0.000001")    # Depends on pulse width and period
+    field(DRVL, "0.0000000084")
     field(OUT, "@agilent33521a.proto setPulseTrailingEdge $(PORT)")
     field(FLNK, "$(P)$(R)PulseTrailingEdge-RB")
 }
@@ -204,6 +222,8 @@ record(ao, "$(P)$(R)PRBSBitRate-SP") {
     field(DESC, "Configure PRBS bit rate")
     field(EGU, "s")
     field(DTYP, "stream")
+    field(DRVH, "50000000")
+    field(DRVL, "0.001")
     field(OUT, "@agilent33521a.proto setPrbsBitRate $(PORT)")
     field(FLNK, "$(P)$(R)PRBSBitRate-RB")
 }
@@ -220,6 +240,8 @@ record(ao, "$(P)$(R)PRBSEdgeTime-SP") {
     field(DESC, "Configure PRBS edge time")
     field(EGU, "s")
     field(DTYP, "stream")
+    field(DRVH, "0.000001")    # Depends on pulse width and period
+    field(DRVL, "0.0000000084")
     field(OUT, "@agilent33521a.proto setPrbsEdgeTime $(PORT)")
     field(FLNK, "$(P)$(R)PRBSEdgeTime-RB")
 }
@@ -262,6 +284,8 @@ record(ao, "$(P)$(R)NoiseBw-SP") {
     field(DESC, "Configure noise function bandwidth")
     field(EGU, "Hz")
     field(DTYP, "stream")
+    field(DRVH, "30000000")
+    field(DRVL, "0.001")
     field(OUT, "@agilent33521a.proto setNoiseBandwidth $(PORT)")
     field(FLNK, "$(P)$(R)NoiseBw-RB")
 }
@@ -278,6 +302,8 @@ record(ao, "$(P)$(R)ArbitrarySplRate-SP") {
     field(DESC, "Set sample rate for arbitrary waveform")
     field(EGU, "Sa/s")
     field(DTYP, "stream")
+    field(DRVH, "250000000")
+    field(DRVL, "0.000001")
     field(OUT, "@agilent33521a.proto setArbitraryWaveformSampleRate $(PORT)")
     field(FLNK, "$(P)$(R)ArbitrarySplRate-RB")
 }
