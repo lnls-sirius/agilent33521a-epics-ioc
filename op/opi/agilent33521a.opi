@@ -164,10 +164,10 @@ $(pv_value)</tooltip>
     <vertical_alignment>1</vertical_alignment>
     <visible>true</visible>
     <widget_type>Label</widget_type>
-    <width>361</width>
+    <width>380</width>
     <wrap_words>false</wrap_words>
     <wuid>-121d7f33:1646036f9e2:2036</wuid>
-    <x>730</x>
+    <x>714</x>
     <y>21</y>
   </widget>
   <widget typeId="org.csstudio.opibuilder.widgets.Label" version="1.0.0">
