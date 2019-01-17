@@ -19,19 +19,21 @@
 # Build settings that are NOT module paths should appear in a
 # CONFIG_SITE file.
 
-TEMPLATE_TOP=$(EPICS_BASE)/templates/makeBaseApp/top
-
-# If using the sequencer, point SNCSEQ at its top directory:
-#SNCSEQ=$(EPICS_BASE)/../modules/soft/seq
-
-# RELEASE.local should define the following variables with the
-# paths to the respective EPICS modules:
-#  ASYN
-#  STREAM
-include $(TOP)/configure/RELEASE.local
+TEMPLATE_TOP=${EPICS_BASE}/templates/makeBaseApp/top
 
 # EPICS_BASE usually appears last so other apps can override stuff:
-EPICS_BASE=/opt/epics/base
+#SUPPORT=/opt/epics/base/../synApps_5_7/support
+#SUPPORT=/usr/local/epics/synApps_5_7/support
+SUPPORT=/usr/local/epics/synApps_5_8/support
+
+ASYN=$(SUPPORT)/asyn-4-26
+STREAM=$(SUPPORT)/stream-2-6a
+AUTOSAVE=$(SUPPORT)/autosave-5-6-1
+
+# Specify the standard synApps configuration.
+include $(SUPPORT)/configure/RELEASE
+
+#EPICS_BASE=/opt/epics/base-3.14.12.4
 
 # Set RULES here if you want to take build rules from somewhere
 # other than EPICS_BASE:

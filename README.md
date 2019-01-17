@@ -13,7 +13,7 @@ applications. The following EPICS modules are required:
 - StreamDevice (tested with version 2.7.7)
 
 The path to the required EPICS modules should be configured as Makefile
-variables in the file `configure/RELEASE.local`, as the example below:
+variables in the file `configure/RELEASE`, as the example below:
 
     # file: configure/RELEASE.local
     SUPPORT = /opt/epics/synApps_5_8/support
@@ -33,21 +33,21 @@ variables:
 
 - `P`: first part of the prefix for the PV names
 - `R`: second part of the prefix for the PV names
-- `IPADDR`: IP address of the device to connect to
-- `IPPORT`: IP port of the device to connect to (the default port on the device
+- `DEVICE_IP`: IP address of the device to connect to
+- `DEVICE_PORT`: IP port of the device to connect to (the default port on the device
   is usually 5025)
 
-With the variables exported, you can run the `st.cmd` file from the
+With the variables exported, you can run the `stAgilent33521a.cmd` file from the
 `iocBoot/iocagilent33521a` directory:
 
     cd iocBoot/iocagilent33521a
-    P="MYLAB:" R="TEST:" IPADDR="192.168.1.100" IPPORT=5025 ./st.cmd
+    P="MYLAB:" R="TEST:" DEVICE_IP="192.168.1.100" DEVICE_PORT=5025 ./stAgilent33521a.cmd
 
-If your shell fails to execute the `st.cmd` file you can run the application
-binary directly by passing the `st.cmd` file name as a parameter:
+If your shell fails to execute the `stAgilent33521a.cmd` file you can run the application
+binary directly by passing the `stAgilent33521a.cmd` file name as a parameter:
 
     cd iocBoot/iocagilent33521a
-    P="MYLAB:" R="TEST:" IPADDR="192.168.1.100" IPPORT=5025 ../../bin/<HOST-ARCH>/agilent33521a st.cmd
+    P="MYLAB:" R="TEST:" DEVICE_IP="192.168.1.100" DEVICE_PORT=5025 ../../bin/<HOST-ARCH>/agilent33521a stAgilent33521a.cmd
 
 where `<HOST-ARCH>` is the output folder with the binary for your specific host
 architecture. If you built the IOC with no cross-compilation configured, there

@@ -1,0 +1,22 @@
+[Unit]
+Description=AGILENT33521A IOC %p%I
+After=rc-local.service
+Wants=rc-local.service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+# Source environment
+EnvironmentFile=/etc/sysconfig/agilent33521a-epics-ioc
+EnvironmentFile=/etc/sysconfig/agilent33521a-epics-ioc-mapping
+# Execute pre with root
+PermissionsStartOnly=true
+Environment=AGILENT33521A_INSTANCE=%i
+ExecStartPre=/bin/mkdir -p /var/log/procServ/%p%i
+ExecStartPre=/bin/mkdir -p /var/run/procServ/%p%i
+WorkingDirectory=<INSTALL_PREFIX>/<IOC_NAME>/iocBoot/iocagilent33521a
+# Run procServ with IOC
+ExecStart="/usr/local/bin/runAgilent33521A.sh"
+
+[Install]
+WantedBy=multi-user.target
