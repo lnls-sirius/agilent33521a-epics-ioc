@@ -19,21 +19,15 @@
 # Build settings that are NOT module paths should appear in a
 # CONFIG_SITE file.
 
-TEMPLATE_TOP=${EPICS_BASE}/templates/makeBaseApp/top
-
 # EPICS_BASE usually appears last so other apps can override stuff:
-#SUPPORT=/opt/epics/base/../synApps_5_7/support
-#SUPPORT=/usr/local/epics/synApps_5_7/support
-SUPPORT=/usr/local/epics/synApps_5_8/support
-
-ASYN=$(SUPPORT)/asyn-4-26
-STREAM=$(SUPPORT)/stream-2-6a
-AUTOSAVE=$(SUPPORT)/autosave-5-6-1
-
-# Specify the standard synApps configuration.
-include $(SUPPORT)/configure/RELEASE
+SUPPORT=/opt/epics/synApps-lnls-R1-0-0/support
+AUTOSAVE=$(SUPPORT)/autosave-R5-9
+CALC=$(SUPPORT)/calc-R3-7
+STREAM=$(SUPPORT)/stream-R2-7-7
+ASYN=$(SUPPORT)/asyn-R4-33
 
 #EPICS_BASE=/opt/epics/base-3.14.12.4
+EPICS_BASE=/opt/epics/base
 
 # Set RULES here if you want to take build rules from somewhere
 # other than EPICS_BASE:
