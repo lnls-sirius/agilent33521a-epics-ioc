@@ -373,7 +373,7 @@ record(bo, "$(P)$(R)ClearMemory-Cmd") {
     field(ZNAM, "NOW")
     field(DTYP, "stream")
     field(OUT, "@agilent33521a.proto clearMemory $(PORT)")
-    field(FLNK, "$(P)$(R)arbitrary:waveformFile-RB")
+    field(FLNK, "$(P)$(R)ArbitraryWfmFile-RB")
 }
 
 ######################################################################
