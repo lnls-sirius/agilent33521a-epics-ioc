@@ -9,6 +9,15 @@ $(P)$(R)WfmFunction-Sel
 # Configure frequency value
 $(P)$(R)Freq-SP
 
+# Configure sweep values
+$(P)$(R)FreqStart-SP
+$(P)$(R)FreqStop-SP
+$(P)$(R)SweepTime-SP
+$(P)$(R)SweepHTime-SP
+$(P)$(R)SweepRTime-SP
+$(P)$(R)SweepState-Sel
+$(P)$(R)SweepSpacing-Sel
+
 # Configure amplitude value
 $(P)$(R)Ampl-SP
 

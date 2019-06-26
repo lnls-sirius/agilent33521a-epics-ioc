@@ -1,5 +1,6 @@
 record(bo, "$(P)$(R)ChanOut-Sel") {
     field(DESC, "Enable channel output")
+    field(PINI, "YES")
     field(ZNAM, "OFF")
     field(ONAM, "ON")
     field(DTYP, "stream")
@@ -12,7 +13,6 @@ record(bi, "$(P)$(R)ChanOut-Sts") {
     field(ZNAM, "OFF")
     field(ONAM, "ON")
     field(DTYP, "stream")
-    field(PINI, 1)
     field(INP, "@agilent33521a.proto channelOutputRead $(PORT)")
 }
 
@@ -28,12 +28,12 @@ record(mbbi, "$(P)$(R)WfmFunction-Sts") {
     field(SVST, "Arbitrary")
     field(EIST, "DC")
     field(DTYP, "stream")
-    field(PINI, 1)
     field(INP, "@agilent33521a.proto getWaveformFunction $(PORT)")
 }
 
 record(mbbo, "$(P)$(R)WfmFunction-Sel") {
     field(DESC, "Select waveform function")
+    field(PINI, "YES")
     field(ZRST, "Sine")
     field(ONST, "Square")
     field(TWST, "Triangle")
@@ -51,7 +51,6 @@ record(mbbo, "$(P)$(R)WfmFunction-Sel") {
 record(ai, "$(P)$(R)Freq-RB") {
     field(DESC, "Read configured frequency")
     field(EGU, "Hz")
-    field(PINI, 1)
     field(DTYP, "stream")
     field(PREC, "6")
     field(INP, "@agilent33521a.proto getFrequency $(PORT)")
@@ -59,6 +58,7 @@ record(ai, "$(P)$(R)Freq-RB") {
 
 record(ao, "$(P)$(R)Freq-SP") {
     field(DESC, "Configure frequency value")
+    field(PINI, "YES")
     field(EGU, "Hz")
     field(DTYP, "stream")
     field(DRVH, "30000000")
@@ -68,10 +68,145 @@ record(ao, "$(P)$(R)Freq-SP") {
     field(FLNK, "$(P)$(R)Freq-RB")
 }
 
+record(ai, "$(P)$(R)FreqStart-RB") {
+    field(DESC, "Read configured start frequency")
+    field(EGU, "Hz")
+    field(DTYP, "stream")
+    field(PREC, "6")
+    field(INP, "@agilent33521a.proto getFrequencyStart $(PORT)")
+}
+
+record(ao, "$(P)$(R)FreqStart-SP") {
+    field(DESC, "Configure start frequency value")
+    field(PINI, "YES")
+    field(EGU, "Hz")
+    field(DTYP, "stream")
+    field(DRVH, "30000000")
+    field(DRVL, "0.000001")
+    field(PREC, "6")
+    field(OUT, "@agilent33521a.proto setFrequencyStart $(PORT)")
+    field(FLNK, "$(P)$(R)FreqStart-RB")
+}
+
+record(ai, "$(P)$(R)FreqStop-RB") {
+    field(DESC, "Read configured stop frequency")
+    field(EGU, "Hz")
+    field(DTYP, "stream")
+    field(PREC, "6")
+    field(INP, "@agilent33521a.proto getFrequencyStop $(PORT)")
+}
+
+record(ao, "$(P)$(R)FreqStop-SP") {
+    field(DESC, "Configure stop frequency value")
+    field(PINI, "YES")
+    field(EGU, "Hz")
+    field(DTYP, "stream")
+    field(DRVH, "30000000")
+    field(DRVL, "0.000001")
+    field(PREC, "6")
+    field(OUT, "@agilent33521a.proto setFrequencyStop $(PORT)")
+    field(FLNK, "$(P)$(R)FreqStop-RB")
+}
+
+record(ai, "$(P)$(R)SweepTime-RB") {
+    field(DESC, "Read configured sweep time")
+    field(EGU, "s")
+    field(DTYP, "stream")
+    field(PREC, "3")
+    field(INP, "@agilent33521a.proto getSweepTime $(PORT)")
+}
+
+record(ao, "$(P)$(R)SweepTime-SP") {
+    field(DESC, "Configure sweep time value")
+    field(PINI, "YES")
+    field(EGU, "s")
+    field(DTYP, "stream")
+    field(DRVH, "250000")
+    field(DRVL, "0.001")
+    field(PREC, "3")
+    field(OUT, "@agilent33521a.proto setSweepTime $(PORT)")
+    field(FLNK, "$(P)$(R)SweepTime-RB")
+}
+
+record(ai, "$(P)$(R)SweepHTime-RB") {
+    field(DESC, "Read configured sweep hold time")
+    field(EGU, "s")
+    field(DTYP, "stream")
+    field(PREC, "3")
+    field(INP, "@agilent33521a.proto getSweepHTime $(PORT)")
+}
+
+record(ao, "$(P)$(R)SweepHTime-SP") {
+    field(DESC, "Configure sweep hold time value")
+    field(PINI, "YES")
+    field(EGU, "s")
+    field(DTYP, "stream")
+    field(DRVH, "3600")
+    field(DRVL, "0.001")
+    field(PREC, "3")
+    field(OUT, "@agilent33521a.proto setSweepHTime $(PORT)")
+    field(FLNK, "$(P)$(R)SweepHTime-RB")
+}
+
+record(ai, "$(P)$(R)SweepRTime-RB") {
+    field(DESC, "Read configured sweep return time")
+    field(EGU, "s")
+    field(DTYP, "stream")
+    field(PREC, "3")
+    field(INP, "@agilent33521a.proto getSweepRTime $(PORT)")
+}
+
+record(ao, "$(P)$(R)SweepRTime-SP") {
+    field(DESC, "Configure sweep return time value")
+    field(PINI, "YES")
+    field(EGU, "s")
+    field(DTYP, "stream")
+    field(DRVH, "3600")
+    field(DRVL, "0.001")
+    field(PREC, "3")
+    field(OUT, "@agilent33521a.proto setSweepRTime $(PORT)")
+    field(FLNK, "$(P)$(R)SweepRTime-RB")
+}
+
+record(bo, "$(P)$(R)SweepState-Sel") {
+    field(DESC, "Set sweep state")
+    field(PINI, "YES")
+    field(ZNAM, "OFF")
+    field(ONAM, "ON")
+    field(DTYP, "stream")
+    field(OUT, "@agilent33521a.proto setSweepState $(PORT)")
+    field(FLNK, "$(P)$(R)SweepState-Sts")
+}
+
+record(bi, "$(P)$(R)SweepState-Sts") {
+    field(DESC, "Read sweep state")
+    field(ZNAM, "OFF")
+    field(ONAM, "ON")
+    field(DTYP, "stream")
+    field(INP, "@agilent33521a.proto getSweepState $(PORT)")
+}
+
+record(mbbi, "$(P)$(R)SweepSpacing-Sts") {
+    field(DESC, "Read current sweep spacing")
+    field(ZRST, "LIN")
+    field(ONST, "LOG")
+    field(DTYP, "stream")
+    field(INP, "@agilent33521a.proto getSweepSpacing $(PORT)")
+}
+
+record(mbbo, "$(P)$(R)SweepSpacing-Sel") {
+    field(DESC, "Select sweep spacing")
+    field(PINI, "YES")
+    field(ZRST, "LIN")
+    field(ONST, "LOG")
+    field(DTYP, "stream")
+    field(OUT, "@agilent33521a.proto setSweepSpacing $(PORT)")
+    field(FLNK, "$(P)$(R)SweepSpacing-Sts")
+}
+
 record(ai, "$(P)$(R)Ampl-RB") {
     field(DESC, "Read configured amplitude")
     field(EGU, "V")
-    field(PINI, 1)
     field(DTYP, "stream")
     field(PREC, "3")
     field(INP, "@agilent33521a.proto getAmplitude $(PORT)")
@@ -79,6 +214,7 @@ record(ai, "$(P)$(R)Ampl-RB") {
 
 record(ao, "$(P)$(R)Ampl-SP") {
     field(DESC, "Configure amplitude value")
+    field(PINI, "YES")
     field(EGU, "V")
     field(DTYP, "stream")
     field(DRVH, "10")    # For 50 ohm, range is -5V to 5V
@@ -91,7 +227,6 @@ record(ao, "$(P)$(R)Ampl-SP") {
 record(ai, "$(P)$(R)Offset-RB") {
     field(DESC, "Read configured DC offset")
     field(EGU, "V")
-    field(PINI, 1)
     field(DTYP, "stream")
     field(PREC, "3")
     field(INP, "@agilent33521a.proto getOffset $(PORT)")
@@ -99,6 +234,7 @@ record(ai, "$(P)$(R)Offset-RB") {
 
 record(ao, "$(P)$(R)Offset-SP") {
     field(DESC, "Configure DC offset")
+    field(PINI, "YES")
     field(EGU, "V")
     field(DTYP, "stream")
     field(DRVH, "10")    # For 50 ohm, range is -5V to 5V
@@ -111,7 +247,6 @@ record(ao, "$(P)$(R)Offset-SP") {
 record(ai, "$(P)$(R)Phs-RB") {
     field(DESC, "Read configured phase")
     field(EGU, "degrees")
-    field(PINI, 1)
     field(DTYP, "stream")
     field(PREC, "3")
     field(INP, "@agilent33521a.proto getPhase $(PORT)")
@@ -119,6 +254,7 @@ record(ai, "$(P)$(R)Phs-RB") {
 
 record(ao, "$(P)$(R)Phs-SP") {
     field(DESC, "Configure phase")
+    field(PINI, "YES")
     field(EGU, "degrees")
     field(DTYP, "stream")
     field(DRVH, "360")
@@ -131,7 +267,6 @@ record(ao, "$(P)$(R)Phs-SP") {
 record(ai, "$(P)$(R)SquareDutyCycle-RB") {
     field(DESC, "Read configured square wave duty cycle")
     field(EGU, "%")
-    field(PINI, 1)
     field(DTYP, "stream")
     field(PREC, "2")
     field(INP, "@agilent33521a.proto getSquareDutyCycle $(PORT)")
@@ -139,6 +274,7 @@ record(ai, "$(P)$(R)SquareDutyCycle-RB") {
 
 record(ao, "$(P)$(R)SquareDutyCycle-SP") {
     field(DESC, "Configure square wave duty cycle")
+    field(PINI, "YES")
     field(EGU, "%")
     field(DTYP, "stream")
     field(DRVH, "99.99")    # Limits become more restrict as frequency increases
@@ -151,7 +287,6 @@ record(ao, "$(P)$(R)SquareDutyCycle-SP") {
 record(ai, "$(P)$(R)RmpSymmetry-RB") {
     field(DESC, "Read configured ramp function symmetry")
     field(EGU, "%")
-    field(PINI, 1)
     field(DTYP, "stream")
     field(PREC, "2")
     field(INP, "@agilent33521a.proto getRampSymmetry $(PORT)")
@@ -159,6 +294,7 @@ record(ai, "$(P)$(R)RmpSymmetry-RB") {
 
 record(ao, "$(P)$(R)RmpSymmetry-SP") {
     field(DESC, "Configure ramp function symmetry")
+    field(PINI, "YES")
     field(EGU, "%")
     field(DTYP, "stream")
     field(DRVH, "100")
@@ -171,7 +307,6 @@ record(ao, "$(P)$(R)RmpSymmetry-SP") {
 record(ai, "$(P)$(R)PulseWidth-RB") {
     field(DESC, "Read configured pulse width")
     field(EGU, "s")
-    field(PINI, 1)
     field(DTYP, "stream")
     field(PREC, "9")
     field(INP, "@agilent33521a.proto getPulseWidth $(PORT)")
@@ -179,6 +314,7 @@ record(ai, "$(P)$(R)PulseWidth-RB") {
 
 record(ao, "$(P)$(R)PulseWidth-SP") {
     field(DESC, "Configure pulse width")
+    field(PINI, "YES")
     field(EGU, "s")
     field(DTYP, "stream")
     field(DRVH, "1000000")    # Depends on period used
@@ -191,7 +327,6 @@ record(ao, "$(P)$(R)PulseWidth-SP") {
 record(ai, "$(P)$(R)PulseLeadingEdge-RB") {
     field(DESC, "Read configured leading edge time")
     field(EGU, "s")
-    field(PINI, 1)
     field(DTYP, "stream")
     field(PREC, "10")
     field(INP, "@agilent33521a.proto getPulseLeadingEdge $(PORT)")
@@ -199,6 +334,7 @@ record(ai, "$(P)$(R)PulseLeadingEdge-RB") {
 
 record(ao, "$(P)$(R)PulseLeadingEdge-SP") {
     field(DESC, "Configure pulse leading edge time")
+    field(PINI, "YES")
     field(EGU, "s")
     field(DTYP, "stream")
     field(DRVH, "0.000001")    # Depends on pulse width and period
@@ -211,7 +347,6 @@ record(ao, "$(P)$(R)PulseLeadingEdge-SP") {
 record(ai, "$(P)$(R)PulseTrailingEdge-RB") {
     field(DESC, "Read configured trailing edge time")
     field(EGU, "s")
-    field(PINI, 1)
     field(DTYP, "stream")
     field(PREC, "10")
     field(INP, "@agilent33521a.proto getPulseTrailingEdge $(PORT)")
@@ -219,6 +354,7 @@ record(ai, "$(P)$(R)PulseTrailingEdge-RB") {
 
 record(ao, "$(P)$(R)PulseTrailingEdge-SP") {
     field(DESC, "Configure pulse trailing edge time")
+    field(PINI, "YES")
     field(EGU, "s")
     field(DTYP, "stream")
     field(DRVH, "0.000001")    # Depends on pulse width and period
@@ -231,7 +367,6 @@ record(ao, "$(P)$(R)PulseTrailingEdge-SP") {
 record(ai, "$(P)$(R)PRBSBitRate-RB") {
     field(DESC, "Read configured PRBS bit rate")
     field(EGU, "bps")
-    field(PINI, 1)
     field(DTYP, "stream")
     field(PREC, "3")
     field(INP, "@agilent33521a.proto getPrbsBitRate $(PORT)")
@@ -239,6 +374,7 @@ record(ai, "$(P)$(R)PRBSBitRate-RB") {
 
 record(ao, "$(P)$(R)PRBSBitRate-SP") {
     field(DESC, "Configure PRBS bit rate")
+    field(PINI, "YES")
     field(EGU, "s")
     field(DTYP, "stream")
     field(DRVH, "50000000")
@@ -251,7 +387,6 @@ record(ao, "$(P)$(R)PRBSBitRate-SP") {
 record(ai, "$(P)$(R)PRBSEdgeTime-RB") {
     field(DESC, "Read configured PRBS edge time")
     field(EGU, "s")
-    field(PINI, 1)
     field(DTYP, "stream")
     field(PREC, "10")
     field(INP, "@agilent33521a.proto getPrbsEdgeTime $(PORT)")
@@ -259,6 +394,7 @@ record(ai, "$(P)$(R)PRBSEdgeTime-RB") {
 
 record(ao, "$(P)$(R)PRBSEdgeTime-SP") {
     field(DESC, "Configure PRBS edge time")
+    field(PINI, "YES")
     field(EGU, "s")
     field(DTYP, "stream")
     field(DRVH, "0.000001")    # Depends on pulse width and period
@@ -277,12 +413,12 @@ record(mbbi, "$(P)$(R)PRBSSeqType-Sts") {
     field(FRST, "PN20")
     field(FVST, "PN23")
     field(DTYP, "stream")
-    field(PINI, 1)
     field(INP, "@agilent33521a.proto getPrbsSequenceType $(PORT)")
 }
 
 record(mbbo, "$(P)$(R)PRBSSeqType-Sel") {
     field(DESC, "Select PRBS sequence type")
+    field(PINI, "YES")
     field(ZRST, "PN7")
     field(ONST, "PN9")
     field(TWST, "PN11")
@@ -297,7 +433,6 @@ record(mbbo, "$(P)$(R)PRBSSeqType-Sel") {
 record(ai, "$(P)$(R)NoiseBw-RB") {
     field(DESC, "Read configured noise function bandwidth")
     field(EGU, "Hz")
-    field(PINI, 1)
     field(DTYP, "stream")
     field(PREC, "3")
     field(INP, "@agilent33521a.proto getNoiseBandwidth $(PORT)")
@@ -305,6 +440,7 @@ record(ai, "$(P)$(R)NoiseBw-RB") {
 
 record(ao, "$(P)$(R)NoiseBw-SP") {
     field(DESC, "Configure noise function bandwidth")
+    field(PINI, "YES")
     field(EGU, "Hz")
     field(DTYP, "stream")
     field(DRVH, "30000000")
@@ -317,7 +453,6 @@ record(ao, "$(P)$(R)NoiseBw-SP") {
 record(ai, "$(P)$(R)ArbitrarySplRate-RB") {
     field(DESC, "Read sample rate for arbitrary waveform")
     field(EGU, "Sa/s")
-    field(PINI, 1)
     field(DTYP, "stream")
     field(PREC, "6")
     field(INP, "@agilent33521a.proto getArbitraryWaveformSampleRate $(PORT)")
@@ -325,6 +460,7 @@ record(ai, "$(P)$(R)ArbitrarySplRate-RB") {
 
 record(ao, "$(P)$(R)ArbitrarySplRate-SP") {
     field(DESC, "Set sample rate for arbitrary waveform")
+    field(PINI, "YES")
     field(EGU, "Sa/s")
     field(DTYP, "stream")
     field(DRVH, "250000000")
@@ -338,7 +474,6 @@ record(waveform, "$(P)$(R)ArbitraryWfmFile-RB") {
     field(DESC, "Read arbitrary waveform file path")
     field(NELM, 240)
     field(FTVL, "STRING")
-    field(PINI, 1)
     field(DTYP, "stream")
     field(INP, "@agilent33521a.proto getArbitraryWaveformFile $(PORT)")
 }
@@ -353,6 +488,7 @@ record(waveform, "$(P)$(R)ArbitraryLoadWfmFile-Cmd") {
 
 record(waveform, "$(P)$(R)ArbitraryWfmFile-SP") {
     field(DESC, "Set arbitrary waveform file path")
+    field(PINI, "YES")
     field(NELM, 240)
     field(FTVL, "STRING")
     field(DTYP, "stream")
