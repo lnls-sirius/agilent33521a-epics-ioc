@@ -68,6 +68,142 @@ record(ao, "$(P)$(R)Freq-SP") {
     field(FLNK, "$(P)$(R)Freq-RB")
 }
 
+record(ai, "$(P)$(R)FreqStart-RB") {
+    field(DESC, "Read configured start frequency")
+    field(EGU, "Hz")
+    field(DTYP, "stream")
+    field(PREC, "6")
+    field(INP, "@agilent33521a.proto getFrequencyStart $(PORT)")
+}
+
+record(ao, "$(P)$(R)FreqStart-SP") {
+    field(DESC, "Configure start frequency value")
+    field(PINI, "YES")
+    field(EGU, "Hz")
+    field(DTYP, "stream")
+    field(DRVH, "30000000")
+    field(DRVL, "0.000001")
+    field(PREC, "6")
+    field(OUT, "@agilent33521a.proto setFrequencyStart $(PORT)")
+    field(FLNK, "$(P)$(R)FreqStart-RB")
+}
+
+record(ai, "$(P)$(R)FreqStop-RB") {
+    field(DESC, "Read configured stop frequency")
+    field(EGU, "Hz")
+    field(DTYP, "stream")
+    field(PREC, "6")
+    field(INP, "@agilent33521a.proto getFrequencyStop $(PORT)")
+}
+
+record(ao, "$(P)$(R)FreqStop-SP") {
+    field(DESC, "Configure stop frequency value")
+    field(PINI, "YES")
+    field(EGU, "Hz")
+    field(DTYP, "stream")
+    field(DRVH, "30000000")
+    field(DRVL, "0.000001")
+    field(PREC, "6")
+    field(OUT, "@agilent33521a.proto setFrequencyStop $(PORT)")
+    field(FLNK, "$(P)$(R)FreqStop-RB")
+}
+
+record(ai, "$(P)$(R)SweepTime-RB") {
+    field(DESC, "Read configured sweep time")
+    field(EGU, "s")
+    field(DTYP, "stream")
+    field(PREC, "3")
+    field(INP, "@agilent33521a.proto getSweepTime $(PORT)")
+}
+
+record(ao, "$(P)$(R)SweepTime-SP") {
+    field(DESC, "Configure sweep time value")
+    field(PINI, "YES")
+    field(EGU, "s")
+    field(DTYP, "stream")
+    field(DRVH, "250000")
+    field(DRVL, "0.001")
+    field(PREC, "3")
+    field(OUT, "@agilent33521a.proto setSweepTime $(PORT)")
+    field(FLNK, "$(P)$(R)SweepTime-RB")
+}
+
+record(ai, "$(P)$(R)SweepHTime-RB") {
+    field(DESC, "Read configured sweep hold time")
+    field(EGU, "s")
+    field(DTYP, "stream")
+    field(PREC, "3")
+    field(INP, "@agilent33521a.proto getSweepHTime $(PORT)")
+}
+
+record(ao, "$(P)$(R)SweepHTime-SP") {
+    field(DESC, "Configure sweep hold time value")
+    field(PINI, "YES")
+    field(EGU, "s")
+    field(DTYP, "stream")
+    field(DRVH, "3600")
+    field(DRVL, "0.001")
+    field(PREC, "3")
+    field(OUT, "@agilent33521a.proto setSweepHTime $(PORT)")
+    field(FLNK, "$(P)$(R)SweepHTime-RB")
+}
+
+record(ai, "$(P)$(R)SweepRTime-RB") {
+    field(DESC, "Read configured sweep return time")
+    field(EGU, "s")
+    field(DTYP, "stream")
+    field(PREC, "3")
+    field(INP, "@agilent33521a.proto getSweepRTime $(PORT)")
+}
+
+record(ao, "$(P)$(R)SweepRTime-SP") {
+    field(DESC, "Configure sweep return time value")
+    field(PINI, "YES")
+    field(EGU, "s")
+    field(DTYP, "stream")
+    field(DRVH, "3600")
+    field(DRVL, "0.001")
+    field(PREC, "3")
+    field(OUT, "@agilent33521a.proto setSweepRTime $(PORT)")
+    field(FLNK, "$(P)$(R)SweepRTime-RB")
+}
+
+record(bo, "$(P)$(R)SweepState-Sel") {
+    field(DESC, "Set sweep state")
+    field(PINI, "YES")
+    field(ZNAM, "OFF")
+    field(ONAM, "ON")
+    field(DTYP, "stream")
+    field(OUT, "@agilent33521a.proto setSweepState $(PORT)")
+    field(FLNK, "$(P)$(R)SweepState-Sts")
+}
+
+record(bi, "$(P)$(R)SweepState-Sts") {
+    field(DESC, "Read sweep state")
+    field(ZNAM, "OFF")
+    field(ONAM, "ON")
+    field(DTYP, "stream")
+    field(INP, "@agilent33521a.proto getSweepState $(PORT)")
+}
+
+record(mbbi, "$(P)$(R)SweepSpacing-Sts") {
+    field(DESC, "Read current sweep spacing")
+    field(ZRST, "LIN")
+    field(ONST, "LOG")
+    field(DTYP, "stream")
+    field(INP, "@agilent33521a.proto getSweepSpacing $(PORT)")
+}
+
+record(mbbo, "$(P)$(R)SweepSpacing-Sel") {
+    field(DESC, "Select sweep spacing")
+    field(PINI, "YES")
+    field(ZRST, "LIN")
+    field(ONST, "LOG")
+    field(DTYP, "stream")
+    field(OUT, "@agilent33521a.proto setSweepSpacing $(PORT)")
+    field(FLNK, "$(P)$(R)SweepSpacing-Sts")
+}
+
 record(ai, "$(P)$(R)Ampl-RB") {
     field(DESC, "Read configured amplitude")
     field(EGU, "V")

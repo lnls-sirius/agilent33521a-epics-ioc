@@ -33,6 +33,76 @@ setFrequency {
     @init { getFrequency }
 }
 
+getFrequencyStart {
+    out "SOURce1:FREQuency:STARt?";
+    in "%f";
+}
+
+setFrequencyStart {
+    out "SOURce1:FREQuency:STARt %g";
+    @init { getFrequencyStart }
+}
+
+getFrequencyStop {
+    out "SOURce1:FREQuency:STOP?";
+    in "%f";
+}
+
+setFrequencyStop {
+    out "SOURce1:FREQuency:STOP %g";
+    @init { getFrequencyStop }
+}
+
+getSweepTime {
+    out "SOURce1:SWEep:TIME?";
+    in "%f";
+}
+
+setSweepTime {
+    out "SOURce1:SWEep:TIME %g";
+    @init { getSweepTime }
+}
+
+getSweepHTime {
+    out "SOURce1:SWEep:HTIMe?";
+    in "%f";
+}
+
+setSweepHTime {
+    out "SOURce1:SWEep:HTIMe %g";
+    @init { getSweepHTime }
+}
+
+getSweepRTime {
+    out "SOURce1:SWEep:RTIMe?";
+    in "%f";
+}
+
+setSweepRTime {
+    out "SOURce1:SWEep:RTIMe %g";
+    @init { getSweepRTime }
+}
+
+getSweepState {
+    out "SOURce1:SWEep:STATe?";
+    in "%i";
+}
+
+setSweepState {
+    out "SOURce1:SWEep:STATe %{OFF|ON}";
+    @init { getSweepState }
+}
+
+getSweepSpacing {
+    out "SOURce1:SWEep:SPACing?";
+    in "%{LIN|LOG}";
+}
+
+setSweepSpacing {
+    out "SOURce1:SWEep:SPACing %{LIN|LOG}";
+    @init { getSweepSpacing }
+}
+
 getAmplitude {
     out "SOURce1:VOLT?";
     in "%f";
