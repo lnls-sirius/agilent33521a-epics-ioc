@@ -571,7 +571,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color red="0" green="0" blue="0" />
       </foreground_color>
-      <format_type>0</format_type>
+      <format_type>2</format_type>
       <height>20</height>
       <horizontal_alignment>1</horizontal_alignment>
       <name>Text Update_13</name>
@@ -624,7 +624,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color red="0" green="0" blue="0" />
       </foreground_color>
-      <format_type>0</format_type>
+      <format_type>2</format_type>
       <height>25</height>
       <horizontal_alignment>0</horizontal_alignment>
       <limits_from_pv>false</limits_from_pv>
@@ -2016,7 +2016,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color red="0" green="0" blue="0" />
       </foreground_color>
-      <format_type>0</format_type>
+      <format_type>2</format_type>
       <height>20</height>
       <horizontal_alignment>1</horizontal_alignment>
       <name>Text Update_13</name>
@@ -2069,7 +2069,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color red="0" green="0" blue="0" />
       </foreground_color>
-      <format_type>0</format_type>
+      <format_type>2</format_type>
       <height>25</height>
       <horizontal_alignment>0</horizontal_alignment>
       <limits_from_pv>false</limits_from_pv>
@@ -2125,7 +2125,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color red="0" green="0" blue="0" />
       </foreground_color>
-      <format_type>0</format_type>
+      <format_type>2</format_type>
       <height>20</height>
       <horizontal_alignment>1</horizontal_alignment>
       <name>Text Update_13</name>
@@ -2219,7 +2219,7 @@ Edge Time</text>
       <foreground_color>
         <color red="0" green="0" blue="0" />
       </foreground_color>
-      <format_type>0</format_type>
+      <format_type>2</format_type>
       <height>25</height>
       <horizontal_alignment>0</horizontal_alignment>
       <limits_from_pv>false</limits_from_pv>
@@ -2275,7 +2275,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color red="0" green="0" blue="0" />
       </foreground_color>
-      <format_type>0</format_type>
+      <format_type>2</format_type>
       <height>20</height>
       <horizontal_alignment>1</horizontal_alignment>
       <name>Text Update_13</name>
@@ -2369,7 +2369,7 @@ Edge Time</text>
       <foreground_color>
         <color red="0" green="0" blue="0" />
       </foreground_color>
-      <format_type>0</format_type>
+      <format_type>2</format_type>
       <height>25</height>
       <horizontal_alignment>0</horizontal_alignment>
       <limits_from_pv>false</limits_from_pv>
@@ -2713,7 +2713,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color red="0" green="0" blue="0" />
       </foreground_color>
-      <format_type>0</format_type>
+      <format_type>2</format_type>
       <height>20</height>
       <horizontal_alignment>1</horizontal_alignment>
       <name>Text Update_13</name>
@@ -2806,7 +2806,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color red="0" green="0" blue="0" />
       </foreground_color>
-      <format_type>0</format_type>
+      <format_type>2</format_type>
       <height>25</height>
       <horizontal_alignment>0</horizontal_alignment>
       <limits_from_pv>false</limits_from_pv>
@@ -3175,7 +3175,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color red="0" green="0" blue="0" />
       </foreground_color>
-      <format_type>0</format_type>
+      <format_type>2</format_type>
       <height>20</height>
       <horizontal_alignment>1</horizontal_alignment>
       <name>Text Update_13</name>
@@ -3228,7 +3228,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color red="0" green="0" blue="0" />
       </foreground_color>
-      <format_type>0</format_type>
+      <format_type>2</format_type>
       <height>25</height>
       <horizontal_alignment>0</horizontal_alignment>
       <limits_from_pv>false</limits_from_pv>
@@ -3463,7 +3463,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color red="0" green="0" blue="0" />
       </foreground_color>
-      <format_type>0</format_type>
+      <format_type>2</format_type>
       <height>20</height>
       <horizontal_alignment>1</horizontal_alignment>
       <name>Text Update_13</name>
@@ -3516,7 +3516,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color red="0" green="0" blue="0" />
       </foreground_color>
-      <format_type>0</format_type>
+      <format_type>2</format_type>
       <height>25</height>
       <horizontal_alignment>0</horizontal_alignment>
       <limits_from_pv>false</limits_from_pv>
@@ -3999,7 +3999,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color red="0" green="0" blue="0" />
       </foreground_color>
-      <format_type>0</format_type>
+      <format_type>2</format_type>
       <height>20</height>
       <horizontal_alignment>1</horizontal_alignment>
       <name>Text Update_13</name>
@@ -4052,7 +4052,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color red="0" green="0" blue="0" />
       </foreground_color>
-      <format_type>0</format_type>
+      <format_type>2</format_type>
       <height>25</height>
       <horizontal_alignment>0</horizontal_alignment>
       <limits_from_pv>false</limits_from_pv>
@@ -4108,7 +4108,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color red="0" green="0" blue="0" />
       </foreground_color>
-      <format_type>0</format_type>
+      <format_type>2</format_type>
       <height>20</height>
       <horizontal_alignment>1</horizontal_alignment>
       <name>Text Update_13</name>
@@ -4201,7 +4201,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color red="0" green="0" blue="0" />
       </foreground_color>
-      <format_type>0</format_type>
+      <format_type>2</format_type>
       <height>25</height>
       <horizontal_alignment>0</horizontal_alignment>
       <limits_from_pv>false</limits_from_pv>
