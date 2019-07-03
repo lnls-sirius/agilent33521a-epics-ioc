@@ -124,7 +124,7 @@ $(pv_value)</tooltip>
     <vertical_alignment>1</vertical_alignment>
     <visible>true</visible>
     <widget_type>Label</widget_type>
-    <width>328</width>
+    <width>390</width>
     <wrap_words>false</wrap_words>
     <wuid>-121d7f33:1646036f9e2:2010</wuid>
     <x>54</x>
@@ -274,7 +274,7 @@ $(pv_value)</tooltip>
       </fg_gradient_color>
       <fill_level>0.0</fill_level>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
       <foreground_color>
@@ -361,7 +361,7 @@ $(pv_value)</tooltip>
       <border_width>1</border_width>
       <enabled>true</enabled>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <foreground_color>
         <color red="0" green="0" blue="0" />
@@ -522,7 +522,7 @@ $(pv_value)</tooltip>
       <border_width>1</border_width>
       <enabled>true</enabled>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <foreground_color>
         <color red="0" green="0" blue="0" />
@@ -671,7 +671,7 @@ $(pv_value)</tooltip>
       <border_width>1</border_width>
       <enabled>true</enabled>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <foreground_color>
         <color red="0" green="0" blue="0" />
@@ -805,7 +805,7 @@ $(pv_value)</tooltip>
       <border_width>1</border_width>
       <enabled>true</enabled>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <foreground_color>
         <color red="0" green="0" blue="0" />
@@ -954,7 +954,7 @@ $(pv_value)</tooltip>
       <border_width>1</border_width>
       <enabled>true</enabled>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <foreground_color>
         <color red="0" green="0" blue="0" />
@@ -1103,7 +1103,7 @@ $(pv_value)</tooltip>
       <border_width>1</border_width>
       <enabled>true</enabled>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <foreground_color>
         <color red="0" green="0" blue="0" />
@@ -1304,7 +1304,7 @@ $(pv_value)</tooltip>
       </fg_gradient_color>
       <fill_level>0.0</fill_level>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
       <foreground_color>
@@ -1391,7 +1391,7 @@ $(pv_value)</tooltip>
       <border_width>1</border_width>
       <enabled>true</enabled>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <foreground_color>
         <color red="0" green="0" blue="0" />
@@ -1592,7 +1592,7 @@ $(pv_value)</tooltip>
       </fg_gradient_color>
       <fill_level>0.0</fill_level>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
       <foreground_color>
@@ -1679,7 +1679,7 @@ $(pv_value)</tooltip>
       <border_width>1</border_width>
       <enabled>true</enabled>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <foreground_color>
         <color red="0" green="0" blue="0" />
@@ -1880,7 +1880,7 @@ $(pv_value)</tooltip>
       </fg_gradient_color>
       <fill_level>0.0</fill_level>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
       <foreground_color>
@@ -1967,7 +1967,7 @@ $(pv_value)</tooltip>
       <border_width>1</border_width>
       <enabled>true</enabled>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <foreground_color>
         <color red="0" green="0" blue="0" />
@@ -2168,7 +2168,7 @@ $(pv_value)</tooltip>
       <border_width>1</border_width>
       <enabled>true</enabled>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <foreground_color>
         <color red="0" green="0" blue="0" />
@@ -2318,7 +2318,7 @@ $(pv_value)</tooltip>
       <border_width>1</border_width>
       <enabled>true</enabled>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <foreground_color>
         <color red="0" green="0" blue="0" />
@@ -2468,7 +2468,7 @@ $(pv_value)</tooltip>
       </fg_gradient_color>
       <fill_level>0.0</fill_level>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
       <foreground_color>
@@ -2555,7 +2555,7 @@ $(pv_value)</tooltip>
       <border_width>1</border_width>
       <enabled>true</enabled>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <foreground_color>
         <color red="0" green="0" blue="0" />
@@ -2756,7 +2756,7 @@ $(pv_value)</tooltip>
       <border_width>1</border_width>
       <enabled>true</enabled>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <foreground_color>
         <color red="0" green="0" blue="0" />
@@ -2853,7 +2853,7 @@ $(pv_value)</tooltip>
       <border_width>1</border_width>
       <enabled>true</enabled>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <foreground_color>
         <color red="0" green="0" blue="0" />
@@ -3039,7 +3039,7 @@ $(pv_value)</tooltip>
       </fg_gradient_color>
       <fill_level>0.0</fill_level>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
       <foreground_color>
@@ -3126,7 +3126,7 @@ $(pv_value)</tooltip>
       <border_width>1</border_width>
       <enabled>true</enabled>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <foreground_color>
         <color red="0" green="0" blue="0" />
@@ -3327,7 +3327,7 @@ $(pv_value)</tooltip>
       </fg_gradient_color>
       <fill_level>0.0</fill_level>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
       <foreground_color>
@@ -3414,7 +3414,7 @@ $(pv_value)</tooltip>
       <border_width>1</border_width>
       <enabled>true</enabled>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <foreground_color>
         <color red="0" green="0" blue="0" />
@@ -3615,7 +3615,7 @@ $(pv_value)</tooltip>
       <border_width>1</border_width>
       <enabled>true</enabled>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <foreground_color>
         <color red="0" green="0" blue="0" />
@@ -3713,7 +3713,7 @@ $(pv_value)</tooltip>
       <border_width>1</border_width>
       <enabled>true</enabled>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <foreground_color>
         <color red="0" green="0" blue="0" />
@@ -3863,7 +3863,7 @@ $(pv_value)</tooltip>
       </fg_gradient_color>
       <fill_level>0.0</fill_level>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
       <foreground_color>
@@ -3950,7 +3950,7 @@ $(pv_value)</tooltip>
       <border_width>1</border_width>
       <enabled>true</enabled>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <foreground_color>
         <color red="0" green="0" blue="0" />
@@ -4151,12 +4151,12 @@ $(pv_value)</tooltip>
       <border_width>1</border_width>
       <enabled>true</enabled>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <foreground_color>
         <color red="0" green="0" blue="0" />
       </foreground_color>
-      <height>38</height>
+      <height>20</height>
       <horizontal_alignment>0</horizontal_alignment>
       <name>Label_21</name>
       <rules />
@@ -4172,11 +4172,11 @@ $(pv_value)</tooltip>
       <vertical_alignment>1</vertical_alignment>
       <visible>true</visible>
       <widget_type>Label</widget_type>
-      <width>76</width>
+      <width>92</width>
       <wrap_words>false</wrap_words>
       <wuid>4ebe9bcd:16b321b8cbd:-3e3d</wuid>
       <x>15</x>
-      <y>112</y>
+      <y>121</y>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.TextInput" version="2.0.0">
       <actions hook="false" hook_all="false" />
@@ -4357,13 +4357,13 @@ $(pv_value)</tooltip>
       <border_width>1</border_width>
       <enabled>true</enabled>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <foreground_color>
         <color red="0" green="0" blue="0" />
       </foreground_color>
-      <height>38</height>
-      <horizontal_alignment>1</horizontal_alignment>
+      <height>20</height>
+      <horizontal_alignment>0</horizontal_alignment>
       <name>Label_21</name>
       <rules />
       <scale_options>
@@ -4379,11 +4379,11 @@ $(pv_value)</tooltip>
       <vertical_alignment>1</vertical_alignment>
       <visible>true</visible>
       <widget_type>Label</widget_type>
-      <width>76</width>
+      <width>92</width>
       <wrap_words>true</wrap_words>
       <wuid>4ebe9bcd:16b321b8cbd:-3e3a</wuid>
       <x>15</x>
-      <y>151</y>
+      <y>160</y>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
       <actions hook="false" hook_all="false" />
@@ -4507,13 +4507,13 @@ $(pv_value)</tooltip>
       <border_width>1</border_width>
       <enabled>true</enabled>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <foreground_color>
         <color red="0" green="0" blue="0" />
       </foreground_color>
-      <height>38</height>
-      <horizontal_alignment>1</horizontal_alignment>
+      <height>20</height>
+      <horizontal_alignment>0</horizontal_alignment>
       <name>Label_21</name>
       <rules />
       <scale_options>
@@ -4529,11 +4529,11 @@ $(pv_value)</tooltip>
       <vertical_alignment>1</vertical_alignment>
       <visible>true</visible>
       <widget_type>Label</widget_type>
-      <width>76</width>
+      <width>92</width>
       <wrap_words>true</wrap_words>
       <wuid>4ebe9bcd:16b321b8cbd:-3df9</wuid>
       <x>15</x>
-      <y>188</y>
+      <y>197</y>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
       <actions hook="false" hook_all="false" />
@@ -4657,13 +4657,13 @@ $(pv_value)</tooltip>
       <border_width>1</border_width>
       <enabled>true</enabled>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <foreground_color>
         <color red="0" green="0" blue="0" />
       </foreground_color>
-      <height>38</height>
-      <horizontal_alignment>1</horizontal_alignment>
+      <height>20</height>
+      <horizontal_alignment>0</horizontal_alignment>
       <name>Label_21</name>
       <rules />
       <scale_options>
@@ -4679,11 +4679,11 @@ $(pv_value)</tooltip>
       <vertical_alignment>1</vertical_alignment>
       <visible>true</visible>
       <widget_type>Label</widget_type>
-      <width>76</width>
+      <width>92</width>
       <wrap_words>true</wrap_words>
       <wuid>4ebe9bcd:16b321b8cbd:-3dee</wuid>
       <x>15</x>
-      <y>225</y>
+      <y>234</y>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.LED" version="1.0.0">
       <actions hook="false" hook_all="false" />
@@ -4756,12 +4756,12 @@ $(pv_value)</tooltip>
       <border_width>1</border_width>
       <enabled>true</enabled>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <foreground_color>
         <color red="0" green="0" blue="0" />
       </foreground_color>
-      <height>37</height>
+      <height>22</height>
       <horizontal_alignment>0</horizontal_alignment>
       <name>Label_48</name>
       <rules />
@@ -4782,7 +4782,7 @@ $(pv_value)</tooltip>
       <wrap_words>true</wrap_words>
       <wuid>4ebe9bcd:16b321b8cbd:-3db8</wuid>
       <x>15</x>
-      <y>34</y>
+      <y>42</y>
     </widget>
     <widget typeId="org.csstudio.opibuilder.widgets.BoolButton" version="1.0.0">
       <actions hook="false" hook_all="false" />
@@ -4859,7 +4859,7 @@ $(pv_value)</tooltip>
       <border_width>1</border_width>
       <enabled>true</enabled>
       <font>
-        <fontdata fontName="Ubuntu" height="12" style="0" pixels="false" />
+        <opifont.name fontName="Sans" height="10" style="0" pixels="false">Default</opifont.name>
       </font>
       <foreground_color>
         <color red="0" green="0" blue="0" />
