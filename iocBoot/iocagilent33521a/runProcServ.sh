@@ -21,6 +21,7 @@ set -u
 # Use UNIX socket telnet port is not set
 if [ "${UNIX_SOCKET}" ]; then
     /usr/local/bin/procServ \
+        --logfile - \
         --foreground \
         --name agilent33521a_${AGILENT33521A_INSTANCE} \
         --ignore ^C^D \
@@ -28,6 +29,7 @@ if [ "${UNIX_SOCKET}" ]; then
             ./runAgilent33521a.sh "$@"
 else
     /usr/local/bin/procServ \
+        --logfile - \
         --foreground \
         --name agilent33521a_${AGILENT33521A_INSTANCE} \
         --ignore ^C^D \
