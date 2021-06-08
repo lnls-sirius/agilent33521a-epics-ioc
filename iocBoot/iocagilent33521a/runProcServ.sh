@@ -6,14 +6,13 @@ set +u
 # Parse command-line options
 . ./parseCMDOpts.sh "$@"
 
-if [ -z "${AGILENT33521A_INSTANCE}" ]; then
-   AGILENT33521A_INSTANCE="1"
-fi
-
 UNIX_SOCKET=""
-
 if [ -z "${DEVICE_TELNET_PORT}" ]; then
     UNIX_SOCKET="true"
+fi
+
+if [ -z "${AGILENT33521A_INSTANCE}" ]; then
+   AGILENT33521A_INSTANCE="1"
 fi
 
 set -u
