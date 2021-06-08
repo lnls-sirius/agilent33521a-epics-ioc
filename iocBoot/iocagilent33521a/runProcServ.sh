@@ -6,9 +6,9 @@ set +u
 # Parse command-line options
 . ./parseCMDOpts.sh "$@"
 
-# Use defaults if not set
+UNIX_SOCKET=""
 if [ -z "${DEVICE_TELNET_PORT}" ]; then
-   DEVICE_TELNET_PORT="20000"
+    UNIX_SOCKET="true"
 fi
 
 if [ -z "${AGILENT33521A_INSTANCE}" ]; then
@@ -17,5 +17,19 @@ fi
 
 set -u
 
-# Run run*.sh scripts with procServ
-/usr/local/bin/procServ -f -n agilent33521a_${AGILENT33521A_INSTANCE} -i ^C^D ${DEVICE_TELNET_PORT} ./runAgilent33521a.sh "$@"
+# Use UNIX socket telnet port is not set
+if [ "${UNIX_SOCKET}" ]; then
+    /usr/local/bin/procServ \
+        --foreground \
+        --name agilent33521a_${AGILENT33521A_INSTANCE} \
+        --ignore ^C^D \
+        unix:./procserv.sock \
+            ./runAgilent33521a.sh "$@"
+else
+    /usr/local/bin/procServ \
+        --foreground \
+        --name agilent33521a_${AGILENT33521A_INSTANCE} \
+        --ignore ^C^D \
+        ${DEVICE_TELNET_PORT} \
+            ./runAgilent33521a.sh "$@"
+fi
