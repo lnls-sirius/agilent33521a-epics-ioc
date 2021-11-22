@@ -25,7 +25,7 @@ if [ -z "$DEVICE_PORT" ]; then
 fi
 
 if [ -z "$DEVICE_TYPE" ]; then
-    DEVICE_TYPE="Agilent33521"
+    DEVICE_TYPE="Agilent33521a"
 fi
 
 if [ -z "$EPICS_CA_MAX_ARRAY_BYTES" ]; then
@@ -35,7 +35,7 @@ fi
 cd "$IOC_BOOT_DIR"
 
 if [ "$DEVICE_TYPE" = "EgunTest" ]; then
-    P="$P" R="$R" DEVICE_IP="$DEVICE_IP" DEVICE_PORT="$DEVICE_PORT" "$IOC_BIN" EgunTest.cmd
+    P="$P" R="$R" DEVICE_IP="$DEVICE_IP" DEVICE_PORT="$DEVICE_PORT" "$IOC_BIN" stEgunTest.cmd
     exit 7
 else
     P="$P" R="$R" DEVICE_IP="$DEVICE_IP" DEVICE_PORT="$DEVICE_PORT" "$IOC_BIN" stAgilent33521a.cmd
