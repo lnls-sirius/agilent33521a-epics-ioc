@@ -8,20 +8,21 @@ usage () {
     echo >&2
     echo " Options:" >&2
     echo "  -t                  Configure procServ telnet port" >&2
+    echo "  -d                  Configure device type option" >&2
     echo "  -P                  Configure value of \$(P) macro" >&2
     echo "  -R                  Configure value of \$(R) macro" >&2
     echo "  -i                  Configure device IP address (required)" >&2
     echo "  -p                  Configure device port" >&2
 }
 
-while getopts ":t:P:R:i:p:d:" opt; do
+while getopts ":t:d:P:R:i:p:" opt; do
   case $opt in
     t) DEVICE_TELNET_PORT="$OPTARG" ;;
+    d) DEVICE_TYPE="$OPTARG";;
     P) P="$OPTARG" ;;
     R) R="$OPTARG" ;;
     i) DEVICE_IP="$OPTARG" ;;
     p) DEVICE_PORT="$OPTARG" ;;
-    d) DEVICE_TYPE="$OPTARG";;
     \?)
       echo "Invalid option: -$OPTARG" >&2
       usage $0
