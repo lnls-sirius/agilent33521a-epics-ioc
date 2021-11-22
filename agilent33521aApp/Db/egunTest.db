@@ -1,0 +1,17 @@
+record(bo, "$(P)$(R)ChanOut-Sel") {
+    field(DESC, "Enable channel output")
+    field(PINI, "YES")
+    field(ZNAM, "OFF")
+    field(ONAM, "ON")
+    field(DTYP, "stream")
+    field(OUT, "@agilent33521a.proto channelOutputEnable $(PORT)")
+    field(FLNK, "$(P)$(R)ChanOut-Sts")
+}
+
+record(bi, "$(P)$(R)ChanOut-Sts") {
+    field(DESC, "Read channel output status")
+    field(ZNAM, "OFF")
+    field(ONAM, "ON")
+    field(DTYP, "stream")
+    field(INP, "@agilent33521a.proto channelOutputRead $(PORT)")
+}

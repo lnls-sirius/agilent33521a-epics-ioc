@@ -14,13 +14,14 @@ usage () {
     echo "  -p                  Configure device port" >&2
 }
 
-while getopts ":t:P:R:i:p:" opt; do
+while getopts ":t:P:R:i:p:d:" opt; do
   case $opt in
     t) DEVICE_TELNET_PORT="$OPTARG" ;;
     P) P="$OPTARG" ;;
     R) R="$OPTARG" ;;
     i) DEVICE_IP="$OPTARG" ;;
     p) DEVICE_PORT="$OPTARG" ;;
+    d) DEVICE_TYPE="$OPTARG";;
     \?)
       echo "Invalid option: -$OPTARG" >&2
       usage $0

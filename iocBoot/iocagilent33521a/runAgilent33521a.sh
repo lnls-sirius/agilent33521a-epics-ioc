@@ -30,4 +30,9 @@ fi
 
 cd "$IOC_BOOT_DIR"
 
-P="$P" R="$R" DEVICE_IP="$DEVICE_IP" DEVICE_PORT="$DEVICE_PORT" "$IOC_BIN" stAgilent33521a.cmd
+if [ "$DEVICE_TYPE" = "EgunTest" ]; then
+    P="$P" R="$R" DEVICE_IP="$DEVICE_IP" DEVICE_PORT="$DEVICE_PORT" "$IOC_BIN" EgunTest.cmd
+    exit 7
+else
+    P="$P" R="$R" DEVICE_IP="$DEVICE_IP" DEVICE_PORT="$DEVICE_PORT" "$IOC_BIN" stAgilent33521a.cmd
+fi
