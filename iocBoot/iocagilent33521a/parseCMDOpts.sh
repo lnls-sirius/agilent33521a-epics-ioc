@@ -8,7 +8,7 @@ usage () {
     echo >&2
     echo " Options:" >&2
     echo "  -t                  Configure procServ telnet port" >&2
-    echo "  -d                  Configure device type option" >&2
+    echo "  -d                  Configure device type" >&2
     echo "  -P                  Configure value of \$(P) macro" >&2
     echo "  -R                  Configure value of \$(R) macro" >&2
     echo "  -i                  Configure device IP address (required)" >&2
