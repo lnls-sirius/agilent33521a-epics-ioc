@@ -25,6 +25,6 @@ iocInit
 # No sequencer program
 
 # Create manual trigger for Autosave
-#create_triggered_set("auto_settings_agilent33521a.req", "${P}${R}SaveTrg", "P=${P}, R=${R}")
-#create_monitor_set("auto_settings_agilent33521a.req", 5, "P=${P}, R=${R}")
-#set_savefile_name("auto_settings_agilent33521a.req", "auto_settings_${P}${R}.sav")
+create_triggered_set("auto_settings_agilent33521a.req", "${P}${R}SaveTrg", "P=${P}, R=${R}")
+create_monitor_set("auto_settings_agilent33521a.req", 5, "P=${P}, R=${R}")
+set_savefile_name("auto_settings_agilent33521a.req", "auto_settings_${P}${R}.sav")
