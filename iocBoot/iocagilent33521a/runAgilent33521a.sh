@@ -37,8 +37,10 @@ cd "$IOC_BOOT_DIR"
 if [ "$DEVICE_TYPE" = "EgunTest" ]; then
     if [ -z "$P"]; then
         P = "IT-EGH:"
+    fi
     if [ -z "$R"]; then
         R = "TI-TrigGen:"
+    fi
     P="$P" R="$R" DEVICE_IP="$DEVICE_IP" DEVICE_PORT="$DEVICE_PORT" "$IOC_BIN" stEgunTest.cmd
     exit 7
 else
