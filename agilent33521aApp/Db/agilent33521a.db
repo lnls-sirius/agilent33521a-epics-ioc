@@ -496,10 +496,12 @@ record(waveform, "$(P)$(R)ArbitraryWfmFile-SP") {
     field(FLNK, "$(P)$(R)ArbitraryWfmFile-RB")
 }
 
+# For this function, the expected usage is "caput <PV> <numberOfPoints+1> <filename> <value1> <value2> <value3> ..."
+# The protocol file will send data in a comma separated list, as specified from the device's manual
 record(waveform, "$(P)$(R)ArbitraryLoadWfmData-Cmd") {
     field(DESC, "Load arbitrary waveform data into memory")
     field(NELM, 4096)
-    field(FTVL, "CHAR")
+    field(FTVL, "STRING")
     field(DTYP, "stream")
     field(INP, "@agilent33521a.proto loadArbitraryWaveformData $(PORT)")
 }

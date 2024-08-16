@@ -1,5 +1,4 @@
-Agilent 33521A EPICS IOC
-========================
+# Agilent 33521A EPICS IOC
 
 This is an EPICS IOC for the Agilent 33521A 30MHz Function/Arbitrary Waveform
 Generator.
@@ -66,3 +65,4 @@ For now, the following features are supported:
 - Configuring pseudo-random bit stream bit rate, edge time and sequence type;
 - Configuring noise function bandwidth;
 - Configuring arbitrary waveform samples file and sample rate.
+- Loading arbitrary waveform file from array of points.

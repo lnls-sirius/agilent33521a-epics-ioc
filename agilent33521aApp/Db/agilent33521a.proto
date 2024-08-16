@@ -248,6 +248,7 @@ setArbitraryWaveformFile {
 }
 
 loadArbitraryWaveformData {
+    separator=",";
     out "SOURce1:DATA:ARBitrary %s"
 }
 
