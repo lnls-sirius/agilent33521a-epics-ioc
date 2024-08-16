@@ -1,4 +1,4 @@
-TERMINATOR = NL;
+terminator = NL;
 ExtraInput = Ignore;
 ReplyTimeout = 1000;
 
@@ -233,9 +233,10 @@ setArbitraryWaveformSampleRate {
     @init { getArbitraryWaveformSampleRate }
 }
 
+#Depends on PCRE support - check https://paulscherrerinstitute.github.io/StreamDevice/formats.html#regex
 getArbitraryWaveformFile {
     out "SOURce1:FUNCtion:ARBitrary?";
-    in "%.1/\"([^\"]*)\"/"
+    in "\"%[A-Z-0-9\\-_./a-z]\"";
 }
 
 loadArbitraryWaveformFile {

@@ -470,29 +470,26 @@ record(ao, "$(P)$(R)ArbitrarySplRate-SP") {
     field(FLNK, "$(P)$(R)ArbitrarySplRate-RB")
 }
 
-record(waveform, "$(P)$(R)ArbitraryWfmFile-RB") {
+record(stringin, "$(P)$(R)ArbitraryWfmFile-RB") {
     field(DESC, "Read arbitrary waveform file path")
-    field(NELM, 240)
-    field(FTVL, "STRING")
     field(DTYP, "stream")
     field(INP, "@agilent33521a.proto getArbitraryWaveformFile $(PORT)")
 }
 
-record(waveform, "$(P)$(R)ArbitraryLoadWfmFile-Cmd") {
+record(stringout, "$(P)$(R)ArbitraryLoadWfmFile-Cmd") {
     field(DESC, "Load arbitrary waveform file into memory")
-    field(NELM, 240)
-    field(FTVL, "STRING")
     field(DTYP, "stream")
-    field(INP, "@agilent33521a.proto loadArbitraryWaveformFile $(PORT)")
+    field(OUT, "@agilent33521a.proto loadArbitraryWaveformFile $(PORT)")
 }
 
-record(waveform, "$(P)$(R)ArbitraryWfmFile-SP") {
+# For full paths, double quotes are needed in caget command. Path backslashes need to be escaped:
+# caput <PV> "INT:\\\BUILTIN\\\EXP_RISE.arb"
+# For files stored in root directory, double quotes are not needed:
+# caput <PV> myfile
+record(stringout, "$(P)$(R)ArbitraryWfmFile-SP") {
     field(DESC, "Set arbitrary waveform file path")
-    field(PINI, "YES")
-    field(NELM, 240)
-    field(FTVL, "STRING")
     field(DTYP, "stream")
-    field(INP, "@agilent33521a.proto setArbitraryWaveformFile $(PORT)")
+    field(OUT, "@agilent33521a.proto setArbitraryWaveformFile $(PORT)")
     field(FLNK, "$(P)$(R)ArbitraryWfmFile-RB")
 }
 
