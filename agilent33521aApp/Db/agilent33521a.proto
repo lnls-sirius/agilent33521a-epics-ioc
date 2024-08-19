@@ -233,7 +233,6 @@ setArbitraryWaveformSampleRate {
     @init { getArbitraryWaveformSampleRate }
 }
 
-#Depends on PCRE support - check https://paulscherrerinstitute.github.io/StreamDevice/formats.html#regex
 getArbitraryWaveformFile {
     out "SOURce1:FUNCtion:ARBitrary?";
     in "\"%[A-Z-0-9\\-_./a-z]\"";
@@ -251,6 +250,10 @@ setArbitraryWaveformFile {
 loadArbitraryWaveformData {
     separator=",";
     out "SOURce1:DATA:ARBitrary %s"
+}
+
+storeArbitraryWaveformFile {
+    out "MMEMory:STOR:DATA1 \"%s\"";
 }
 
 clearMemory {

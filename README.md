@@ -66,3 +66,4 @@ For now, the following features are supported:
 - Configuring noise function bandwidth;
 - Configuring arbitrary waveform samples file and sample rate.
 - Loading arbitrary waveform file from array of points.
+- Storing loaded arbitrary waveform into non-volatile memory
