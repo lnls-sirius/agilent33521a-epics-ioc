@@ -1,4 +1,4 @@
-TERMINATOR = NL;
+terminator = NL;
 ExtraInput = Ignore;
 ReplyTimeout = 1000;
 
@@ -235,7 +235,7 @@ setArbitraryWaveformSampleRate {
 
 getArbitraryWaveformFile {
     out "SOURce1:FUNCtion:ARBitrary?";
-    in "%.1/\"([^\"]*)\"/"
+    in "\"%[A-Z-0-9\\-_./a-z]\"";
 }
 
 loadArbitraryWaveformFile {
@@ -248,7 +248,12 @@ setArbitraryWaveformFile {
 }
 
 loadArbitraryWaveformData {
+    separator=",";
     out "SOURce1:DATA:ARBitrary %s"
+}
+
+storeArbitraryWaveformFile {
+    out "MMEMory:STOR:DATA1 \"%s\"";
 }
 
 clearMemory {

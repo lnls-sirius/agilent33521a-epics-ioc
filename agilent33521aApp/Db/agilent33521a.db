@@ -470,38 +470,44 @@ record(ao, "$(P)$(R)ArbitrarySplRate-SP") {
     field(FLNK, "$(P)$(R)ArbitrarySplRate-RB")
 }
 
-record(waveform, "$(P)$(R)ArbitraryWfmFile-RB") {
+record(stringin, "$(P)$(R)ArbitraryWfmFile-RB") {
     field(DESC, "Read arbitrary waveform file path")
-    field(NELM, 240)
-    field(FTVL, "STRING")
     field(DTYP, "stream")
     field(INP, "@agilent33521a.proto getArbitraryWaveformFile $(PORT)")
 }
 
-record(waveform, "$(P)$(R)ArbitraryLoadWfmFile-Cmd") {
+# Loads files stored in EEPROM or EXT. MEM. for them to be used. 
+# For full paths, single quotes are needed in caput command. Path backslashes need to be escaped:
+# Example: caput <PV> 'INT:\\BUILTIN\\CARDIAC.arb' would make this arb available for usage.
+record(stringout, "$(P)$(R)ArbitraryLoadWfmFile-Cmd") {
     field(DESC, "Load arbitrary waveform file into memory")
-    field(NELM, 240)
-    field(FTVL, "STRING")
     field(DTYP, "stream")
-    field(INP, "@agilent33521a.proto loadArbitraryWaveformFile $(PORT)")
+    field(OUT, "@agilent33521a.proto loadArbitraryWaveformFile $(PORT)")
 }
 
-record(waveform, "$(P)$(R)ArbitraryWfmFile-SP") {
-    field(DESC, "Set arbitrary waveform file path")
+record(stringout, "$(P)$(R)ArbitraryWfmFile-SP") {
+    field(DESC, "Select arbitrary waveform file from path")
     field(PINI, "YES")
-    field(NELM, 240)
-    field(FTVL, "STRING")
     field(DTYP, "stream")
-    field(INP, "@agilent33521a.proto setArbitraryWaveformFile $(PORT)")
+    field(OUT, "@agilent33521a.proto setArbitraryWaveformFile $(PORT)")
     field(FLNK, "$(P)$(R)ArbitraryWfmFile-RB")
 }
 
+# For this PV, the expected usage is "caput <PV> <numberOfPoints+1> <filename> <value1> <value2> <value3> ..."
+# The protocol file will send data in a comma separated list, as specified from the device's manual
 record(waveform, "$(P)$(R)ArbitraryLoadWfmData-Cmd") {
-    field(DESC, "Load arbitrary waveform data into memory")
+    field(DESC, "Load arbitrary waveform data from array")
     field(NELM, 4096)
-    field(FTVL, "CHAR")
+    field(FTVL, "STRING")
     field(DTYP, "stream")
     field(INP, "@agilent33521a.proto loadArbitraryWaveformData $(PORT)")
+}
+
+# For this PV, the full path to be stored need to be provided: "caput <PV> 'INT:\\mywfm.arb'"
+record(stringout, "$(P)$(R)ArbitraryStoreWfmFile-Cmd") {
+    field(DESC, "Store current waveform file into non-volatile mem.")
+    field(DTYP, "stream")
+    field(OUT, "@agilent33521a.proto storeArbitraryWaveformFile $(PORT)")
 }
 
 record(bo, "$(P)$(R)ClearMemory-Cmd") {
